@@ -217,16 +217,25 @@ function ggSample(p, pb, who) {
     : [{ tr: null, p, col: null }];
 }
 const GG_T = 1.5;
-const rearUnloaded = (p) => {
-  const f = p.useF || 0;
-  const r = p.useR || 0;
-  return r > f && (r > 3 || (r > 1 && (p.ax || 0) < -0.6 * G));
-};
-const gripUse = (p) => {
-  const f = p.useF || 0;
-  const r = p.useR || 0;
-  return rearUnloaded(p) ? f : Math.max(f, r);
-};
+// A tyre passes on at most its grip: asked for more, it slides. A wheel left with almost no load (the
+// rear just after hard front braking, the front at a wheelie) slides at the slightest force, so its
+// share says nothing and the other wheel's is shown.
+const LIGHT_WHEEL = 0.25;
+function gripState(p) {
+  let f = p.useF || 0;
+  let r = p.useR || 0;
+  let note = '';
+  if (r > 1 && r >= f && (p.loadR ?? 1) < LIGHT_WHEEL) {
+    r = 0;
+    note = i18n`tył odciążony`;
+  } else if (f > 1 && f > r && (p.loadF ?? 1) < LIGHT_WHEEL) {
+    f = 0;
+    note = i18n`przód odciążony`;
+  }
+  const slide = Math.max(f, r) > 1;
+  if (slide) note = r >= f ? i18n`tył się ślizga` : i18n`przód się ślizga`;
+  return { use: Math.min(1, Math.max(f, r)), note, slide };
+}
 function drawGG(p, pb, who) {
   const q = ggCtx;
   const W = GW;
@@ -306,6 +315,14 @@ function drawGG(p, pb, who) {
     q.stroke();
   }
   q.font = '10px ' + FONT_MONO;
+  const muText = localNum(S.mu) + ' g';
+  const muX = c0 + S.mu * k;
+  q.fillStyle = COL.muted;
+  if (muX + 4 + q.measureText(muText).width <= W - 4) q.fillText(muText, muX + 4, c1 + 3);
+  else {
+    q.textAlign = 'right';
+    q.fillText(muText, muX - 6, c1 - 4);
+  }
   q.fillStyle = COL.dim;
   q.textAlign = 'left';
   q.fillText('1 g', c0 + k * 0.71 + 3, c1 - k * 0.71 - 2);
@@ -351,13 +368,13 @@ function drawGG(p, pb, who) {
     const ax = s.p.ax || 0;
     const al = s.p.al || 0;
     const [px, py] = P(ax, al);
-    const use = gripUse(s.p);
+    const grip = gripState(s.p);
     q.fillStyle = s.col || COL.chalk;
     q.beginPath();
     q.arc(px, py, 5, 0, 7);
     q.fill();
-    if (use > 0.9) {
-      q.strokeStyle = use > 1.0 ? COL.brake : COL.warn;
+    if (grip.slide || grip.use > 0.9) {
+      q.strokeStyle = grip.slide ? COL.brake : COL.warn;
       q.lineWidth = 2;
       q.beginPath();
       q.arc(px, py, 8, 0, 7);
@@ -376,17 +393,18 @@ function drawGG(p, pb, who) {
     q.textAlign = 'left';
   } else {
     const s = src[0];
-    const use = gripUse(s.p);
-    const rOff = rearUnloaded(s.p);
+    const grip = gripState(s.p);
     q.fillStyle = s.col || COL.chalk;
     q.fillText(gT(s), 8, H - 22);
-    if (rOff) {
+    if (grip.note) {
       const w0 = q.measureText(gT(s)).width;
-      q.fillStyle = COL.muted;
-      q.fillText(i18n` · tył odciążony`, 8 + w0, H - 22);
+      q.font = '10px ' + FONT_MONO;
+      q.fillStyle = grip.slide ? COL.brake : COL.muted;
+      q.fillText(' · ' + grip.note, 8 + w0, H - 22);
+      q.font = '12px ' + FONT_MONO;
     }
     q.fillStyle = COL.muted;
-    q.fillText(i18n`przyczepność ${Math.round(use * 100)}%`, 8, H - 7);
+    q.fillText(i18n`przyczepność ${Math.round(grip.use * 100)}%`, 8, H - 7);
   }
 }
 function setHud(p, pb) {
@@ -413,8 +431,7 @@ function setHud(p, pb) {
     '</tr>';
   for (const [nm, v, q] of L) {
     const kk = Math.abs(q.k || 0);
-    const rOff = rearUnloaded(q);
-    const use = rOff ? q.useF || 0 : Math.max(q.useF || 0, q.useR || 0);
+    const grip = gripState(q);
     h +=
       '<tr><td class="' +
       v +
@@ -431,11 +448,11 @@ function setHud(p, pb) {
       '</td><td>' +
       (kk > 0.02 ? fmtNum(1 / kk, 1) + ' m' : i18n`prosto`) +
       '</td><td' +
-      (use > 1 ? ' class="up"' : '') +
+      (grip.slide ? ' class="up"' : '') +
       '>' +
-      Math.round(use * 100) +
+      Math.round(grip.use * 100) +
       '%' +
-      (rOff ? i18n` · tył odciążony` : '') +
+      (grip.note ? ' · ' + grip.note : '') +
       '</td><td>' +
       inp(q) +
       '</td></tr>';

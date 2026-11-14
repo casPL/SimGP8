@@ -268,7 +268,17 @@ let hudTick = 0;
 function drawLiveHud() {
   if (!run) return;
   const s = run.sim;
-  const p = { ...poseOf(s), lock: s.lock, k: s.k, al: s.al, ax: s.ax, useF: s.useF, useR: s.useR };
+  const p = {
+    ...poseOf(s),
+    lock: s.lock,
+    k: s.k,
+    al: s.al,
+    ax: s.ax,
+    useF: s.useF,
+    useR: s.useR,
+    loadF: s.loadF,
+    loadR: s.loadR,
+  };
   drawLean(p);
   if (++hudTick % 3 === 0) setHud(p);
 }

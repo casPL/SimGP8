@@ -57,6 +57,8 @@ class Sim {
     this.crash = null;
     this.useF = 0;
     this.useR = 0;
+    this.loadF = 1;
+    this.loadR = 1;
     this.zf = forkTravel(S, S.mt * G * S.fF * S.cE);
     this.vf = 0;
     this.zr = clamp(S.sagR - (S.mt * G * (S.fF - b.ff)) / S.kR, 0, S.rt);
@@ -228,6 +230,8 @@ class Sim {
     const v = Math.max(0, v0 + ax * dt);
     this.useF = uF;
     this.useR = uR;
+    this.loadF = Nf / (S.mt * G * D.fF);
+    this.loadR = Nr / (S.mt * G * (1 - D.fF));
     if (this.slideF >= 1)
       return this.fail(
         ax - axT < -2

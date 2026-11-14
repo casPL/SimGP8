@@ -84,6 +84,8 @@ function simulateRun(S, opt, keep) {
       fl: s.fl,
       useF: s.useF,
       useR: s.useR,
+      loadF: s.loadF,
+      loadR: s.loadR,
       zf: s.zf / s.S.ft,
       zr: s.zr / s.S.rt,
       bx: s.bx,

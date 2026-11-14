@@ -19,6 +19,8 @@ const INTERP_KEYS = [
   'al',
   'useF',
   'useR',
+  'loadF',
+  'loadR',
   'zf',
   'zr',
   'bx',
