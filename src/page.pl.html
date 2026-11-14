@@ -1,0 +1,129 @@
+<div class="wrap">
+  <div class="screen">
+    <header class="top">
+      <div class="brand">
+        <h1>SimGP8</h1>
+      </div>
+      <div class="hset">
+        <div class="hg"><span class="k">Motocykl</span><div class="seg bikes" id="bikes" role="group" aria-label="Motocykl"></div></div>
+        <div class="hg"><span class="k">Pozycja ciała</span><div class="seg" id="posSeg" role="group" aria-label="Pozycja ciała"><button data-v="pos">Pozytywna</button><button data-v="neu">Neutralna</button><button data-v="neg">Negatywna</button></div></div>
+        <div class="hg"><span class="k">Miejsce na siedzeniu</span><div class="seg" id="seatSeg" role="group" aria-label="Miejsce na siedzeniu"><button data-v="-1">Tył</button><button data-v="0">Środek</button><button data-v="1">Przód</button></div></div>
+      </div>
+    </header>
+    <main class="dash" id="dash">
+      <section class="pTrack" aria-label="Plac">
+        <div class="bar">
+          <div class="seg mode" id="modeSeg" role="group" aria-label="Tryb"><button data-v="demo" aria-pressed="true">Pokaz trenera</button><button data-v="plan" aria-pressed="false">Planer</button></div>
+          <button class="btn go" id="cmpBtn">▶ Porównaj</button>
+          <button class="btn go" id="demoBtn" hidden>▶ Pokaz</button>
+          <button class="btn small" id="stopBtn" hidden>Przerwij (Esc)</button>
+          <div class="status" id="status"></div>
+        </div>
+        <div class="cvbox trackbox" id="trackBox">
+          <canvas id="track" tabindex="-1" aria-label="Plac GP8 z góry: dwa pachołki, box startu i mety, zawodnicy i punkty planu"></canvas>
+          <div class="overlay" id="overlay" hidden></div>
+        </div>
+        <div class="player" id="player" hidden>
+          <button class="btn small" id="plPlay" aria-label="Odtwórz">▶</button>
+          <div class="seg" id="plSpd" role="group" aria-label="Tempo odtwarzania"><button data-v="1">1×</button><button data-v="0.5">½×</button><button data-v="0.25">¼×</button><button data-v="0.1">⅒×</button></div>
+          <input type="range" id="plT" min="0" max="1" step="0.01" value="0" aria-label="Chwila przejazdu od startu z bramki">
+          <span class="pt"><b id="plTime">0,00 s</b></span>
+        </div>
+      </section>
+
+      <section class="pane pSide" aria-label="Plan zawodnika">
+        <div class="planner" id="planner">
+          <div class="ppos"><div class="seg" id="pPos" role="group" aria-label="Pozycja ciała zawodnika" title="Pozycja ciała zawodnika"><button data-v="pos">Pozytywna</button><button data-v="neu">Neutralna</button><button data-v="neg">Negatywna</button></div></div>
+          <div class="ppos pseat"><span class="k">Siedzi</span><div class="seg" id="pSeat" role="group" aria-label="Miejsce na siedzeniu zawodnika" title="Miejsce na siedzeniu zawodnika"><button data-v="-1">z tyłu</button><button data-v="0">na środku</button><button data-v="1">z przodu</button></div></div>
+          <div class="sls" id="slMain"></div>
+          <div class="pbtns"><button class="btn small" data-pact="def">Plan wyjściowy</button></div>
+          <p class="note pmsg" id="pMsg" aria-live="polite" hidden></p>
+        </div>
+        <div class="demoInfo" id="demoInfo" hidden>
+          <h3>Pokaz trenera</h3>
+          <p class="note">Automatyczny kierowca jedzie GP8 z fizyki motocykla na 93% przyczepności opon (nikt nie jeździ na samej granicy). Między pętlami pełny gaz, przed pętlą hamowanie prawie tylko przodem: przód dostaje tyle, ile zniesie opona, tył dokłada delikatnie, żeby się nie zablokował. Składając się, oddaje przód razem ze złożeniem, więc przeciążenia idą po obwiedni wykresu g-g dla łuku o stałym promieniu (przerywana linia; ciągła: przy składaniu i podnoszeniu, gdy bezwładność odchylenia przenosi siłę boczną między kołami). Kierownica idzie w jedną stronę: po krótkim przeciwskręcie dokręca się prawie do pełnego skrętu, a na wyjściu płynnie odkręca, gdy gaz narasta tak, jak pozwala złożenie. Naciśnij <b>▶ Pokaz</b> albo Enter. Po przejeździe odtworzysz go pod placem, także w zwolnionym tempie.</p>
+          <p class="note">Na wykresie tło dzieli pętlę na fazy: S1 wejście (A–C), S2 obrót na pełnym skręcie (D), S3 wyjście, przełożenie i dohamowanie (E–H). Szeroka blada linia to wzorzec.</p>
+        </div>
+      </section>
+
+      <section class="pane pStats" aria-label="Wyniki">
+        <div class="pres" id="planRes" aria-live="polite"></div>
+        <div class="scroll"><table class="cmp mini" id="splits"></table></div>
+      </section>
+
+      <section class="pane pTele" aria-label="Wykres przejazdu">
+        <div class="segs" id="segs"><span class="note">Po przejeździe wybierzesz tu całość albo jedną pętlę: F1 to pierwsza pętla wokół czerwonego (dalszego) pachołka, N1 wokół niebieskiego (bliższego).</span></div>
+        <div class="cvbox" id="teleBox"><canvas id="tele" aria-label="Wykres przejazdu: prędkość, złożenie (z przeciwskrętem) i przeciążenie wzdłużne (z hamowaniem w złożeniu)"></canvas></div>
+      </section>
+
+      <section class="pane pViews" aria-label="Widok z tyłu, widok z boku, przeciążenia">
+        <div class="views">
+          <div class="cvbox" id="leanBox"><canvas id="lean" aria-label="Widok z tyłu: złożenie motocykli i kierowców"></canvas></div>
+          <div class="cvbox" id="sideBox"><canvas id="side" aria-label="Widok z boku: ugięcie widelca i tyłu, kąt główki, wyprzedzenie, rozstaw osi i promień pełnego skrętu"></canvas></div>
+          <div class="cvbox" id="ggBox"><canvas id="gg" aria-label="Wykres przeciążeń: przyspieszanie, hamowanie i skręt na tle granicy przyczepności opon"></canvas></div>
+        </div>
+        <div class="scroll"><table class="cmp now" id="nowTbl"></table></div>
+      </section>
+    </main>
+  </div>
+
+  <section class="cols">
+    <div class="panel">
+      <h2 id="repH">Raport planera</h2>
+      <ul class="tips" id="tips"></ul>
+    </div>
+    <div class="panel notes">
+      <h2>Jak czytać ekran</h2>
+      <p class="note"><b>Punkty planu.</b> <b>H</b> hamowanie: do H gaz, od H przedni hamulec (pełna siła po ok. 0,2 s; składając się, zawodnik oddaje przód i dokłada tyłu). <b>S</b> składanie: tu zawodnik zaczyna kłaść motocykl (szybki zawodnik robi to już w środku ósemki). Złożenie narasta stopniowo (na Ultra Bee od pionu do 45° w ok. 0,35 s, ciężkie motocykle wolniej), a w złożeniu zawodnik dalej hamuje, więc łuk sam się zacieśnia. S przesuwasz bliżej lub dalej i szerzej lub węziej. Od S składa się tak mocno, jak pozwala motocykl, ale tak, żeby obrys minął pachołek o zapas (od 5 mm), więc późny albo wąski S to ciaśniejszy łuk: trzeba przed nim mocniej wyhamować, inaczej wynosi szeroko. <b>G</b> gaz: tu kierowca odkręca. Im bardziej złożony motocykl w G, tym szerzej wyjeżdża, a im później G, tym gwałtowniej można odkręcić. H i S liczone są od środka motocykla wzdłuż przekątnej do linii pachołka, S w bok jako odległość od pachołka w poprzek przekątnej, G jako obrót, który zostaje do wyjścia na przekątną. Punkty ustawiasz przy czerwonym pachołku, a przy niebieskim zawodnik jedzie według tego samego planu, lustrzanie. W pierwszej pętli (prawej, zaraz po starcie) hamuje i składa się jak trener, wcześniej niż w H i w S, bo z bramki rozpędza się dłużej i dojeżdża z innej strony; od pierwszej lewej hamuje w H, więc za późny H widać od niej. Planer przyjmuje tylko plany, z którymi zawodnik przejeżdża bezbłędnie (dojeżdża do mety, nie wjeżdża w bramkę z boxem 3 m za niebieskim pachołkiem i nie dotyka pachołka) i najwyżej w 33 s: inaczej punkt wraca do najbliższego miejsca, z którym tak jedzie. Pozycję ciała i miejsce na siedzeniu zawodnika wybierasz w planerze; trener jedzie w tej samej pozycji i w tym samym miejscu. Plan wyjściowy to punkty trenera dla tej pozycji i tego miejsca na siedzeniu; w części ustawień H i S są przesunięte o 0,1–0,8 m, bo z punktami trenera zawodnik tracił czas albo nie dojeżdżał. Widok z tyłu, z boku i przeciążenia pokazują zawodnika, tabela „Teraz” zawodnika i trenera.</p>
+      <p class="note"><b>Pachołek.</b> Stożek 40 cm (ok. 18 cm średnicy przy ziemi, 2,5 cm u góry, z nagrania). Zawodnicy w symulatorze go nie dotykają: gdy z nitki wynikałoby dotknięcie, kierowca skręca mniej i traci czas. Odstęp liczy się od obrysu motocykla z kierowcą: końce kierownicy na każdej wysokości, a tył motocykla (siedzenie, boczki), podnóżek z butem, kolano i łokieć poniżej czubka pachołka. W negatywnej kierowca siedzi nad motocyklem, więc łokieć nie wystaje poza kierownicę, a kolano przylega do zbiornika, ale motocykl złożony głębiej sięga dalej tyłem. Zapas od pachołka jest ustalony dla każdego motocykla, pozycji i miejsca na siedzeniu; ile naprawdę zostało, widać w wierszu „Do pachołka”.</p>
+      <p class="note" id="teleNote"></p>
+      <p class="note"><b>Przeciążenia (G).</b> Kropka to przyspieszenie motocykla w tej chwili: w górę gaz, w dół hamowanie, na boki skręt. Ogon to ostatnie 1,5 s. Ciągła linia to granica motocykla, nie koło: w dół hamowanie do stoppie (tył się unosi), w złożeniu tyle, ile utrzyma odciążony tył; w górę gaz do wheelie i mocy silnika przy obecnej prędkości, w złożeniu tyle, ile utrzyma odciążony przód. Najszybciej jedzie się po tej linii. Przerywane okręgi to 0,5 g i 1 g.</p>
+      <p class="note"><b>Gaz i hamulce.</b> Słupki w prawym dolnym rogu placu: gaz, przedni hamulec (przód) i tylny hamulec (tył), od 0 do 100%. W planerze pokazują zawodnika. W widoku z boku „ugięcie” to ugięcie widelca (przód) i tylnego zawieszenia (tył) w milimetrach, kreska to ugięcie statyczne (sag).</p>
+      <p class="note"><b>Ósemki.</b> Ósemka kończy się, gdy motocykl przejeżdża przed boxem za bliższym pachołkiem. Pierwsza zawiera start z miejsca, ostatnia powrót do bramki.</p>
+      <p class="note"><b>Pozycja ciała.</b> <span id="posNote"></span> <b>Miejsce na siedzeniu.</b> <span id="seatNote"></span></p>
+      <p class="note"><b>Strony pachołków.</b> <b style="color:var(--coneN)">Niebieski</b> (bliższy) zawodnik ma zawsze po lewej ręce, <b style="color:var(--coneF)">czerwony</b> (dalszy) po prawej. Ze startu mija niebieski po lewej ręce i przekątną jedzie do czerwonego, który objeżdża w prawo. Pachołek po złej stronie to dyskwalifikacja.</p>
+      <p class="note"><b>Plac.</b> Pachołki 40 cm co 12 m. Box 3 × 2 m z jedną bramką startu i mety stoi 3 m za bliższym pachołkiem. Pięć ósemek. Dotknięć pachołka w symulatorze nie ma: komu wyszłoby dotknięcie, ten skręca mniej i traci czas.</p>
+    </div>
+  </section>
+
+  <details>
+    <summary>Jak jechać GP8: fazy S1–S3 i A–H</summary>
+    <canvas id="refc" style="margin-top:12px" aria-label="Wzorzec faz A–H: prędkość, złożenie, skręt kierownicy, hamulce i gaz w jednej pętli"></canvas>
+    <ul class="phases">
+      <li><b>S1 · A</b> Zaczynasz skręcać. Kierownica szybko, ale pod kontrolą domyka się do środka, przedni hamulec puszczasz powoli.</li>
+      <li><b>S1 · B</b> Wchodzi tylny hamulec, płynnie. Przeciwskrętem dokładasz złożenia.</li>
+      <li><b>S1 · C</b> Przód puszczony, trochę więcej tyłu. Szybko do pełnego skrętu, bez podnoszenia motocykla. Głowa już na wejściu do drugiego pachołka.</li>
+      <li><b>S2 · D</b> Pełny skręt. Tylny hamulec zacieśnia promień, można pulsować. Gaz lekko uchylony, prędkość kontrolujesz tyłem.</li>
+      <li><b>S3 · E</b> Szybko, ale płynnie otwierasz gaz, jeszcze w złożeniu. Puszczasz tył.</li>
+      <li><b>S3 · F</b> Celujesz w wejście do drugiego pachołka i szybko przekładasz motocykl.</li>
+      <li><b>S3 · G</b> Zamykasz gaz i zaczynasz hamować przodem.</li>
+      <li><b>S3 · H</b> Celujesz w punkt wejścia, składasz motocykl na przednim hamulcu.</li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>Dla dociekliwych: jak liczy symulator</summary>
+    <div class="learn">
+      <div><h3>Złożenie i promień</h3><p class="f">R = v² / (g · tg φ)</p><p>Przy tym samym złożeniu wolniej znaczy ciaśniej. Dlatego hamowanie w złożeniu zacieśnia łuk, a gaz go otwiera i podnosi motocykl. Nitki nie rysujesz: wychodzi z tego, gdzie zaczynasz składać i ile w tym czasie hamujesz.</p></div>
+      <div><h3>Pełny skręt kierownicy</h3><p class="f">R ≈ L · cos φ<sub>moto</sub> / tg(δ · cos ε)</p><p>L to rozstaw osi, δ maksymalny skręt, ε kąt główki ramy. Na pełnym skręcie promień zależy już tylko od złożenia motocykla, a złożenie od prędkości. Za wolno i za mocno złożony motocykl wpada do środka, chyba że dodasz gazu.</p></div>
+      <div><h3>Tylny hamulec w obrocie</h3><p>Tył hamuje bez zabierania przyczepności przodowi. Gdy przód schodzi ze składaniem, tył przejmuje hamowanie: najpierw mocno, potem coraz mniej, a puszcza chwilę po wejściu na gaz. Łuk zacieśnia się, bo motocykl zwalnia (przy tym samym złożeniu wolniej to ciaśniej), a nie przez poślizg: tył ponad granicą przyczepności ślizga się, ale nie obraca motocykla do środka, więc uślizg nie skraca przejazdu. Zablokowany tył hamuje słabiej, a długi uślizg w złożeniu kończy się glebą. Zacisk tylnego hamulca jest na wahaczu, więc hamowanie tyłem ściąga tył w dół (przysiad). Gaz dokładany przy trzymanym hamulcu napina łańcuch, ale motocykl nie przyspiesza, więc przód nie odciąża się jak przy samym gazie, a tył dalej przysiada. Dopiero puszczony hamulec pozwala przyspieszyć: masa przechodzi na tył, widelec się rozpręża, a tył się podnosi.</p></div>
+      <div><h3>Koło przyczepności każdej opony</h3><p class="f">√(F<sub>wzdłużna</sub>² + F<sub>boczna</sub>²) ≤ μ · N</p><p>Przód niesie hamowanie i swoją część siły bocznej. Hamowanie dociąża przód i odciąża tył, ale nie od razu: widelec ugina się przez około 0,15 s. Dlatego przedni hamulec dokładaj płynnie, a oddawaj, gdy rośnie złożenie (A–C). Mocne hamowanie przodem w złożeniu łatwo wyrzuca odciążony tył.</p></div>
+      <div><h3>Zawieszenie i geometria</h3><p class="f">wyprzedzenie = (r · sin ε − offset) / cos ε</p><p>r to promień koła, ε kąt główki, offset to wysunięcie osi koła przed oś skrętu. Przedni hamulec dociąża przód, a siła hamowania wzdłuż goleni dodatkowo ugina widelec. Motocykl pochyla się do przodu: główka staje bardziej stromo, wyprzedzenie i rozstaw się skracają. Motocykl szybciej się składa, ale jest mniej stabilny. Na pełnym skręcie przy małym złożeniu skręca wtedy ciaśniej, a w głębokim szerzej: w złożeniu koło skręca się względem drogi tym mocniej, im bardziej położona główka. Gaz działa odwrotnie: przód traci nacisk i widelec się rozpręża, tym bardziej, im mocniejsze przyspieszenie; główka się kładzie, wyprzedzenie rośnie. Dlatego na gazie kierowca przesuwa ciało do przodu: dociąża przód (widelec mniej się rozpręża, wheelie później). Nagle puszczony hamulec pozwala widelcowi odbić i motocykl wychodzi szerzej. Tył zależy od wahacza: napęd na kole go podnosi, napięty łańcuch nad osią wahacza ściąga, a przy hamowaniu tyłem zacisk na wahaczu ściąga tył w dół (kolumna „Tył” w parametrach motocykli). Widok z boku pokazuje to na żywo, blady obrys to motocykl w ugięciu statycznym (sag, przyjęte 30% skoku).</p></div>
+      <div><h3>Moment z dołu</h3><p>Każdy motocykl ma inny zapas momentu przy małej prędkości. Sur-Ron ciągnie od zera, CBR600 na dole jest słaby. Ze słabym dołem trzymaj szerszą nitkę i wyższą prędkość w pętli, z mocnym możesz jechać prościej i ciaśniej.</p></div>
+      <div><h3>Pozycja ciała</h3><p>Opona czuje tylko złożenie wypadkowe, więc pozycja nie dodaje przyczepności. Zmienia za to złożenie samego motocykla. Pozytywna: motocykl bardziej wyprostowany, więcej prześwitu, ale szerszy pełny skręt i wolniejsze przekładanie. Negatywna: ciaśniejszy pełny skręt i szybkie przekładanie, ale prześwit kończy się wcześniej.</p></div>
+      <div><h3>Pachołek 40 cm</h3><p>Złożony motocykl i kierowca wiszą nad pachołkiem: im głębsze złożenie, tym dalej od pachołka musi biec ślad opon. Symulator sprawdza odstęp pachołka od obrysu: końców kierownicy, tyłu motocykla, podnóżka, kolana i łokcia.</p></div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Parametry motocykli</summary>
+    <div class="scroll" style="margin-top:10px"><table class="cmp" id="params"></table></div>
+    <p class="note">Masa bez kierowcy, kierowca 80 kg. CoG to wysokość środka ciężkości z kierowcą, „przód” to udział masy na przednim kole. „Dół” to część pełnego przyspieszenia dostępna przy prędkości bliskiej zera. Złożenie max to granica prześwitu, przekładanie to maksymalna prędkość przechyłu w pozycji neutralnej. Skok to cały skok zawieszenia, ugięcie przy 1 g mówi, o ile widelec ugina się ponad ugięcie statyczne przy hamowaniu przodem z opóźnieniem 1 g (przeniesienie masy razem z siłą hamowania wzdłuż goleni, do końca skoku), wyprzedzenie podane w ugięciu statycznym 30% skoku. „Tył” mówi, o ile tylne zawieszenie ugina się ponad ugięcie statyczne (minus: rozpręża się) przy tylnym hamulcu do końca, przy gazie, który na zakładce znosi ten hamulec (prędkość stoi), i przy samym gazie z tą samą siłą napędu: zacisk tylnego hamulca na wahaczu ściąga tył w dół, napęd na kole go podnosi, a napięty łańcuch nad osią wahacza ściąga.</p>
+  </details>
+
+  <footer class="credit">
+    <p>SimGP8 © 2026 Maciej Kasprzyk · Instagram <a href="https://www.instagram.com/cas8pl/" target="_blank" rel="noopener">@cas8pl</a></p>
+    <p>Wolne oprogramowanie na licencji <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener">GNU GPL</a> w wersji 3 lub nowszej: możesz je rozpowszechniać i zmieniać na warunkach tej licencji. Bez żadnej gwarancji. Kod źródłowy: <a href="https://github.com/casPL/simgp8" target="_blank" rel="noopener">github.com/casPL/simgp8</a></p>
+  </footer>
+
+</div>

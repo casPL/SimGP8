@@ -1,0 +1,17 @@
+{
+  "name": "simgp8",
+  "version": "1.0.0",
+  "description": "GP8 motogymkhana simulator: motorcycle physics, a coach demo and a planner for the braking, turn-in and throttle points.",
+  "license": "GPL-3.0-or-later",
+  "author": "Maciej Kasprzyk (https://www.instagram.com/cas8pl/)",
+  "repository": "github:casPL/simgp8",
+  "private": true,
+  "scripts": {
+    "build": "node build.js",
+    "test": "node --test",
+    "format": "prettier --write src/js build.js test"
+  },
+  "devDependencies": {
+    "prettier": "^3.3.3"
+  }
+}

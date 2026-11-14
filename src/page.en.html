@@ -1,0 +1,129 @@
+<div class="wrap">
+  <div class="screen">
+    <header class="top">
+      <div class="brand">
+        <h1>SimGP8</h1>
+      </div>
+      <div class="hset">
+        <div class="hg"><span class="k">Bike</span><div class="seg bikes" id="bikes" role="group" aria-label="Bike"></div></div>
+        <div class="hg"><span class="k">Body position</span><div class="seg" id="posSeg" role="group" aria-label="Body position"><button data-v="pos">Lean in</button><button data-v="neu">Neutral</button><button data-v="neg">Lean out</button></div></div>
+        <div class="hg"><span class="k">Seat position</span><div class="seg" id="seatSeg" role="group" aria-label="Seat position"><button data-v="-1">Back</button><button data-v="0">Middle</button><button data-v="1">Front</button></div></div>
+      </div>
+    </header>
+    <main class="dash" id="dash">
+      <section class="pTrack" aria-label="Course">
+        <div class="bar">
+          <div class="seg mode" id="modeSeg" role="group" aria-label="Mode"><button data-v="demo" aria-pressed="true">Coach demo</button><button data-v="plan" aria-pressed="false">Planner</button></div>
+          <button class="btn go" id="cmpBtn">▶ Compare</button>
+          <button class="btn go" id="demoBtn" hidden>▶ Demo</button>
+          <button class="btn small" id="stopBtn" hidden>Stop (Esc)</button>
+          <div class="status" id="status"></div>
+        </div>
+        <div class="cvbox trackbox" id="trackBox">
+          <canvas id="track" tabindex="-1" aria-label="GP8 course from above: two cones, the start and finish box, the riders and the plan points"></canvas>
+          <div class="overlay" id="overlay" hidden></div>
+        </div>
+        <div class="player" id="player" hidden>
+          <button class="btn small" id="plPlay" aria-label="Play">▶</button>
+          <div class="seg" id="plSpd" role="group" aria-label="Playback speed"><button data-v="1">1×</button><button data-v="0.5">½×</button><button data-v="0.25">¼×</button><button data-v="0.1">⅒×</button></div>
+          <input type="range" id="plT" min="0" max="1" step="0.01" value="0" aria-label="Moment of the run, counted from the start at the gate">
+          <span class="pt"><b id="plTime">0.00 s</b></span>
+        </div>
+      </section>
+
+      <section class="pane pSide" aria-label="Rider's plan">
+        <div class="planner" id="planner">
+          <div class="ppos"><div class="seg" id="pPos" role="group" aria-label="Rider's body position" title="Rider's body position"><button data-v="pos">Lean in</button><button data-v="neu">Neutral</button><button data-v="neg">Lean out</button></div></div>
+          <div class="ppos pseat"><span class="k">Seat</span><div class="seg" id="pSeat" role="group" aria-label="Rider's seat position" title="Rider's seat position"><button data-v="-1">back</button><button data-v="0">middle</button><button data-v="1">front</button></div></div>
+          <div class="sls" id="slMain"></div>
+          <div class="pbtns"><button class="btn small" data-pact="def">Default plan</button></div>
+          <p class="note pmsg" id="pMsg" aria-live="polite" hidden></p>
+        </div>
+        <div class="demoInfo" id="demoInfo" hidden>
+          <h3>Coach demo</h3>
+          <p class="note">The automatic rider's run is computed from the motorcycle's physics, at 93% of the tyre grip (nobody rides right at the limit). Full throttle between the loops, and before a loop braking almost only with the front: the front gets as much as the tyre can take, the rear adds a little, gently enough not to lock. Leaning in, the rider eases off the front in step with the lean, so the g-forces follow the envelope of the g-g diagram for a constant-radius turn (dashed line; solid line: during lean-in and pick-up, when yaw inertia shifts the side force between the wheels). The handlebar moves one way: after a short countersteer it turns in almost to full lock, and on exit it unwinds smoothly while the throttle builds as far as the lean allows. Press <b>▶ Demo</b> or Enter. After the run you can replay it below the course, also in slow motion.</p>
+          <p class="note">On the chart the background splits the loop into phases: S1 entry (A–C), S2 rotation at full lock (D), S3 exit, transition and braking for the next cone (E–H). The wide pale line is the reference pattern.</p>
+        </div>
+      </section>
+
+      <section class="pane pStats" aria-label="Results">
+        <div class="pres" id="planRes" aria-live="polite"></div>
+        <div class="scroll"><table class="cmp mini" id="splits"></table></div>
+      </section>
+
+      <section class="pane pTele" aria-label="Run chart">
+        <div class="segs" id="segs"><span class="note">After the run you can pick the whole run or a single loop here: F1 is the first loop around the red (far) cone, N1 the first around the blue (near) one.</span></div>
+        <div class="cvbox" id="teleBox"><canvas id="tele" aria-label="Run chart: speed, lean (with countersteering) and longitudinal g (with braking while leaned over)"></canvas></div>
+      </section>
+
+      <section class="pane pViews" aria-label="Rear view, side view, g-forces">
+        <div class="views">
+          <div class="cvbox" id="leanBox"><canvas id="lean" aria-label="Rear view: lean of the bikes and the riders"></canvas></div>
+          <div class="cvbox" id="sideBox"><canvas id="side" aria-label="Side view: fork and rear suspension travel, rake, trail, wheelbase and full-lock radius"></canvas></div>
+          <div class="cvbox" id="ggBox"><canvas id="gg" aria-label="G-force diagram: acceleration, braking and cornering against the tyre grip limit"></canvas></div>
+        </div>
+        <div class="scroll"><table class="cmp now" id="nowTbl"></table></div>
+      </section>
+    </main>
+  </div>
+
+  <section class="cols">
+    <div class="panel">
+      <h2 id="repH">Planner report</h2>
+      <ul class="tips" id="tips"></ul>
+    </div>
+    <div class="panel notes">
+      <h2>How to read the screen</h2>
+      <p class="note"><b>Plan points.</b> <b>B</b> braking: throttle up to B, front brake from B (full force after about 0.2 s; leaning in, the rider eases off the front and adds rear). <b>T</b> turn-in: here the rider starts to lay the bike down (a fast rider does it as early as the middle of the figure eight). The lean builds gradually (on the Ultra Bee from upright to 45° in about 0.35 s, heavy bikes more slowly), and the rider keeps braking while leaned over, so the turn tightens by itself. You can move T nearer or farther and wider or narrower. From T the rider leans in as far as the bike allows, but so that the outline clears the cone by the margin (from 5 mm), so a late or narrow T means a tighter turn: more braking is needed before it, otherwise the bike runs wide. <b>G</b> gas: here the rider opens the throttle. The more the bike is leaned at G, the wider it exits, and the later G is, the more abruptly the throttle can be opened. B and T are measured from the middle of the bike along the diagonal to the cone line, T sideways as the distance from the cone across the diagonal, and G as the rotation left before the exit onto the diagonal. You set the points at the red cone; at the blue cone the rider follows the same plan, mirrored. In the first loop (the right-hand one, straight after the start) the rider brakes and leans in like the coach, earlier than at B and T, because the run-up from the gate is longer and the approach comes from a different side; from the first left-hand loop on, braking starts at B, so a B that is too late shows from that loop on. The planner accepts only plans with which the rider completes a clean run (reaches the finish, does not ride into the gate with the box 3 m behind the blue cone and does not touch a cone) in 33 s at most: otherwise the point goes back to the nearest place that gives such a run. You choose the rider's body position and seat position in the planner; the coach rides in the same position and the same place. The default plan uses the coach's points for that body position and seat position; in some setups B and T are shifted by 0.1–0.8 m, because with the coach's points the rider lost time or did not reach the finish. The rear view, the side view and the g-forces show the rider; the “Now” table shows the rider and the coach.</p>
+      <p class="note"><b>Cone.</b> A 40 cm cone (about 18 cm across at the ground, 2.5 cm at the top, measured from video). The riders in the simulator do not touch it: when the line would lead to a touch, the rider turns less and loses time. The gap is measured from the outline of the bike with its rider: the handlebar ends at any height, and the rear of the bike (seat, side panels), the footpeg with the boot, the knee and the elbow below the tip of the cone. In the lean-out position the rider sits above the bike, so the elbow does not stick out past the handlebar and the knee stays against the tank, but the bike, leaned deeper, reaches further with its rear. The cone margin is fixed for each bike, body position and seat position; the “Cone clearance” row shows how much was actually left.</p>
+      <p class="note" id="teleNote"></p>
+      <p class="note"><b>G-forces (G).</b> The dot is the acceleration of the bike right now: up is throttle, down is braking, sideways is cornering. The tail is the last 1.5 s. The solid line is the limit of the motorcycle, not a circle: downwards, braking up to a stoppie (the rear lifts), and while leaned over as much as the unloaded rear can hold; upwards, throttle up to a wheelie and to the engine power at the current speed, and while leaned over as much as the unloaded front can hold. The fastest way round is along this line. The dashed circles are 0.5 g and 1 g.</p>
+      <p class="note"><b>Gas and brakes.</b> The bars in the bottom right corner of the course: gas, front brake (front) and rear brake (rear), from 0 to 100%. In the planner they show the rider. In the side view “travel” is the compression of the fork (front) and of the rear suspension (rear) in millimetres; the tick marks the static sag.</p>
+      <p class="note"><b>Figure eights.</b> A figure eight ends when the bike passes in front of the box behind the near cone. The first one includes the standing start, the last one the return to the gate.</p>
+      <p class="note"><b>Body position.</b> <span id="posNote"></span> <b>Seat position.</b> <span id="seatNote"></span></p>
+      <p class="note"><b>Cone sides.</b> The <b style="color:var(--coneN)">blue</b> (near) cone always stays on the rider's left, the <b style="color:var(--coneF)">red</b> (far) one on the right. From the start the rider passes the blue cone on the left and rides the diagonal to the red one, which is rounded to the right. A cone on the wrong side means disqualification.</p>
+      <p class="note"><b>Course.</b> 40 cm cones 12 m apart. A 3 × 2 m box with a single start and finish gate stands 3 m behind the near cone. Five figure eights. There are no cone touches in the simulator: whoever would touch a cone turns less and loses time.</p>
+    </div>
+  </section>
+
+  <details>
+    <summary>How to ride the GP8: phases S1–S3 and A–H</summary>
+    <canvas id="refc" style="margin-top:12px" aria-label="The A–H phase pattern: speed, lean, steering angle, brakes and throttle in one loop"></canvas>
+    <ul class="phases">
+      <li><b>S1 · A</b> You start to turn. The handlebar closes towards the inside quickly but under control; you release the front brake slowly.</li>
+      <li><b>S1 · B</b> The rear brake comes in, smoothly. You add lean by countersteering.</li>
+      <li><b>S1 · C</b> Front brake released, a little more rear. Quickly to full lock without standing the bike up. Your head is already turned towards the entry to the other cone.</li>
+      <li><b>S2 · D</b> Full lock. The rear brake tightens the radius; you can pulse it. Throttle slightly cracked open, speed controlled with the rear brake.</li>
+      <li><b>S3 · E</b> You open the throttle quickly but smoothly, still leaned over. You release the rear brake.</li>
+      <li><b>S3 · F</b> You aim at the entry to the other cone and flick the bike over quickly.</li>
+      <li><b>S3 · G</b> You close the throttle and start braking with the front.</li>
+      <li><b>S3 · H</b> You aim at the entry point and lean the bike in on the front brake.</li>
+    </ul>
+  </details>
+
+  <details>
+    <summary>For the curious: how the simulator works</summary>
+    <div class="learn">
+      <div><h3>Lean and radius</h3><p class="f">R = v² / (g · tan φ)</p><p>At the same lean, slower means tighter. That is why braking while leaned over tightens the turn, while throttle opens it and stands the bike up. You do not draw the line: it follows from where you start to lean in and how much you brake while doing so.</p></div>
+      <div><h3>Full steering lock</h3><p class="f">R ≈ L · cos φ<sub>bike</sub> / tan(δ · cos ε)</p><p>L is the wheelbase, δ the maximum steering angle, ε the rake. At full lock the radius depends only on the lean of the bike, and the lean on the speed. A bike that is too slow and leaned too far falls to the inside unless you add throttle.</p></div>
+      <div><h3>Rear brake in the rotation</h3><p>The rear brakes without taking grip away from the front. As the front brake comes off during lean-in, the rear takes over the braking: hard at first, then less and less, and it is released a moment after getting on the gas. The turn tightens because the bike slows down (at the same lean, slower is tighter), not because of a slide: a rear tyre beyond its grip limit slides but does not rotate the bike into the turn, so a slide does not shorten the run. A locked rear brakes less, and a long slide while leaned over ends in a crash. The rear brake caliper sits on the swingarm, so rear braking pulls the rear down (squat). Throttle added against a held brake tensions the chain, but the bike does not accelerate, so the front is not unloaded as it is on throttle alone, and the rear keeps squatting. Only releasing the brake lets the bike accelerate: weight moves to the rear, the fork extends and the rear rises.</p></div>
+      <div><h3>The grip circle of each tyre</h3><p class="f">√(F<sub>long</sub>² + F<sub>lat</sub>²) ≤ μ · N</p><p>The front carries the braking and its share of the side force. Braking loads the front and unloads the rear, but not at once: the fork takes about 0.15 s to compress. So apply the front brake smoothly and release it as the lean grows (A–C). Hard front braking while leaned over easily throws out the unloaded rear.</p></div>
+      <div><h3>Suspension and geometry</h3><p class="f">trail = (r · sin ε − offset) / cos ε</p><p>r is the wheel radius, ε the rake, and offset is how far the wheel axle sits ahead of the steering axis. The front brake loads the front, and the braking force along the fork legs compresses the fork further. The bike pitches forward: the rake gets steeper, the trail and the wheelbase get shorter. The bike leans in faster but is less stable. At full lock it then turns tighter at small lean and wider at deep lean: when leaned over, the wheel steers more relative to the road the more the steering head is laid back. Throttle does the opposite: the front loses load and the fork extends, the more so the harder the acceleration; the steering head lays back and the trail grows. That is why the rider moves the body forward on the gas: it loads the front (the fork extends less, wheelies come later). A brake released suddenly lets the fork rebound and the bike runs wider. The rear depends on the swingarm: drive at the wheel lifts it, a tensioned chain above the swingarm pivot pulls it down, and under rear braking the caliper on the swingarm pulls the rear down (the “Rear” column in the bike parameters). The side view shows this live; the pale outline is the bike at static sag (assumed to be 30% of travel).</p></div>
+      <div><h3>Low-end torque</h3><p>Every bike has a different reserve of torque at low speed. The Sur-Ron pulls from zero, the CBR600 is weak at the bottom. With a weak low end keep a wider line and a higher speed in the loop; with a strong one you can ride straighter and tighter.</p></div>
+      <div><h3>Body position</h3><p>The tyre feels only the combined lean, so body position adds no grip. What it changes is the lean of the bike itself. Lean in: the bike stays more upright, with more ground clearance but a wider full-lock turn and slower transitions. Lean out: a tighter full-lock turn and quick transitions, but ground clearance runs out sooner.</p></div>
+      <div><h3>The 40 cm cone</h3><p>A leaned bike and its rider hang over the cone: the deeper the lean, the further from the cone the tyre track has to run. The simulator checks the gap between the cone and the outline: the handlebar ends, the rear of the bike, the footpeg, the knee and the elbow.</p></div>
+    </div>
+  </details>
+
+  <details>
+    <summary>Bike parameters</summary>
+    <div class="scroll" style="margin-top:10px"><table class="cmp" id="params"></table></div>
+    <p class="note">Mass without the rider; the rider weighs 80 kg. CoG is the height of the centre of gravity with the rider, “Front” is the share of mass on the front wheel. “Low end” is the fraction of full acceleration available at near-zero speed. Max lean is the ground clearance limit, and roll rate is the maximum roll speed in the neutral body position. Travel is the full suspension travel; fork dive at 1 g tells how far the fork compresses beyond static sag when braking with the front at 1 g (weight transfer together with the braking force along the fork legs, up to the end of travel); trail is given at static sag, 30% of travel. “Rear” tells how far the rear suspension compresses beyond static sag (minus: it extends) with the rear brake fully applied, with the throttle that cancels that brake during the overlap (the speed holds), and with the throttle alone at the same drive force: the rear brake caliper on the swingarm pulls the rear down, drive at the wheel lifts it, and a tensioned chain above the swingarm pivot pulls it down.</p>
+  </details>
+
+  <footer class="credit">
+    <p>SimGP8 © 2026 Maciej Kasprzyk · Instagram <a href="https://www.instagram.com/cas8pl/" target="_blank" rel="noopener">@cas8pl</a></p>
+    <p>Free software under the <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener">GNU GPL</a>, version 3 or later: you may redistribute and modify it under the terms of that licence. No warranty of any kind. Source code: <a href="https://github.com/casPL/simgp8" target="_blank" rel="noopener">github.com/casPL/simgp8</a></p>
+  </footer>
+
+</div>
