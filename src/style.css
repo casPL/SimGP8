@@ -68,8 +68,8 @@ button { font: inherit; color: inherit; }
 .seg.mode { min-width: 220px; }
 .seg.mode button { font-family: var(--f-display); font-size: 15px; padding: 6px 12px; white-space: nowrap; }
 
-/* Dashboard grid: track, plan, results, telemetry, views */
-.dash { display: grid; gap: 10px; min-width: 0; grid-template-columns: minmax(0, 1fr); grid-template-areas: "trk" "sid" "sts" "viw" "tel"; }
+/* Dashboard grid: track, views, plan, results, telemetry */
+.dash { display: grid; gap: 10px; min-width: 0; grid-template-columns: minmax(0, 1fr); grid-template-areas: "trk" "viw" "sid" "sts" "tel"; }
 .pane { background: var(--panel); border: 1px solid var(--rule); border-radius: 6px; padding: 10px 12px; display: flex; flex-direction: column; gap: 8px; min-width: 0; min-height: 0; }
 .pTrack { grid-area: trk; display: flex; flex-direction: column; gap: 8px; min-width: 0; min-height: 0; }
 .pSide { grid-area: sid; }
@@ -185,7 +185,7 @@ details summary { cursor: pointer; font-family: var(--f-display); font-size: 18p
 }
 
 @media (min-width: 760px) {
-  .dash { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "trk trk" "sid sts" "viw viw" "tel tel"; }
+  .dash { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); grid-template-areas: "trk trk" "viw viw" "sid sts" "tel tel"; }
   .views { grid-template-columns: minmax(0, .95fr) minmax(0, 1.25fr) minmax(0, .9fr); }
   .views .cvbox { height: 220px; }
   #sideBox { grid-column: auto; }
@@ -195,7 +195,7 @@ details summary { cursor: pointer; font-family: var(--f-display); font-size: 18p
 @media (min-width: 1180px) and (min-height: 620px) {
   body { padding-block: 8px 24px; }
   .screen { height: calc(100vh - 16px); height: calc(100dvh - 16px); }
-  .dash { flex: 1 1 0; min-height: 0; grid-template-columns: minmax(0, 1fr) clamp(280px, 21vw, 380px) clamp(320px, 24.5vw, 410px); grid-template-rows: minmax(0, 1fr) minmax(0, .74fr); grid-template-areas: "trk sid sts" "tel viw viw"; }
+  .dash { flex: 1 1 0; min-height: 0; grid-template-columns: minmax(0, 1fr) clamp(280px, 21vw, 380px) clamp(320px, 24.5vw, 410px); grid-template-rows: minmax(0, 1fr) minmax(0, .74fr); grid-template-areas: "trk sid sts" "viw tel tel"; }
   .pTrack .trackbox { flex: 1 1 0; }
   .pSide, .pStats { overflow: auto; scrollbar-width: thin; }
   .pTele .cvbox { flex: 1 1 0; }
