@@ -217,6 +217,8 @@ function ggSample(p, pb, who) {
     : [{ tr: null, p, col: null }];
 }
 const GG_T = 1.5;
+// A warm track tyre (a Supercorsa SC1, for one) holds about 1.5 g: a reference ring on the chart.
+const TRACK_TYRE_G = 1.5;
 // A tyre passes on at most its grip: asked for more, it slides. A wheel left with almost no load (the
 // rear just after hard front braking, the front at a wheelie) slides at the slightest force, so its
 // share says nothing and the other wheel's is shown.
@@ -254,7 +256,7 @@ function drawGG(p, pb, who) {
     }
   }
   const src = ggSample(p, pb, who);
-  const gm = Math.max(S.mu, 1) * 1.06;
+  const gm = Math.max(S.mu, TRACK_TYRE_G) * 1.06;
   const top = 24;
   const bot = H - (src.length > 1 ? 24 : 36);
   const c0 = W / 2;
@@ -271,7 +273,7 @@ function drawGG(p, pb, who) {
   q.lineTo(c0, c1 + R);
   q.stroke();
   q.setLineDash([3, 4]);
-  for (const g of [0.5, 1]) {
+  for (const g of [0.5, 1, TRACK_TYRE_G]) {
     q.beginPath();
     q.arc(c0, c1, g * k, 0, 7);
     q.stroke();
@@ -326,6 +328,8 @@ function drawGG(p, pb, who) {
   q.fillStyle = COL.dim;
   q.textAlign = 'left';
   q.fillText('1 g', c0 + k * 0.71 + 3, c1 - k * 0.71 - 2);
+  const d45 = TRACK_TYRE_G * 0.71;
+  q.fillText(localNum(TRACK_TYRE_G) + ' g', c0 + k * d45 + 3, c1 - k * d45 - 2);
   q.textAlign = 'center';
   q.fillText(i18n`gaz`, c0, c1 - R + 11);
   q.fillText(i18n`hamowanie`, c0, c1 + R - 4);
