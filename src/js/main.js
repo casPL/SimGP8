@@ -24,9 +24,6 @@ function setMode(on, force) {
     }
   }
   planner.on = on;
-  try {
-    localStorage.setItem('simgp8.mode', on ? 'plan' : 'demo');
-  } catch (e) {}
   $('cmpBtn').hidden = !on;
   $('demoBtn').hidden = on;
   $('planner').hidden = !on;
@@ -245,15 +242,8 @@ sizeTele();
 makeAsphalt();
 settingsChanged();
 drawRef();
-{
-  let md = 'demo';
-  try {
-    if (localStorage.getItem('simgp8.mode') === 'plan') md = 'plan';
-  } catch (e) {}
-  if (/^#(pokaz|demo)$/.test(location.hash)) md = 'demo';
-  else if (/^#(planer|planner)$/.test(location.hash)) md = 'plan';
-  setMode(md === 'plan', true);
-}
+// The coach's run is shown first; #planer (or #planner) opens the planner.
+setMode(/^#(planer|planner)$/.test(location.hash), true);
 if (window.ResizeObserver) {
   let rq = 0;
   const ro = new ResizeObserver(() => {

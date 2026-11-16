@@ -5921,6 +5921,13 @@ const TRACK_TYRE_G = 1.5;
 // rear just after hard front braking, the front at a wheelie) slides at the slightest force, so its
 // share says nothing and the other wheel's is shown.
 const LIGHT_WHEEL = 0.25;
+// The yaw-inertia shift grows as 1/v and 1/v², so at walking pace the outline turns into a star of
+// spikes that says nothing; below 2.5 m/s (9 km/h) it is drawn as at that speed.
+const GG_VMIN = 2.5;
+// A short box (the planner on a laptop screen) keeps the plot as large as it can: the reading moves to
+// the corner below the circle and the labels inside it are left out until the circle is large enough.
+const GG_COMPACT_H = 170;
+const GG_LABEL_R = 56;
 function gripState(p) {
   let f = p.useF || 0;
   let r = p.useR || 0;
@@ -5955,11 +5962,13 @@ function drawGG(p, pb, who) {
   }
   const src = ggSample(p, pb, who);
   const gm = Math.max(S.mu, TRACK_TYRE_G) * 1.06;
-  const top = 24;
-  const bot = H - (src.length > 1 ? 24 : 36);
+  const compact = H < GG_COMPACT_H;
+  const top = compact ? 20 : 24;
+  const bot = H - (compact ? 4 : src.length > 1 ? 24 : 36);
   const c0 = W / 2;
   const c1 = (top + bot) / 2;
   const R = Math.max(14, Math.min(W / 2 - 12, (bot - top) / 2));
+  const labels = R >= GG_LABEL_R;
   const k = R / gm;
   const P = (ax, al) => [c0 - (al / G) * k, c1 - (ax / G) * k];
   q.strokeStyle = COL.rule;
@@ -5979,7 +5988,7 @@ function drawGG(p, pb, who) {
   q.setLineDash([]);
   {
     const sp = src[0] && src[0].p;
-    const vv = Math.max(1, (sp && sp.v) || 1);
+    const vv = Math.max(GG_VMIN, (sp && sp.v) || 0);
     const laM = S.mu * G;
     const n = 40;
     const E = [];
@@ -6014,24 +6023,26 @@ function drawGG(p, pb, who) {
     q.closePath();
     q.stroke();
   }
-  q.font = '10px ' + FONT_MONO;
-  const muText = localNum(S.mu) + ' g';
-  const muX = c0 + S.mu * k;
-  q.fillStyle = COL.muted;
-  if (muX + 4 + q.measureText(muText).width <= W - 4) q.fillText(muText, muX + 4, c1 + 3);
-  else {
-    q.textAlign = 'right';
-    q.fillText(muText, muX - 6, c1 - 4);
+  if (labels) {
+    q.font = '10px ' + FONT_MONO;
+    const muText = localNum(S.mu) + ' g';
+    const muX = c0 + S.mu * k;
+    q.fillStyle = COL.muted;
+    if (muX + 4 + q.measureText(muText).width <= W - 4) q.fillText(muText, muX + 4, c1 + 3);
+    else {
+      q.textAlign = 'right';
+      q.fillText(muText, muX - 6, c1 - 4);
+    }
+    q.fillStyle = COL.dim;
+    q.textAlign = 'left';
+    q.fillText('1 g', c0 + k * 0.71 + 3, c1 - k * 0.71 - 2);
+    const d45 = TRACK_TYRE_G * 0.71;
+    q.fillText(localNum(TRACK_TYRE_G) + ' g', c0 + k * d45 + 3, c1 - k * d45 - 2);
+    q.textAlign = 'center';
+    q.fillText(i18n`gaz`, c0, c1 - R + 11);
+    q.fillText(i18n`hamowanie`, c0, c1 + R - 4);
+    q.textAlign = 'left';
   }
-  q.fillStyle = COL.dim;
-  q.textAlign = 'left';
-  q.fillText('1 g', c0 + k * 0.71 + 3, c1 - k * 0.71 - 2);
-  const d45 = TRACK_TYRE_G * 0.71;
-  q.fillText(localNum(TRACK_TYRE_G) + ' g', c0 + k * d45 + 3, c1 - k * d45 - 2);
-  q.textAlign = 'center';
-  q.fillText(i18n`gaz`, c0, c1 - R + 11);
-  q.fillText(i18n`hamowanie`, c0, c1 + R - 4);
-  q.textAlign = 'left';
   for (const s of src) {
     if (s.tr && s.tr.length) {
       const T = s.tr;
@@ -6083,16 +6094,23 @@ function drawGG(p, pb, who) {
       q.stroke();
     }
   }
-  q.font = '12px ' + FONT_MONO;
+  q.font = (compact ? '11px ' : '12px ') + FONT_MONO;
   const gT = (s) => fmtNum(Math.hypot(s.p.ax || 0, s.p.al || 0) / G, 2) + ' g';
+  const xB = compact ? 6 : 8;
+  const yB = compact ? H - 5 : H - 8;
   if (src.length > 1) {
     q.fillStyle = COL.chalk;
     q.textAlign = 'left';
-    q.fillText(gT(src[0]), 8, H - 8);
+    q.fillText(gT(src[0]), xB, yB);
     q.fillStyle = COL.ok;
     q.textAlign = 'right';
-    q.fillText(gT(src[1]), W - 8, H - 8);
+    q.fillText(gT(src[1]), W - xB, yB);
     q.textAlign = 'left';
+  } else if (compact) {
+    // Grip use and its note stay in the table under the views.
+    const s = src[0];
+    q.fillStyle = s.col || COL.chalk;
+    q.fillText(gT(s), xB, yB);
   } else {
     const s = src[0];
     const grip = gripState(s.p);
@@ -6379,9 +6397,6 @@ function setMode(on, force) {
     }
   }
   planner.on = on;
-  try {
-    localStorage.setItem('simgp8.mode', on ? 'plan' : 'demo');
-  } catch (e) {}
   $('cmpBtn').hidden = !on;
   $('demoBtn').hidden = on;
   $('planner').hidden = !on;
@@ -6600,15 +6615,8 @@ sizeTele();
 makeAsphalt();
 settingsChanged();
 drawRef();
-{
-  let md = 'demo';
-  try {
-    if (localStorage.getItem('simgp8.mode') === 'plan') md = 'plan';
-  } catch (e) {}
-  if (/^#(pokaz|demo)$/.test(location.hash)) md = 'demo';
-  else if (/^#(planer|planner)$/.test(location.hash)) md = 'plan';
-  setMode(md === 'plan', true);
-}
+// The coach's run is shown first; #planer (or #planner) opens the planner.
+setMode(/^#(planer|planner)$/.test(location.hash), true);
 if (window.ResizeObserver) {
   let rq = 0;
   const ro = new ResizeObserver(() => {
