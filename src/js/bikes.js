@@ -71,7 +71,7 @@ const STANCE = {
 };
 const STANCE_NOTE = {
   pos: i18n`Ciało do środka łuku. Motocykl bardziej wyprostowany: więcej prześwitu, ale szerszy pełny skręt i wolniejsze przekładanie.`,
-  neu: i18n`Ciało w osi motocykla. Punkt odniesienia.`,
+  neu: i18n`Ciało w osi motocykla, zalecane na GP8. Punkt odniesienia.`,
   neg: i18n`Ciało nad motocyklem, motocykl złożony pod Tobą (styl enduro). Ciaśniejszy pełny skręt i szybkie przekładanie, ale wcześniej kończy się prześwit.`,
 };
 const SEAT_NOTE = {
