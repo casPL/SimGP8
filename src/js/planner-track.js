@@ -216,6 +216,7 @@ const REASON_SHORT = {
   out: i18n`wyjazd poza plac`,
   time: i18n`za długo`,
   missed: i18n`minął metę`,
+  stop: i18n`nie stanął w boxie`,
 };
 const shortReason = (x) => (x.end === 'crash' ? i18n`gleba` : REASON_SHORT[x.cause] || '');
 function drawPlanHud(r, t) {

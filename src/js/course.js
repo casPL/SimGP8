@@ -2,7 +2,7 @@
 // Copyright (C) 2026 Maciej Kasprzyk
 //
 // Course rules and timing: start through the gate, the cone axis crossed in order and on the
-// right side, five figure eights, finish through the gate.
+// right side, five figure eights, finish through the gate and a stop in the box behind it.
 
 const CONE_NAME = { N: i18n`Niebieski pachołek (bliższy)`, F: i18n`Czerwony pachołek (dalszy)` };
 class Course {
@@ -16,6 +16,7 @@ class Course {
     this.near = [false, false];
     this.passedN = false;
     this.done = false;
+    this.stopped = false;
     this.err = null;
     this.dsq = false;
     this.tEnd = null;
@@ -41,6 +42,7 @@ class Course {
       }
       return;
     }
+    if (this.done) return;
     if (!this.passedN && pc[0] < -CONE_X && c[0] >= -CONE_X) {
       const u = (-CONE_X - pc[0]) / (c[0] - pc[0]);
       const y = pc[1] + (c[1] - pc[1]) * u;
@@ -99,6 +101,16 @@ class Course {
       this.splits.push(this.tEnd);
       this.done = true;
     }
+  }
+  // The time is taken at the line, but the run is complete only once the bike stands with the front
+  // wheel f still inside the box (sideways with the same tolerance as at the line).
+  stopIn(f, v) {
+    if (f[0] < GATE_X - BOX_LEN || Math.abs(f[1]) > 1.15) {
+      this.err = i18n`Nie zatrzymał się w boxie za metą: przednie koło wyjechało z boxu, zanim motocykl stanął.`;
+      this.done = false;
+      this.tEnd = null;
+      this.splits.pop();
+    } else if (v < 0.01) this.stopped = true;
   }
 }
 // Gap from the outline to each cone (sim.cl, closest part sim.cn) and touches.

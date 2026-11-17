@@ -142,8 +142,17 @@ function simulateRun(S, opt, keep) {
       }
     }
     if (c.done) {
-      end = 'done';
-      break;
+      c.stopIn(sim.front(), sim.v);
+      if (c.err) {
+        end = 'err';
+        cause = 'stop';
+        why = c.err;
+        break;
+      }
+      if (c.stopped) {
+        end = 'done';
+        break;
+      }
     }
     const [qx, qy] = sim.mid();
     if (qx < WORLD_BOX.x0 + 0.75 || qx > WORLD_BOX.x1 - 0.75 || qy < WORLD_BOX.y0 + 0.75 || qy > WORLD_BOX.y1 - 0.75) {
@@ -158,7 +167,7 @@ function simulateRun(S, opt, keep) {
       why = i18n`Za długo.`;
       break;
     }
-    if (bot.i >= bot.n - 3 && sim.v < 0.5) {
+    if (!c.done && bot.i >= bot.n - 3 && sim.v < 0.5) {
       end = 'err';
       cause = 'missed';
       why = i18n`Minął bramkę mety.`;

@@ -411,9 +411,11 @@ function drawCanvasHud() {
   trackCtx.textBaseline = 'top';
   const hv = !r && hover && last ? hover.t : null;
   const t = r
-    ? c.started
-      ? r.sim.t - c.t0
-      : 0
+    ? c.tEnd != null
+      ? c.tEnd
+      : c.started
+        ? r.sim.t - c.t0
+        : 0
     : hv != null
       ? hv
       : last && last.course.tEnd != null

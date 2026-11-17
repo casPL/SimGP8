@@ -150,6 +150,11 @@ function buildSegments(r) {
     r.segs.push(sg);
   }
   r.segs.forEach((sg) => (sg.dt = sg.t1 - sg.t0));
+  // The finish segment runs on to the stop in the box; its time ends at the line.
+  if (c.done) {
+    const sg = r.segs[r.segs.length - 1];
+    sg.dt = c.tEnd - sg.t0;
+  }
 }
 function loopPhases(tr, t0, t1) {
   const P = tr.filter((p) => p.rt >= t0 && p.rt <= t1);

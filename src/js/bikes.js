@@ -24,7 +24,7 @@ const BIKES = [
   {
     id: 'ebike', name: 'Sur-Ron SM 17"', sub: 'Ultra Bee, 21/18 kW', tyre: 'supermoto 17"',
     m: 85,  P: 21,  P2: 18, Pt: 10, aT: 8.4, b0: 1.0,  vb: 1, eb: 0.3,
-    L: 1.38,  lock: 45, rake: 26, h: 0.72, ff: 0.48, clear: 58, mu: 1.15,
+    L: 1.38,  lock: 45, rake: 26, h: 0.72, ff: 0.48, clear: 58, mu: 1.18,
     bf: 10,  br: 3.0, roll: 300,
     ft: 240, fd: 120, fz: 1.8, rw: 0.296, trail: 0.1,
     rt: 240, rd: 50, rr: 0.3,   hp: 0.42, ls: 0.57,  rf: 0.0285, rs: 0.115,  xf: 0.06, yf: 0.01,

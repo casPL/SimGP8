@@ -44,6 +44,17 @@ const sideOfCone = (q, p) => {
   return (p[0] - c[0]) * o[0] + (p[1] - c[1]) * o[1];
 };
 const FINISH_GATE = [GATE_X, 0.9];
+// The bike has to stop in the box behind the finish line. The rider brakes at share of the upright
+// braking limit from the point where a ride ahead shows the front wheel stopping gap metres short of
+// the far end of the box (the brake takes full force only once the front has loaded up), and harder
+// if the bike would still overrun that point.
+const STOP = { share: 0.95, gap: 0.3 };
+// A copy of the simulation to ride ahead in.
+const cloneSim = (s) => {
+  const c = Object.assign(Object.create(Object.getPrototypeOf(s)), s);
+  c.D = Object.assign(Object.create(Object.getPrototypeOf(s.D)), s.D);
+  return c;
+};
 // Rotation from heading h to heading d in direction sg, in [0, 2π); signedRotation: in (−π/2, 3π/2].
 const rotationTo = (h, d, sg) => {
   let a = sg * (d - h);
@@ -201,6 +212,8 @@ class AutoRider {
       pl: null,
       approach: null,
       o: { thr: 0, fb: 0, rb: 0, lean: 0 },
+      stop: false,
+      chk: Infinity,
       done: false,
     };
   }
@@ -211,11 +224,6 @@ class AutoRider {
   // After the last loop: the way over the near cone to the gate with the best predicted time.
   pickFinishPath(sim, st, mk) {
     const C = CONES[0];
-    const cl = (s) => {
-      const c = Object.assign(Object.create(Object.getPrototypeOf(s)), s);
-      c.D = Object.assign(Object.create(Object.getPrototypeOf(s.D)), s.D);
-      return c;
-    };
     let best = null;
     let bs = -1e9;
     let bt = 1e9;
@@ -224,12 +232,12 @@ class AutoRider {
     for (const fy of ys)
       for (const gy of gs) {
         const pl = mk([-CONE_X, fy], [GATE_X, gy]);
-        const s2 = cl(sim);
+        const s2 = cloneSim(sim);
         const st2 = Object.assign({}, st, { fpl: pl, o: Object.assign({}, st.o), fsim: true, done: false });
         let m = 9;
         let yG = null;
         const t0 = s2.t;
-        for (let j = 0; j < 600; j++) {
+        for (let j = 0; j < 900; j++) {
           const pf = s2.front();
           s2.step(this.decide(s2, st2, null), DT);
           if (s2.crash) break;
@@ -255,6 +263,13 @@ class AutoRider {
         }
       }
     return best || mk(this.finishAim, FINISH_GATE);
+  }
+  // Where the front wheel comes to rest if braking for the box starts now.
+  predictStop(sim, st) {
+    const s2 = cloneSim(sim);
+    const st2 = Object.assign({}, st, { o: Object.assign({}, st.o), stop: true, fix: true, fsim: true });
+    for (let j = 0; j < 720 && s2.v > 0.01 && !s2.crash; j++) s2.step(this.decide(s2, st2, null), DT);
+    return s2.front()[0];
   }
   // Lean that steers for the point ld seconds ahead on path pts.
   leanToward(sim, pts, ld) {
@@ -533,7 +548,25 @@ class AutoRider {
       lean = this.leanToward(sim, st.fpl, opt.finL);
       thr = gas(maxDriveAccel(S, D, G * Math.tan(Math.abs(lean)), eta, v, sim.t));
       bf = 1;
-      if (sim.front()[0] < GATE_X - 0.6) st.done = true;
+      const f = sim.front();
+      const aM = maxBrakeDecel(S, D, 0, eta);
+      const aS = STOP.share * aM;
+      const xS = GATE_X - BOX_LEN + STOP.gap;
+      const dS = Math.max(0.05, f[0] - xS);
+      if (!st.stop) {
+        if (st.fsim) st.stop = v * v >= 2 * aS * dS;
+        else if (f[0] <= st.chk) {
+          const e = this.predictStop(sim, st) - xS;
+          if (e <= 2 * v * DT) st.stop = true;
+          else st.chk = f[0] - e / 3;
+        }
+      }
+      if (st.stop) {
+        thr = 0;
+        bf = 0;
+        [fb, rb] = brk(st.fix ? aS : clamp((v * v) / (2 * dS), aS, aM));
+      }
+      if (f[0] < GATE_X && (v < 0.01 || f[0] < GATE_X - BOX_LEN - 2)) st.done = true;
     } else {
       const bq = opt.plan ? opt.brk[q] : null;
       const C = turnCone(q);

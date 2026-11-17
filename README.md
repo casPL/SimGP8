@@ -1,8 +1,9 @@
 # SimGP8
 
-A browser simulator of the GP8 motogymkhana layout: two cones 12 m apart, a start box behind the near
-cone, five figure eights. Watch the coach ride it, or plan your own run by setting the braking,
-turn-in and throttle points, and compare it with the coach loop by loop.
+A browser simulator of the GP8 motogymkhana layout: two cones 12 m apart, a start and finish box behind
+the near cone (the bike has to stop in it at the end), five figure eights. Watch the coach ride it, or
+plan your own run by setting the braking, turn-in and throttle points, and compare it with the coach
+loop by loop.
 
 [Opis po polsku](#po-polsku) jest niżej.
 
@@ -75,9 +76,10 @@ Maciej Kasprzyk, Instagram [@cas8pl](https://www.instagram.com/cas8pl/)
 
 ## Po polsku
 
-SimGP8 to symulator przejazdu GP8 w motogymkhanie: dwa pachołki 12 m od siebie, box startowy za
-bliższym pachołkiem, pięć ósemek. Można obejrzeć przejazd trenera albo zaplanować własny, ustawiając
-punkty hamowania, składania i gazu, i porównać go z trenerem pętla po pętli.
+SimGP8 to symulator przejazdu GP8 w motogymkhanie: dwa pachołki 12 m od siebie, box startu i mety za
+bliższym pachołkiem (na koniec trzeba się w nim zatrzymać), pięć ósemek. Można obejrzeć przejazd
+trenera albo zaplanować własny, ustawiając punkty hamowania, składania i gazu, i porównać go
+z trenerem pętla po pętli.
 
 Symulator to jeden plik HTML, wystarczy przeglądarka: pobierz
 [dist/simgp8-pl.html](dist/simgp8-pl.html) (albo angielski [dist/simgp8-en.html](dist/simgp8-en.html))

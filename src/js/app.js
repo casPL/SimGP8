@@ -174,9 +174,13 @@ function stepRun() {
     return;
   }
   if (c.done) {
-    run.end = 'done';
-    record(true);
-    return;
+    c.stopIn(sim.front(), sim.v);
+    if (c.err || c.stopped) {
+      run.end = c.err ? 'err' : 'done';
+      run.why = c.err;
+      record(true);
+      return;
+    }
   }
   const [qx, qy] = sim.mid();
   if (qx < WORLD_BOX.x0 - 0.5 || qx > WORLD_BOX.x1 + 0.5 || qy < WORLD_BOX.y0 - 0.5 || qy > WORLD_BOX.y1 + 0.5) {
