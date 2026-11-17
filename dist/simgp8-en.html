@@ -304,7 +304,7 @@ details summary { cursor: pointer; font-family: var(--f-display); font-size: 18p
         </div>
         <div class="demoInfo" id="demoInfo" hidden>
           <h3>Coach demo</h3>
-          <p class="note">The automatic rider's run is computed from the motorcycle's physics, at 93% of the tyre grip (nobody rides right at the limit). Full throttle between the loops, and before a loop braking almost only with the front: the front gets as much as the tyre can take, the rear adds a little, gently enough not to lock. In the loop it tightens the line with the rear brake, which now and then makes the rear slide slightly. Leaning in, the rider eases off the front in step with the lean, so the g-forces follow the envelope of the g-g diagram for a constant-radius turn (dashed line; solid line: during lean-in and pick-up, when yaw inertia shifts the side force between the wheels). The handlebar moves one way: after a short countersteer it turns in almost to full lock, and on exit it unwinds smoothly while the throttle builds as far as the lean allows. Press <b>▶ Demo</b> or Enter. After the run you can replay it below the course, also in slow motion.</p>
+          <p class="note">The automatic rider's run is computed from the motorcycle's physics, at 93% of the tyre grip (nobody rides right at the limit). Full throttle between the loops, and before a loop braking almost only with the front, upright usually at 65–90% of the hardest possible braking, while the rear adds a little, gently enough not to lock. The rider starts leaning in while still braking and brakes only as hard as leaves the tyres grip for the lean coming next: easing off the front in step with the lean, so the g-forces follow the envelope of the g-g diagram for a constant-radius turn (dashed line; solid line: during lean-in and pick-up, when yaw inertia shifts the side force between the wheels). In the loop it tightens the line with the rear brake, which now and then makes the rear slide slightly. The handlebar moves one way: after a short countersteer it turns in almost to full lock, and on exit it unwinds smoothly while the throttle builds as far as the lean allows. Press <b>▶ Demo</b> or Enter. After the run you can replay it below the course, also in slow motion.</p>
           <p class="note">On the chart the background splits the loop into phases: S1 entry (A–C), S2 rotation at full lock (D), S3 exit, transition and braking for the next cone (E–H). The wide pale line is the reference pattern.</p>
         </div>
       </section>
@@ -337,7 +337,7 @@ details summary { cursor: pointer; font-family: var(--f-display); font-size: 18p
     </div>
     <div class="panel notes">
       <h2>How to read the screen</h2>
-      <p class="note"><b>Plan points.</b> <b>B</b> braking: throttle up to B, front brake from B (full force after about 0.2 s; leaning in, the rider eases off the front and adds rear). <b>T</b> turn-in: here the rider starts to lay the bike down (a fast rider does it as early as the middle of the figure eight). The lean builds gradually (on the Ultra Bee from upright to 45° in about 0.35 s, heavy bikes more slowly), and the rider keeps braking while leaned over, so the turn tightens by itself. You can move T nearer or farther and wider or narrower. From T the rider leans in as far as the bike allows, but so that the outline clears the cone by the margin (from 5 mm), so a late or narrow T means a tighter turn: more braking is needed before it, otherwise the bike runs wide. <b>G</b> gas: here the rider opens the throttle. The more the bike is leaned at G, the wider it exits, and the later G is, the more abruptly the throttle can be opened. B and T are measured from the middle of the bike along the diagonal to the cone line, T sideways as the distance from the cone across the diagonal, and G as the rotation left before the exit onto the diagonal. You set the points at the red cone; at the blue cone the rider follows the same plan, mirrored. In the first loop (the right-hand one, straight after the start) the rider brakes and leans in like the coach, earlier than at B and T, because the run-up from the gate is longer and the approach comes from a different side; from the first left-hand loop on, braking starts at B, so a B that is too late shows from that loop on. The planner accepts only plans with which the rider completes a clean run (reaches the finish and stops in the box, does not ride into the gate with the box 3 m behind the blue cone and does not touch a cone) in 33 s at most: otherwise the point goes back to the nearest place that gives such a run. You choose the rider's body position and seat position in the planner; the coach rides in the same position and the same place. The default plan uses the coach's points for that body position and seat position; in some setups B and T are shifted by 0.1–0.8 m, because with the coach's points the rider lost time or did not reach the finish. The rear view, the side view and the g-forces show the rider; the “Now” table shows the rider and the coach.</p>
+      <p class="note"><b>Plan points.</b> <b>B</b> braking: throttle up to B, front brake from B (the coach's braking force after about 0.2 s; leaning in, the rider eases off the front and adds rear). <b>T</b> turn-in: here the rider starts to lay the bike down (a fast rider does it as early as the middle of the figure eight). The lean builds gradually (on the Ultra Bee from upright to 45° in about 0.35 s, heavy bikes more slowly), and the rider keeps braking while leaned over, so the turn tightens by itself. You can move T nearer or farther and wider or narrower. From T the rider leans in as far as the bike allows, but so that the outline clears the cone by the margin (from 5 mm), so a late or narrow T means a tighter turn: more braking is needed before it, otherwise the bike runs wide. <b>G</b> gas: here the rider opens the throttle. The more the bike is leaned at G, the wider it exits, and the later G is, the more abruptly the throttle can be opened. B and T are measured from the middle of the bike along the diagonal to the cone line, T sideways as the distance from the cone across the diagonal, and G as the rotation left before the exit onto the diagonal. You set the points at the red cone; at the blue cone the rider follows the same plan, mirrored. In the first loop (the right-hand one, straight after the start) the rider brakes and leans in like the coach, earlier than at B and T, because the run-up from the gate is longer and the approach comes from a different side; from the first left-hand loop on, braking starts at B, so a B that is too late shows from that loop on. The planner accepts only plans with which the rider completes a clean run (reaches the finish and stops in the box, does not ride into the gate with the box 3 m behind the blue cone and does not touch a cone) in 33 s at most: otherwise the point goes back to the nearest place that gives such a run. You choose the rider's body position and seat position in the planner; the coach rides in the same position and the same place. The default plan uses the coach's points for that body position and seat position; in some setups B and T are shifted by 0.1–0.8 m, because with the coach's points the rider lost time or did not reach the finish. The rear view, the side view and the g-forces show the rider; the “Now” table shows the rider and the coach.</p>
       <p class="note"><b>Cone.</b> A 40 cm cone (about 18 cm across at the ground, 2.5 cm at the top, measured from video). The riders in the simulator do not touch it: when the line would lead to a touch, the rider turns less and loses time. The gap is measured from the outline of the bike with its rider: the handlebar ends at any height, and the rear of the bike (seat, side panels), the footpeg with the boot, the knee and the elbow below the tip of the cone. In the lean-out position the rider sits above the bike, so the elbow does not stick out past the handlebar and the knee stays against the tank, but the bike, leaned deeper, reaches further with its rear. The cone margin is fixed for each bike, body position and seat position; the “Cone clearance” row shows how much was actually left.</p>
       <p class="note" id="teleNote"></p>
       <p class="note"><b>G-forces (G).</b> The dot is the acceleration of the bike right now: up is throttle, down is braking, sideways is cornering. The tail is the last 1.5 s. The solid line is the limit of the motorcycle, not a circle: downwards, braking up to a stoppie (the rear lifts), and while leaned over as much as the unloaded rear can hold; upwards, throttle up to a wheelie and to the engine power at the current speed, and while leaned over as much as the unloaded front can hold. The fastest way round is along this line. Sideways it reaches the tyre grip on the course, written next to it in g. The dashed circles are a scale: 0.5 g, 1 g and 1.5 g, which is what a warm track tyre such as the Supercorsa SC1 holds. The grip below the chart is the share of grip used by the tyre that works hardest. A tyre cannot give more than 100%: asked for more, it slides. A wheel with almost no load (the rear just after hard front braking, the front at a wheelie) slides at the slightest force, so then the other wheel counts.</p>
@@ -371,7 +371,7 @@ details summary { cursor: pointer; font-family: var(--f-display); font-size: 18p
       <div><h3>Lean and radius</h3><p class="f">R = v² / (g · tan φ)</p><p>At the same lean, slower means tighter. That is why braking while leaned over tightens the turn, while throttle opens it and stands the bike up. You do not draw the line: it follows from where you start to lean in and how much you brake while doing so.</p></div>
       <div><h3>Full steering lock</h3><p class="f">R ≈ L · cos φ<sub>bike</sub> / tan(δ · cos ε)</p><p>L is the wheelbase, δ the maximum steering angle, ε the rake. At full lock the radius depends only on the lean of the bike, and the lean on the speed. A bike that is too slow and leaned too far falls to the inside unless you add throttle.</p></div>
       <div><h3>Rear brake in the rotation</h3><p>The rear brakes without taking grip away from the front. As the front brake comes off during lean-in, the rear takes over the braking: hard at first, then less and less, and it is released a moment after getting on the gas. The turn tightens because the bike slows down (at the same lean, slower is tighter), not because of a slide: a rear tyre beyond its grip limit slides but does not rotate the bike into the turn, so a slide does not shorten the run. A locked rear brakes less, and a long slide while leaned over ends in a crash. The rear brake caliper sits on the swingarm, so rear braking pulls the rear down (squat). Throttle added against a held brake tensions the chain, but the bike does not accelerate, so the front is not unloaded as it is on throttle alone, and the rear keeps squatting. Only releasing the brake lets the bike accelerate: weight moves to the rear, the fork extends and the rear rises.</p></div>
-      <div><h3>The grip circle of each tyre</h3><p class="f">√(F<sub>long</sub>² + F<sub>lat</sub>²) ≤ μ · N</p><p>The front carries the braking and its share of the side force. Braking loads the front and unloads the rear, but not at once: the fork takes about 0.15 s to compress. So apply the front brake smoothly and release it as the lean grows (A–C). Hard front braking while leaned over easily throws out the unloaded rear.</p></div>
+      <div><h3>The grip circle of each tyre</h3><p class="f">√(F<sub>long</sub>² + F<sub>lat</sub>²) ≤ μ · N</p><p>The front carries the braking and its share of the side force. Braking loads the front and unloads the rear, but not at once: the fork takes about 0.15 s to compress. So apply the front brake smoothly and release it as the lean grows (A–C). Hard front braking while leaned over easily throws out the unloaded rear. An unloaded rear cannot carry a deeper lean either: braking at the stoppie limit, the bike will not lean in until you ease the front brake.</p></div>
       <div><h3>Suspension and geometry</h3><p class="f">trail = (r · sin ε − offset) / cos ε</p><p>r is the wheel radius, ε the rake, and offset is how far the wheel axle sits ahead of the steering axis. The front brake loads the front, and the braking force along the fork legs compresses the fork further. The bike pitches forward: the rake gets steeper, the trail and the wheelbase get shorter. The bike leans in faster but is less stable. At full lock it then turns tighter at small lean and wider at deep lean: when leaned over, the wheel steers more relative to the road the more the steering head is laid back. Throttle does the opposite: the front loses load and the fork extends, the more so the harder the acceleration; the steering head lays back and the trail grows. That is why the rider moves the body forward on the gas: it loads the front (the fork extends less, wheelies come later). A brake released suddenly lets the fork rebound and the bike runs wider. The rear depends on the swingarm: drive at the wheel lifts it, a tensioned chain above the swingarm pivot pulls it down, and under rear braking the caliper on the swingarm pulls the rear down (the “Rear” column in the bike parameters). The side view shows this live; the pale outline is the bike at static sag (assumed to be 30% of travel).</p></div>
       <div><h3>Low-end torque</h3><p>Every bike has a different reserve of torque at low speed. The Sur-Ron pulls from zero, the CBR600 is weak at the bottom. With a weak low end keep a wider line and a higher speed in the loop; with a strong one you can ride straighter and tighter.</p></div>
       <div><h3>Body position</h3><p>The tyre feels only the combined lean, so body position adds no grip. What it changes is the lean of the bike itself. Lean in: the bike stays more upright, with more ground clearance but a wider full-lock turn and slower transitions. Lean out: a tighter full-lock turn and quick transitions, but ground clearance runs out sooner.</p></div>
@@ -396,7 +396,7 @@ details summary { cursor: pointer; font-family: var(--f-display); font-size: 18p
 'use strict';
 
 const LANG = 'en';
-const DICT = {"ok. 150–190 cm³":"approx. 150–190 cc","klasa Honda CRF450 z kołami SM":"Honda CRF450 class on SM wheels","supermoto, miękkie":"supermoto, soft","sport 600, słaby dół, szlifowane odboje":"600 sport bike, weak low end, ground-down lock stops","sportowe":"sport","sport 1000, mocny dół, szlifowane odboje":"1000 sport bike, strong low end, ground-down lock stops","pozytywna":"lean in","pozytywnej":"lean-in","neutralna":"neutral","neutralnej":"neutral","negatywna":"lean out","negatywnej":"lean-out","Ciało do środka łuku. Motocykl bardziej wyprostowany: więcej prześwitu, ale szerszy pełny skręt i wolniejsze przekładanie.":"Body to the inside of the turn. The bike stays more upright: more ground clearance, but a wider full-lock turn and slower side-to-side transitions.","Ciało w osi motocykla, zalecane na GP8. Punkt odniesienia.":"Body in line with the bike, recommended for GP8. The reference point.","Ciało nad motocyklem, motocykl złożony pod Tobą (styl enduro). Ciaśniejszy pełny skręt i szybkie przekładanie, ale wcześniej kończy się prześwit.":"Body above the bike, the bike leaned under you (enduro style). A tighter full-lock turn and quick transitions, but ground clearance runs out sooner.","Z tyłu: później podnosi się tylne koło przy hamowaniu, ale łatwiej o wheelie na gazie i lżejszy przód w skręcie.":"At the back: the rear wheel lifts later under braking, but wheelies come more easily on the gas and the front is lighter in the turn.","Środek siedzenia. Punkt odniesienia.":"Middle of the seat. The reference point.","Z przodu: dociążony przód lepiej skręca i trzyma, później wheelie, ale wcześniej stoppie.":"At the front: the loaded front turns and grips better and wheelies come later, but stoppies come sooner.","kierownica":"handlebar","tył motocykla":"rear of the bike","podnóżek":"footpeg","kolano":"knee","łokieć":"elbow","Uślizg przodu. Przedni hamulec złapany gwałtownie w złożeniu: widelec nie zdążył się ugiąć i dociążyć koła. Dokładaj go płynnie, a oddawaj, gdy rośnie złożenie (A–C).":"Front slide. The front brake was grabbed abruptly while leaned over: the fork had no time to compress and load the wheel. Apply it smoothly and release it as the lean grows (A–C).","Uślizg przodu. Przedni hamulec w złożeniu zabrał przyczepność potrzebną do skrętu: oddawaj go, gdy rośnie złożenie (A–C).":"Front slide. The front brake while leaned over used up the grip needed for turning: release it as the lean grows (A–C).","Uślizg tyłu na gazie w głębokim złożeniu: za dużo gazu, zanim motocykl zaczął się podnosić (E–F).":"Rear slide on the gas at deep lean: too much throttle before the bike started to stand up (E–F).","Uślizg tyłu. Za długo za mocny tylny hamulec w głębokim złożeniu, tył uciekł. W pętli (D) tylnym hamulcem tylko domykaj łuk.":"Rear slide. Too much rear brake for too long at deep lean, and the rear stepped out. In the loop (D) use the rear brake only to tighten the turn.","Uślizg tyłu. Mocny przedni hamulec w złożeniu odciążył tylne koło i tył uciekł. Przedni oddawaj, gdy rośnie złożenie (A–C).":"Rear slide. Hard front braking while leaned over unloaded the rear wheel and the rear stepped out. Release the front as the lean grows (A–C).","Uślizg tyłu. Gaz zamknięty gwałtownie w głębokim złożeniu: hamowanie silnikiem zerwało przyczepność tyłu.":"Rear slide. The throttle was shut abruptly at deep lean: engine braking broke the rear tyre's grip.","Gleba. Za wolno na pełnym skręcie: motocykl wpadł do środka. Dodaj gazu albo puść tylny hamulec, zanim zabraknie prędkości.":"Crash. Too slow at full lock: the bike fell to the inside. Add throttle or release the rear brake before the speed runs out.","Niebieski pachołek (bliższy)":"The blue cone (near)","Czerwony pachołek (dalszy)":"The red cone (far)","Start obok bramki. Ruszaj z boxu prosto przez bramkę.":"Start beside the gate. Leave the box straight through the gate.","Niebieski pachołek minięty po złej stronie. Ze startu masz go mieć po lewej ręce, a czerwony po prawej.":"The blue cone was passed on the wrong side. From the start keep it on your left and the red one on your right.","Błąd trasy przed metą: po piątej ósemce jedź prosto do bramki.":"Course error before the finish: after the fifth figure eight ride straight to the gate.","Druga pętla wokół tego samego pachołka zamiast przejazdu do drugiego.":"A second loop around the same cone instead of riding to the other one.","{} ominięty: ósemkę przeciąłeś, zanim go objechałeś.":"{} was skipped: you cut the figure eight before going around it.","Ósemka przecięta w złą stronę.":"The figure eight was crossed in the wrong direction.","{} objechany w złą stronę. Niebieski masz zawsze po lewej ręce, czerwony po prawej.":"{} was rounded the wrong way. Always keep the blue cone on your left and the red one on your right.","Nie zatrzymał się w boxie za metą: przednie koło wyjechało z boxu, zanim motocykl stanął.":"Did not stop in the box behind the finish: the front wheel left the box before the bike came to a stop.","Wjazd w bramkę przy niebieskim pachołku.":"Rode into the gate by the blue cone.","Wjazd w bramkę przy niebieskim pachołku. W S ma ok. {} km/h, a łuk za S pozwala na ok. {} km/h, więc hamuje za późno albo za słabo.":"Rode into the gate by the blue cone. At T the speed is about {} km/h, while the turn after T allows about {} km/h, so the braking is too late or too weak.","Wjazd w bramkę przy niebieskim pachołku, bo pętla wychodzi za szeroko.":"Rode into the gate by the blue cone because the loop runs too wide.","Wyjazd poza plac.":"Left the course area.","Za długo.":"Too long.","Minął bramkę mety.":"Missed the finish gate.","Przejazd przerwany.":"Run stopped.","<b>Pokaz trenera.</b> Automatyczny kierowca jedzie nitką według wzorca A–H, blisko granic motocykla, ale z zapasem. Patrz na wykres po przejeździe.":"<b>Coach demo.</b> The automatic rider follows the A–H pattern, close to the limits of the bike but with a margin. Watch the chart after the run.","JEDŹ!":"GO!","Wyjazd poza plac (poza widoczny obszar).":"Left the course area (outside the visible area).","Za długo: przejazd przerwany po 150 s.":"Too long: the run was stopped after 150 s.","pokaz trenera":"coach demo","<b>Meta: {}</b>. Odtwórz go pod placem, raport niżej na stronie.":"<b>Finish: {}</b>. Replay it below the course; the report is further down the page.","GLEBA":"CRASH","DYSKWALIFIKACJA":"DISQUALIFIED","BŁĄD TRASY":"COURSE ERROR","Gleba.":"Crash.","Dyskwalifikacja.":"Disqualified.","Błąd trasy.":"Course error.","START":"START","META":"FINISH","gaz i hamulce":"gas and brakes","gaz":"gas","przód":"front","tył":"rear","ÓSEMKA {}/{}":"EIGHT {}/{}","START Z BOXU":"START FROM THE BOX","WIDOK Z BOKU":"SIDE VIEW","główka":"rake","wyprzedzenie":"trail","wypr.":"trail","rozstaw":"wheelbase","rozst.":"wb.","R pełny skręt":"R full lock","R pełny":"R lock","ugięcie, mm":"travel, mm","Prędkość":"Speed","Prędk.":"Speed","Złożenie":"Lean","Złoż.":"Lean","Kierownica":"Steering","Kier.":"Steer.","Przedni ham.":"Front brake","Przód":"Front","Tylny ham.":"Rear brake","Tył":"Rear","Gaz":"Gas","Widelec":"Fork","Widel.":"Fork","Ciało":"Body","Start":"Start","Meta":"Finish","Koniec":"End","Brak danych z przejazdu po starcie.":"No data from the run after the start.","Całość":"Whole run","Tu pojawi się wykres po przejeździe.":"The chart will appear here after the run.","bez pełnego skrętu":"no full lock","przód ↑ tył ↓":"front ↑ rear ↓","··· do środka ↑":"··· inward ↑","pełny":"lock","środek":"centre",", do środka":", inward",", na zewnątrz":", outward","złożenie {}°":"lean {}°","kier. {}°":"steer. {}°"," (pełny)":" (full lock)","gaz {}%":"gas {}%","hamulce: przód {}%, tył {}%":"brakes: front {}%, rear {}%","widelec {} mm":"fork {} mm","ciało {}{}":"body {}{}","Pokaz przerwany. Naciśnij ▶ Pokaz albo Enter, żeby obejrzeć go od początku.":"Demo stopped. Press ▶ Demo or Enter to watch it from the beginning.","<b>{}</b>. To pokaz trenera: szybka i czysta jazda, ale z zapasem w złożeniu, na hamulcach i przy pachołkach. Własny plan porównasz z nim w planerze.":"<b>{}</b>. This is the coach demo: a fast, clean ride, but with a margin in lean, on the brakes and at the cones. You can compare your own plan with it in the planner.","Za mało danych, żeby ocenić pętle.":"Not enough data to assess the loops.","główka o {}° bardziej stroma, wyprzedzenie krótsze o {} mm":"rake {}° steeper, trail {} mm shorter","Jak jechał trener: rusza z tyłu boxu przy prawym skraju i na pełnym gazie mija niebieski pachołek, mając go po lewej ręce. Przed każdą pętlą hamuje mocno przodem: najmocniej {} g. Składając się, oddaje przód razem ze złożeniem, a tył od razu przejmuje hamowanie: najmocniej {} m/s² ({}% dźwigni), potem coraz mniej, aż do gazu, i puszcza go dopiero chwilę po wejściu na gaz; przód to {}% całego hamowania. Przeciążenia idą po obwiedni wykresu g-g dla łuku o stałym promieniu (przerywana linia). Obwiednia motocykla nie jest okręgiem: w takim łuku tył musi utrzymać ok. połowę siły bocznej, a hamowanie przodem go odciąża. Kiedy motocykl się składa, obrót przyspiesza i większą część siły bocznej bierze przód, więc w złożeniu da się hamować mocniej; przy podnoszeniu odwrotnie, co pozwala na więcej gazu (ciągła linia, bliżej okręgu, dla obecnej prędkości: im wolniej, tym szybciej rośnie obrót). Tego zapasu trener jeszcze nie wykorzystuje. Używa {}% przyczepności opon.":"How the coach rode: the start is from the back of the box near its right edge, and the blue cone is passed at full throttle on the left-hand side. Before every loop the coach brakes hard with the front: {} g at most. Leaning in, the coach eases off the front in step with the lean and the rear takes over the braking at once: {} m/s² at most ({}% of the lever), then less and less until the throttle opens, and it is released only a moment after getting on the gas; the front does {}% of all the braking. The g-forces follow the envelope of the g-g diagram for a constant-radius turn (dashed line). The envelope of a motorcycle is not a circle: in such a turn the rear has to carry about half of the side force, and front braking unloads it. While the bike is leaning in, the yaw accelerates and the front takes most of the side force, so harder braking is possible during the lean-in; while the bike is being picked up it is the other way round, which allows more throttle (solid line, closer to a circle, for the current speed: the slower, the faster the yaw builds). The coach does not use this margin yet. The coach uses {}% of the tyre grip.","Pętla: w najciaśniejszym miejscu średnio {} km/h, motocykl złożony do {}°. Kierownica: krótki przeciwskręt na wejściu, dokręcenie do {}° (pełny skręt {}°) i płynne odkręcanie na wyjściu, gdy gaz narasta w ok. {} s do granicy opon. W całym przejeździe kierownica zmienia kierunek o więcej niż 3° {} razy, ok. {} na pętlę.":"Loop: {} km/h on average at the tightest point, bike leaned to {}°. Steering: a short countersteer on entry, turning in to {}° (full lock is {}°) and a smooth unwinding on exit while the throttle builds over about {} s up to the tyre limit. Over the whole run the steering changes direction by more than 3° {} times, about {} per loop."," Na odbojach w {} z {} pętli: tu pętlę ogranicza skręt kierownicy.":" On the lock stops in {} of {} loops: there the loop is limited by the steering lock.","Wierzchołek: w złożeniu trener bierze ok. {}% przyczepności. Tył hamuje do prędkości wierzchołka (ok. {} km/h) i coraz słabiej, bo w pełnym złożeniu tylnej oponie zostaje mało przyczepności na hamowanie; zwolniony motocykl jedzie ciaśniej. Wtedy trener uchyla gaz (prędkość stoi), a tył puszcza dopiero po ok. 0,2 s: hamulec i gaz na tym samym kole prawie się znoszą, więc ta zakładka nie zabiera przyczepności, a nie ma chwili bez hamulca i bez gazu. W G stawia motocykl: krótki ruch kierownicą w stronę zakrętu zwiększa siłę odśrodkową, a gaz narasta do granicy opon.":"Apex: while leaned over, the coach uses about {}% of the grip. The rear brakes down to the apex speed (about {} km/h), more and more gently, because at full lean the rear tyre has little grip left for braking; the slowed bike turns tighter. Then the coach cracks the throttle open (the speed holds) and releases the rear only after about 0.2 s: brake and throttle on the same wheel almost cancel out, so this overlap costs no grip and there is no moment without brake or throttle. At G the coach stands the bike up: a short steering input into the turn increases the centrifugal force, and the throttle builds up to the tyre limit.","Zawieszenie: na wejściu (S1, A–C) trener jeszcze trzyma przód, więc widelec ma średnio {}% skoku (bez hamowania 30%): {}. Motocykl łatwiej się wtedy składa i ciaśniej domyka łuk. Porównaj wiersze „Przedni ham.” i „Widelec” na wykresie pętli.":"Suspension: on entry (S1, A–C) the coach still holds the front brake, so the fork sits at {}% of its travel on average (30% without braking): {}. The bike then leans in more easily and closes the turn tighter. Compare the “Front brake” and “Fork” rows on the loop chart.","Kliknij pętlę nad wykresem (np. F2), żeby zobaczyć jej przebieg na tle wzorca A–H. Pętle trenera trwają od {} do {} s.":"Click a loop above the chart (e.g. F2) to see it against the A–H pattern. The coach's loops take from {} to {} s.","Motocykl":"Bike","Masa":"Mass","Moc":"Power","Dół":"Low end","Rozstaw":"Wheelbase","Skręt kier.":"Steering lock","Kąt główki":"Rake","CoG":"CoG","Złożenie max":"Max lean","Opony (μ)":"Tyres (μ)","Przód / tył ham.":"Front / rear brake","Przekładanie":"Roll rate","Pełny skręt przy 45°":"Full-lock radius at 45°","Skok przód / tył":"Travel front / rear","Ugięcie przodu przy 1 g":"Fork dive at 1 g","Tył: hamulec / zakładka / gaz":"Rear: brake / overlap / gas","Wyprzedzenie":"Trail","zawodnik minus trener (plus: zawodnik wolniejszy)":"rider minus coach (plus: the rider is slower)","zawodnik":"rider","trener":"coach","Zawodnik":"Rider","Trener":"Coach","H":"B","S":"T","G":"G","H · hamowanie":"B · braking","S · składanie":"T · turn-in","S · w bok":"T · sideways","G · gaz":"G · gas","Siła hamowania":"Braking force","Odkręcenie gazu do pełna":"Time to full throttle","Zapas od pachołka":"Cone margin","Wirtualny zawodnik i trener startują razem z bramki. Zawodnik jedzie według planu: do H gaz, od H przedni hamulec, w S zaczyna składać motocykl, w G gaz. Punkt S przesuwasz bliżej i dalej oraz szerzej i węziej. Trener jedzie tym samym motocyklem, w tej samej pozycji ciała i w tym samym miejscu na siedzeniu, tak jak w pokazie trenera. Zawodnik planera to prostszy kierowca niż trener: składa się i odkręca w punktach planu i jedzie na granicy złożenia, a trener zostawia sobie zapas. Dlatego nawet z punktami trenera zawodnik bywa od niego szybszy albo wolniejszy. Nitka wychodzi z fizyki: od S zawodnik składa się tak szybko i mocno, jak pozwala motocykl i prędkość, ale tak, żeby kierownica, tył motocykla, podnóżek, kolano i łokieć minęły pachołek o zapas. Zawodnik i trener jadą bez błędów, więc ten sam plan daje zawsze ten sam wynik. Obaj hamują w złożeniu: składając się, oddają przód, a tył od razu przejmuje hamowanie, najpierw mocno, potem coraz mniej, i trzymają go jeszcze chwilę po wejściu na gaz. Siła hamowania, odkręcanie gazu i zapas od pachołka są ustalone dla motocykla, pozycji i miejsca na siedzeniu.":"The virtual rider and the coach start together from the gate. The rider follows the plan: throttle up to B, front brake from B, the bike starts leaning in at T, throttle at G. You can move point T nearer and farther, and wider and narrower. The coach rides the same bike, in the same body position and the same place on the seat, exactly as in the coach demo. The planner's rider is a simpler rider than the coach: it leans in and opens the throttle at the plan points and rides at the lean limit, while the coach keeps a margin. That is why, even with the coach's points, the rider can be faster or slower than the coach. The line comes out of the physics: from T the rider leans in as fast and as far as the bike and the speed allow, but so that the handlebar, the rear of the bike, the footpeg, the knee and the elbow clear the cone by the margin. The rider and the coach make no mistakes, so the same plan always gives the same result. Both brake while leaned over: leaning in, they ease off the front and the rear takes over the braking at once, hard at first, then less and less, and they hold it for a moment after getting on the gas. The braking force, the throttle roll-on and the cone margin are fixed for the bike, the body position and the seat position.","Obejrzyj pokaz trenera. Po przejeździe raport porówna jego pętle z wzorcem faz A–H.":"Watch the coach demo. After the run the report will compare the coach's loops with the A–H phase pattern.","<b>Planer.</b> Wybierz pozycję ciała i miejsce na siedzeniu zawodnika, przeciągnij przy czerwonym pachołku punkty <b>H</b> (hamowanie), <b>S</b> (początek składania, także w bok) i <b>G</b> (gaz), potem <b>▶ Porównaj</b> albo Enter: zawodnik pojedzie razem z trenerem.":"<b>Planner.</b> Choose the rider's body position and seat position, drag points <b>B</b> (braking), <b>T</b> (start of turn-in, also sideways) and <b>G</b> (gas) by the red cone, then press <b>▶ Compare</b> or Enter: the rider will ride together with the coach.","<b>Pokaz trenera.</b> Naciśnij <b>▶ Pokaz</b> albo Enter: automatyczny kierowca przejedzie GP8 według wzorca faz A–H.":"<b>Coach demo.</b> Press <b>▶ Demo</b> or Enter: the automatic rider will ride the GP8 following the A–H phase pattern.","<b>Wykres.</b> Biała linia to zawodnik, zielona to trener: prędkość, złożenie i przeciążenie wzdłużne (w górę gaz, w dół hamowanie). Grubo na złożeniu: <b>przeciwskręt</b>, czyli chwila, w której kierownica jest skręcona na zewnątrz łuku, żeby motocykl zaczął się składać (w pętli najlepiej widać go po wybraniu pętli i w tempie ¼×). Grubo na przeciążeniu: hamowanie przodem w złożeniu, czyli <b>trail braking</b>. W wybranej pętli obaj są wyrównani do jej początku, a litery H, S i G pokazują, gdzie każdy zaczął hamować, skręcać i odkręcać gaz. Podczas odtwarzania wykres przechodzi do pętli, którą jedzie zawodnik. Nad wykresem przy każdej pętli różnica czasu: zawodnik minus trener (plus: zawodnik wolniejszy).":"<b>Chart.</b> The white line is the rider, the green one the coach: speed, lean and longitudinal g (up is throttle, down is braking). Thick on the lean trace: <b>countersteering</b>, the moment when the handlebar is turned to the outside of the turn so that the bike starts to lean (in a loop it shows best after selecting the loop and at ¼× speed). Thick on the g trace: front braking while leaned over, that is <b>trail braking</b>. In a selected loop both are aligned to its start, and the letters B, T and G show where each of them started to brake, to turn in and to open the throttle. During replay the chart moves to the loop the rider is in. Above the chart each loop shows the time difference: rider minus coach (plus: the rider is slower).","<b>Wykres.</b> Tło dzieli pętlę na fazy: S1 wejście (A–C), S2 obrót na pełnym skręcie (D), S3 wyjście, przełożenie i dohamowanie (E–H). Szeroka blada linia to wzorzec. Najedź na wykres albo odtwórz przejazd pod placem, żeby zobaczyć to miejsce na placu.":"<b>Chart.</b> The background splits the loop into phases: S1 entry (A–C), S2 rotation at full lock (D), S3 exit, transition and braking for the next cone (E–H). The wide pale line is the reference pattern. Hover over the chart or replay the run below the course to see that spot on the course.","z tyłu":"back","na środku":"middle","z przodu":"front","z tyłu siedzenia":"at the back of the seat","na środku siedzenia":"in the middle of the seat","z przodu siedzenia":"at the front of the seat","nie dojeżdża do mety.":"does not reach the finish.","Zawodnik dotknąłby pachołka.":"The rider would touch a cone.","Przejazd trwałby {} s, a planer przyjmuje najwyżej {} s.":"The run would take {} s, and the planner accepts {} s at most.","wjazd w bramkę":"rode into the gate","wyjazd poza plac":"left the course","za długo":"too long","minął metę":"missed the finish","nie stanął w boxie":"did not stop in the box","gleba":"crash","nie ukończył":"did not finish","<b>Planer nie przyjmie tego ustawienia:</b> {} ":"<b>The planner will not accept this setting:</b> {} ","Zostawiam najbliższe ustawienie, z którym zawodnik jedzie bezbłędnie i najwyżej {} s: ":"Keeping the nearest setting with which the rider completes a clean run in {} s at most: ","Wracam do ostatniego dobrego ustawienia.":"Going back to the last good setting.","{} m przed":"{} m before","{} m za":"{} m past","{} m od pachołka":"{} m from the cone","{}° przed wyjściem":"{}° before the exit","na wyjściu":"at the exit","{} m w bok":"{} m sideways","S · składanie bliżej albo dalej":"T · turn-in nearer or farther","S · składanie szerzej albo węziej":"T · turn-in wider or narrower","■ Przerwij":"■ Stop","▶ Porównaj":"▶ Compare","Porównanie…":"Comparing…","Porównanie przerwane.":"Comparison stopped.","<b>{}.</b> Odtwarzam ten przejazd od startu z bramki. Spacja: pauza.":"<b>{}.</b> Replaying this run from the start at the gate. Space: pause.","Obaj nie ukończyli":"Neither finished","{} nie ukończył":"{} did not finish","Bez różnicy":"No difference","{} szybszy o {} s":"{} faster by {} s","{} za":"{} past","Plan zmieniony od porównania. Naciśnij Porównaj jeszcze raz.":"The plan has changed since the comparison. Press Compare again.","Naciśnij <b>▶ Porównaj</b> albo Enter, a zobaczysz czas zawodnika i trenera.":"Press <b>▶ Compare</b> or Enter to see the times of the rider and the coach.","Plan":"Plan","Pozycja":"Body position","Siedzi":"Seat","H hamowanie":"B braking","S: metry przed linią pachołka (za: po niej) · metry w bok od pachołka":"T: metres before the cone line (past: beyond it) · metres sideways from the cone","S składanie · bok":"T turn-in · side","G gaz":"G gas","błąd trasy":"course error","Wynik":"Result","Czas":"Time","Powód":"Reason","Średnio w pętli":"Loop averages","km/h w H·S·G":"km/h at B·T·G","Złożenie w G":"Lean at G","najmniejszy odstęp obrysu motocykla z kierowcą (kierownica, tył motocykla, podnóżek, kolano, łokieć) od pachołka; ślad tylnej opony: zawodnik {} m, trener {} m od środka pachołka":"smallest gap between the outline of the bike with its rider (handlebar, rear of the bike, footpeg, knee, elbow) and the cone; rear tyre track: rider {} m, coach {} m from the centre of the cone","Do pachołka":"Cone clearance","Najbliżej":"Closest part","Naciśnij <b>▶ Pokaz</b> albo Enter. Tu pojawi się wynik trenera.":"Press <b>▶ Demo</b> or Enter. The coach's result will appear here.","Trener: {}":"Coach: {}","Pokaz przerwany":"Demo stopped","Trener nie ukończył":"The coach did not finish","Najwyższa prędkość":"Top speed","Największe złożenie":"Max lean","Pętla najszybsza – najwolniejsza":"Fastest – slowest loop","Ósemka":"Eight","Różnica":"Difference"," (pozycja {}, {})":" (body position: {}, {})","<b>{}</b>: zawodnik {}, trener {}.":"<b>{}</b>: rider {}, coach {}.","{}: w S ma ok. {}. Obrys mija pachołek średnio o {}":"{}: about {} at T. The outline clears the cone by {} on average"," (najbliżej: {})":" (closest: {})",", ślad tylnej opony ok. {} m od jego środka. W G ma ok. {} i złożenie ok. {}°, wyjście wychodzi szersze od nitki o ok. {} cm.":", and the rear tyre track runs about {} m from its centre. At G the speed is about {} and the lean about {}°; the exit runs about {} cm wider than the line.","błąd trasy.":"course error.","{} nie ukończył: {}":"{} did not finish: {}","Największa różnica w pętli {}: zawodnik {} względem trenera. Kliknij ją nad wykresem i odtwórz w tempie ¼× albo ⅒×.":"Biggest difference in loop {}: rider {} relative to the coach. Click it above the chart and replay it at ¼× or ⅒× speed.","Wirtualny zawodnik: do H gaz, od H przedni hamulec z zadaną siłą (pełna siła po ok. 0,2 s), najdłużej do S, aż do prędkości, z jaką zmieści się w łuku za S. W S składa się <b>przeciwskrętem</b>: kierownica na ułamek sekundy idzie na zewnątrz łuku, motocykl zaczyna się przechylać, a dopiero potem kierownica idzie do środka (na wykresie grubo na złożeniu, w tabeli „Teraz” przy kierownicy: „przeciwskręt”). Przy większej prędkości przechył rusza szybciej. Tak samo, tylko odwrotnie, podnosi motocykl przy wyjściu: kierownica mocniej do środka. Hamuje też w złożeniu (trail braking): po S oddaje przedni hamulec w miarę składania, bo w złożeniu opona ma mniej przyczepności na hamowanie, a jak tylko puszcza przód, dokłada tyłu: najpierw mocno (do ok. 80% tego, na co tylnej oponie zostaje przyczepności w złożeniu), potem coraz mniej, aż zwolni do prędkości wierzchołka albo tył nie ma już czym hamować; wtedy uchyla gaz, a tył puszcza dopiero po ok. 0,2 s (zakładka), więc nie ma chwili bez hamulca i bez gazu; ugięty widelec zmniejsza wyprzedzenie, więc motocykl składa się szybciej. Od S składa się tak szybko i mocno, jak pozwala motocykl, ale tak, żeby obrys (kierownica, tył motocykla, podnóżek, kolano i łokieć) minął pachołek o zapas, i jedzie na granicy złożenia (trener w pokazie zostawia sobie zapas). Późny albo wąski S to ciasny łuk zaraz za S, więc przed nim trzeba mocniej wyhamować. Kto hamuje za późno, w złożeniu już tak nie wyhamuje i wynosi go szeroko. Potem trzyma prędkość wierzchołka uchylonym gazem aż do G. Od G odkręca do pełna, przesuwa ciało do przodu (przednie koło później się podnosi) i podnosi motocykl na tyle, żeby opony przeniosły przyspieszanie, więc gaz w głębszym złożeniu to szersze wyjście. W pierwszej pętli (prawej, zaraz po starcie) hamuje i składa się jak trener, wcześniej niż w H i w S, bo z bramki jest szybszy i dojeżdża z innej strony; od pierwszej lewej hamuje w H. Bramka 3 m za niebieskim pachołkiem to przeszkoda: przejazd, w którym zawodnik w nią wjeżdża, jest nieukończony. Złożenie od pionu do 45° trwa na Ultra Bee ok. 0,35 s, tak jak na nagraniu przejazdu.":"The virtual rider: throttle up to B, then from B the front brake with the set force (full force after about 0.2 s), until T at the latest, down to the speed that fits the turn after T. At T the rider leans in by <b>countersteering</b>: for a fraction of a second the handlebar goes to the outside of the turn, the bike starts to roll, and only then does the handlebar turn in (thick on the lean trace of the chart; “countersteer” next to the steering angle in the “Now” table). At higher speed the roll starts faster. The same thing in reverse picks the bike up on exit: the handlebar turns further in. The rider also brakes while leaned over (trail braking): after T the front brake is released as the lean grows, because a leaned tyre has less grip left for braking, and as soon as the front is released the rear comes in: hard at first (up to about 80% of the grip the rear tyre has left at that lean), then less and less, until the bike has slowed to the apex speed or the rear has nothing left to brake with; then the throttle is cracked open and the rear is released only after about 0.2 s (overlap), so there is no moment without brake or throttle; the compressed fork shortens the trail, so the bike leans in faster. From T the rider leans in as fast and as far as the bike allows, but so that the outline (handlebar, rear of the bike, footpeg, knee and elbow) clears the cone by the margin, and rides at the lean limit (the coach in the demo keeps a margin). A late or narrow T means a tight turn right after T, so more braking is needed before it. Braking that starts too late cannot be made up while leaned over, and the bike runs wide. Then the rider holds the apex speed on a cracked throttle until G. From G the rider rolls on to full throttle, moves the body forward (the front wheel lifts later) and picks the bike up just enough for the tyres to carry the acceleration, so throttle at deeper lean means a wider exit. In the first loop (the right-hand one, straight after the start) the rider brakes and leans in like the coach, earlier than at B and T, because the speed out of the gate is higher and the approach comes from a different side; from the first left-hand loop on, braking starts at B. The gate 3 m behind the blue cone is an obstacle: a run in which the rider enters it does not count as finished. Leaning from upright to 45° takes about 0.35 s on the Ultra Bee, as in the video of a real run.","Brak danych z przejazdu.":"No data from the run.","▬ przeciwskręt":"▬ countersteer","Przeciążenie":"Longitudinal g","g wzdł.":"long. g","± 1,2 g":"± 1.2 g","▬ trail braking":"▬ trail braking","WIDOK Z TYŁU":"REAR VIEW","moto {}°":"bike {}°","wypadkowa {}°":"combined {}°","PRZECIĄŻENIA (G)":"G-FORCES","hamowanie":"braking","tył odciążony":"rear unloaded","przód odciążony":"front unloaded","tył się ślizga":"rear sliding","przód się ślizga":"front sliding","przyczepność {}%":"grip {}%","Teraz":"Now","złożenie":"lean","promień":"radius","przyczepność":"grip","przeciwskręt":"countersteer","prosto":"straight","{} · {} kg · {} kW · rozstaw {} m · skręt {}°":"{} · {} kg · {} kW · wheelbase {} m · lock {}°","Pauza":"Pause","Odtwórz":"Play","Raport planera":"Planner report","Raport z pokazu":"Demo report","<b>{} w pozycji {}</b> z tym planem nie przejedzie bezbłędnie w czasie do {} s, więc ma plan wyjściowy dla tej pozycji.":"<b>{} in the {} position</b> cannot complete a clean run within {} s with this plan, so the default plan for this position is used.","<b>{} w pozycji {}</b> z tymi punktami nie przejedzie bezbłędnie w czasie do {} s, więc zmieniam: ":"<b>{} in the {} position</b> cannot complete a clean run within {} s with these points, so they are changed: ","{} z tym planem nie przejedzie bezbłędnie w czasie do {} s, więc ma plan wyjściowy dla tej pozycji i miejsca.":"{} cannot complete a clean run within {} s with this plan, so the default plan for this position and seat is used.","{} z tymi punktami nie przejedzie bezbłędnie w czasie do {} s, więc zmieniam: ":"{} cannot complete a clean run within {} s with these points, so they are changed: ","Przeciągnij kółko <b>H</b>, <b>S</b> albo <b>G</b> albo kliknij przy czerwonym pachołku: na prostej dojazdu (H), obok niej (S, także w bok) albo na pętli (G).":"Drag the <b>B</b>, <b>T</b> or <b>G</b> circle, or click near the red cone: on the approach straight (B), beside it (T, also sideways) or on the loop (G)."};
+const DICT = {"ok. 150–190 cm³":"approx. 150–190 cc","klasa Honda CRF450 z kołami SM":"Honda CRF450 class on SM wheels","supermoto, miękkie":"supermoto, soft","sport 600, słaby dół, szlifowane odboje":"600 sport bike, weak low end, ground-down lock stops","sportowe":"sport","sport 1000, mocny dół, szlifowane odboje":"1000 sport bike, strong low end, ground-down lock stops","pozytywna":"lean in","pozytywnej":"lean-in","neutralna":"neutral","neutralnej":"neutral","negatywna":"lean out","negatywnej":"lean-out","Ciało do środka łuku. Motocykl bardziej wyprostowany: więcej prześwitu, ale szerszy pełny skręt i wolniejsze przekładanie.":"Body to the inside of the turn. The bike stays more upright: more ground clearance, but a wider full-lock turn and slower side-to-side transitions.","Ciało w osi motocykla, zalecane na GP8. Punkt odniesienia.":"Body in line with the bike, recommended for GP8. The reference point.","Ciało nad motocyklem, motocykl złożony pod Tobą (styl enduro). Ciaśniejszy pełny skręt i szybkie przekładanie, ale wcześniej kończy się prześwit.":"Body above the bike, the bike leaned under you (enduro style). A tighter full-lock turn and quick transitions, but ground clearance runs out sooner.","Z tyłu: później podnosi się tylne koło przy hamowaniu, ale łatwiej o wheelie na gazie i lżejszy przód w skręcie.":"At the back: the rear wheel lifts later under braking, but wheelies come more easily on the gas and the front is lighter in the turn.","Środek siedzenia. Punkt odniesienia.":"Middle of the seat. The reference point.","Z przodu: dociążony przód lepiej skręca i trzyma, później wheelie, ale wcześniej stoppie.":"At the front: the loaded front turns and grips better and wheelies come later, but stoppies come sooner.","kierownica":"handlebar","tył motocykla":"rear of the bike","podnóżek":"footpeg","kolano":"knee","łokieć":"elbow","Uślizg przodu. Przedni hamulec złapany gwałtownie w złożeniu: widelec nie zdążył się ugiąć i dociążyć koła. Dokładaj go płynnie, a oddawaj, gdy rośnie złożenie (A–C).":"Front slide. The front brake was grabbed abruptly while leaned over: the fork had no time to compress and load the wheel. Apply it smoothly and release it as the lean grows (A–C).","Uślizg przodu. Przedni hamulec w złożeniu zabrał przyczepność potrzebną do skrętu: oddawaj go, gdy rośnie złożenie (A–C).":"Front slide. The front brake while leaned over used up the grip needed for turning: release it as the lean grows (A–C).","Uślizg tyłu na gazie w głębokim złożeniu: za dużo gazu, zanim motocykl zaczął się podnosić (E–F).":"Rear slide on the gas at deep lean: too much throttle before the bike started to stand up (E–F).","Uślizg tyłu. Za długo za mocny tylny hamulec w głębokim złożeniu, tył uciekł. W pętli (D) tylnym hamulcem tylko domykaj łuk.":"Rear slide. Too much rear brake for too long at deep lean, and the rear stepped out. In the loop (D) use the rear brake only to tighten the turn.","Uślizg tyłu. Mocny przedni hamulec w złożeniu odciążył tylne koło i tył uciekł. Przedni oddawaj, gdy rośnie złożenie (A–C).":"Rear slide. Hard front braking while leaned over unloaded the rear wheel and the rear stepped out. Release the front as the lean grows (A–C).","Uślizg tyłu. Gaz zamknięty gwałtownie w głębokim złożeniu: hamowanie silnikiem zerwało przyczepność tyłu.":"Rear slide. The throttle was shut abruptly at deep lean: engine braking broke the rear tyre's grip.","Gleba. Za wolno na pełnym skręcie: motocykl wpadł do środka. Dodaj gazu albo puść tylny hamulec, zanim zabraknie prędkości.":"Crash. Too slow at full lock: the bike fell to the inside. Add throttle or release the rear brake before the speed runs out.","Niebieski pachołek (bliższy)":"The blue cone (near)","Czerwony pachołek (dalszy)":"The red cone (far)","Start obok bramki. Ruszaj z boxu prosto przez bramkę.":"Start beside the gate. Leave the box straight through the gate.","Niebieski pachołek minięty po złej stronie. Ze startu masz go mieć po lewej ręce, a czerwony po prawej.":"The blue cone was passed on the wrong side. From the start keep it on your left and the red one on your right.","Błąd trasy przed metą: po piątej ósemce jedź prosto do bramki.":"Course error before the finish: after the fifth figure eight ride straight to the gate.","Druga pętla wokół tego samego pachołka zamiast przejazdu do drugiego.":"A second loop around the same cone instead of riding to the other one.","{} ominięty: ósemkę przeciąłeś, zanim go objechałeś.":"{} was skipped: you cut the figure eight before going around it.","Ósemka przecięta w złą stronę.":"The figure eight was crossed in the wrong direction.","{} objechany w złą stronę. Niebieski masz zawsze po lewej ręce, czerwony po prawej.":"{} was rounded the wrong way. Always keep the blue cone on your left and the red one on your right.","Nie zatrzymał się w boxie za metą: przednie koło wyjechało z boxu, zanim motocykl stanął.":"Did not stop in the box behind the finish: the front wheel left the box before the bike came to a stop.","Wjazd w bramkę przy niebieskim pachołku.":"Rode into the gate by the blue cone.","Wjazd w bramkę przy niebieskim pachołku. W S ma ok. {} km/h, a łuk za S pozwala na ok. {} km/h, więc hamuje za późno albo za słabo.":"Rode into the gate by the blue cone. At T the speed is about {} km/h, while the turn after T allows about {} km/h, so the braking is too late or too weak.","Wjazd w bramkę przy niebieskim pachołku, bo pętla wychodzi za szeroko.":"Rode into the gate by the blue cone because the loop runs too wide.","Wyjazd poza plac.":"Left the course area.","Za długo.":"Too long.","Minął bramkę mety.":"Missed the finish gate.","Przejazd przerwany.":"Run stopped.","<b>Pokaz trenera.</b> Automatyczny kierowca jedzie nitką według wzorca A–H, blisko granic motocykla, ale z zapasem. Patrz na wykres po przejeździe.":"<b>Coach demo.</b> The automatic rider follows the A–H pattern, close to the limits of the bike but with a margin. Watch the chart after the run.","JEDŹ!":"GO!","Wyjazd poza plac (poza widoczny obszar).":"Left the course area (outside the visible area).","Za długo: przejazd przerwany po 150 s.":"Too long: the run was stopped after 150 s.","pokaz trenera":"coach demo","<b>Meta: {}</b>. Odtwórz go pod placem, raport niżej na stronie.":"<b>Finish: {}</b>. Replay it below the course; the report is further down the page.","GLEBA":"CRASH","DYSKWALIFIKACJA":"DISQUALIFIED","BŁĄD TRASY":"COURSE ERROR","Gleba.":"Crash.","Dyskwalifikacja.":"Disqualified.","Błąd trasy.":"Course error.","START":"START","META":"FINISH","gaz i hamulce":"gas and brakes","gaz":"gas","przód":"front","tył":"rear","ÓSEMKA {}/{}":"EIGHT {}/{}","START Z BOXU":"START FROM THE BOX","WIDOK Z BOKU":"SIDE VIEW","główka":"rake","wyprzedzenie":"trail","wypr.":"trail","rozstaw":"wheelbase","rozst.":"wb.","R pełny skręt":"R full lock","R pełny":"R lock","ugięcie, mm":"travel, mm","Prędkość":"Speed","Prędk.":"Speed","Złożenie":"Lean","Złoż.":"Lean","Kierownica":"Steering","Kier.":"Steer.","Przedni ham.":"Front brake","Przód":"Front","Tylny ham.":"Rear brake","Tył":"Rear","Gaz":"Gas","Widelec":"Fork","Widel.":"Fork","Ciało":"Body","Start":"Start","Meta":"Finish","Koniec":"End","Brak danych z przejazdu po starcie.":"No data from the run after the start.","Całość":"Whole run","Tu pojawi się wykres po przejeździe.":"The chart will appear here after the run.","bez pełnego skrętu":"no full lock","przód ↑ tył ↓":"front ↑ rear ↓","··· do środka ↑":"··· inward ↑","pełny":"lock","środek":"centre",", do środka":", inward",", na zewnątrz":", outward","złożenie {}°":"lean {}°","kier. {}°":"steer. {}°"," (pełny)":" (full lock)","gaz {}%":"gas {}%","hamulce: przód {}%, tył {}%":"brakes: front {}%, rear {}%","widelec {} mm":"fork {} mm","ciało {}{}":"body {}{}","Pokaz przerwany. Naciśnij ▶ Pokaz albo Enter, żeby obejrzeć go od początku.":"Demo stopped. Press ▶ Demo or Enter to watch it from the beginning.","<b>{}</b>. To pokaz trenera: szybka i czysta jazda, ale z zapasem w złożeniu, na hamulcach i przy pachołkach. Własny plan porównasz z nim w planerze.":"<b>{}</b>. This is the coach demo: a fast, clean ride, but with a margin in lean, on the brakes and at the cones. You can compare your own plan with it in the planner.","Za mało danych, żeby ocenić pętle.":"Not enough data to assess the loops.","główka o {}° bardziej stroma, wyprzedzenie krótsze o {} mm":"rake {}° steeper, trail {} mm shorter","Jak jechał trener: rusza z tyłu boxu przy prawym skraju i na pełnym gazie mija niebieski pachołek, mając go po lewej ręce. Przed każdą pętlą hamuje mocno przodem: najmocniej {} g. Składając się, oddaje przód razem ze złożeniem, a tył od razu przejmuje hamowanie: najmocniej {} m/s² ({}% dźwigni), potem coraz mniej, aż do gazu, i puszcza go dopiero chwilę po wejściu na gaz; przód to {}% całego hamowania. Przeciążenia idą po obwiedni wykresu g-g dla łuku o stałym promieniu (przerywana linia). Obwiednia motocykla nie jest okręgiem: w takim łuku tył musi utrzymać ok. połowę siły bocznej, a hamowanie przodem go odciąża. Kiedy motocykl się składa, obrót przyspiesza i większą część siły bocznej bierze przód, więc w złożeniu da się hamować mocniej; przy podnoszeniu odwrotnie, co pozwala na więcej gazu (ciągła linia, bliżej okręgu, dla obecnej prędkości: im wolniej, tym szybciej rośnie obrót). Tego zapasu trener jeszcze nie wykorzystuje. Używa {}% przyczepności opon.":"How the coach rode: the start is from the back of the box near its right edge, and the blue cone is passed at full throttle on the left-hand side. Before every loop the coach brakes hard with the front: {} g at most. Leaning in, the coach eases off the front in step with the lean and the rear takes over the braking at once: {} m/s² at most ({}% of the lever), then less and less until the throttle opens, and it is released only a moment after getting on the gas; the front does {}% of all the braking. The g-forces follow the envelope of the g-g diagram for a constant-radius turn (dashed line). The envelope of a motorcycle is not a circle: in such a turn the rear has to carry about half of the side force, and front braking unloads it. While the bike is leaning in, the yaw accelerates and the front takes most of the side force, so harder braking is possible during the lean-in; while the bike is being picked up it is the other way round, which allows more throttle (solid line, closer to a circle, for the current speed: the slower, the faster the yaw builds). The coach does not use this margin yet. The coach uses {}% of the tyre grip.","Pętla: w najciaśniejszym miejscu średnio {} km/h, motocykl złożony do {}°. Kierownica: krótki przeciwskręt na wejściu, dokręcenie do {}° (pełny skręt {}°) i płynne odkręcanie na wyjściu, gdy gaz narasta w ok. {} s do granicy opon. W całym przejeździe kierownica zmienia kierunek o więcej niż 3° {} razy, ok. {} na pętlę.":"Loop: {} km/h on average at the tightest point, bike leaned to {}°. Steering: a short countersteer on entry, turning in to {}° (full lock is {}°) and a smooth unwinding on exit while the throttle builds over about {} s up to the tyre limit. Over the whole run the steering changes direction by more than 3° {} times, about {} per loop."," Na odbojach w {} z {} pętli: tu pętlę ogranicza skręt kierownicy.":" On the lock stops in {} of {} loops: there the loop is limited by the steering lock.","Wierzchołek: w złożeniu trener bierze ok. {}% przyczepności. Tył hamuje do prędkości wierzchołka (ok. {} km/h) i coraz słabiej, bo w pełnym złożeniu tylnej oponie zostaje mało przyczepności na hamowanie; zwolniony motocykl jedzie ciaśniej. Wtedy trener uchyla gaz (prędkość stoi), a tył puszcza dopiero po ok. 0,2 s: hamulec i gaz na tym samym kole prawie się znoszą, więc ta zakładka nie zabiera przyczepności, a nie ma chwili bez hamulca i bez gazu. W G stawia motocykl: krótki ruch kierownicą w stronę zakrętu zwiększa siłę odśrodkową, a gaz narasta do granicy opon.":"Apex: while leaned over, the coach uses about {}% of the grip. The rear brakes down to the apex speed (about {} km/h), more and more gently, because at full lean the rear tyre has little grip left for braking; the slowed bike turns tighter. Then the coach cracks the throttle open (the speed holds) and releases the rear only after about 0.2 s: brake and throttle on the same wheel almost cancel out, so this overlap costs no grip and there is no moment without brake or throttle. At G the coach stands the bike up: a short steering input into the turn increases the centrifugal force, and the throttle builds up to the tyre limit.","Zawieszenie: na wejściu (S1, A–C) trener jeszcze trzyma przód, więc widelec ma średnio {}% skoku (bez hamowania 30%): {}. Motocykl łatwiej się wtedy składa i ciaśniej domyka łuk. Porównaj wiersze „Przedni ham.” i „Widelec” na wykresie pętli.":"Suspension: on entry (S1, A–C) the coach still holds the front brake, so the fork sits at {}% of its travel on average (30% without braking): {}. The bike then leans in more easily and closes the turn tighter. Compare the “Front brake” and “Fork” rows on the loop chart.","Kliknij pętlę nad wykresem (np. F2), żeby zobaczyć jej przebieg na tle wzorca A–H. Pętle trenera trwają od {} do {} s.":"Click a loop above the chart (e.g. F2) to see it against the A–H pattern. The coach's loops take from {} to {} s.","Motocykl":"Bike","Masa":"Mass","Moc":"Power","Dół":"Low end","Rozstaw":"Wheelbase","Skręt kier.":"Steering lock","Kąt główki":"Rake","CoG":"CoG","Złożenie max":"Max lean","Opony (μ)":"Tyres (μ)","Przód / tył ham.":"Front / rear brake","Przekładanie":"Roll rate","Pełny skręt przy 45°":"Full-lock radius at 45°","Skok przód / tył":"Travel front / rear","Ugięcie przodu przy 1 g":"Fork dive at 1 g","Tył: hamulec / zakładka / gaz":"Rear: brake / overlap / gas","Wyprzedzenie":"Trail","zawodnik minus trener (plus: zawodnik wolniejszy)":"rider minus coach (plus: the rider is slower)","zawodnik":"rider","trener":"coach","Zawodnik":"Rider","Trener":"Coach","H":"B","S":"T","G":"G","H · hamowanie":"B · braking","S · składanie":"T · turn-in","S · w bok":"T · sideways","G · gaz":"G · gas","Siła hamowania":"Braking force","Odkręcenie gazu do pełna":"Time to full throttle","Zapas od pachołka":"Cone margin","Wirtualny zawodnik i trener startują razem z bramki. Zawodnik jedzie według planu: do H gaz, od H przedni hamulec, w S zaczyna składać motocykl, w G gaz. Punkt S przesuwasz bliżej i dalej oraz szerzej i węziej. Trener jedzie tym samym motocyklem, w tej samej pozycji ciała i w tym samym miejscu na siedzeniu, tak jak w pokazie trenera. Zawodnik planera to prostszy kierowca niż trener: składa się i odkręca w punktach planu i jedzie na granicy złożenia, a trener zostawia sobie zapas. Dlatego nawet z punktami trenera zawodnik bywa od niego szybszy albo wolniejszy. Nitka wychodzi z fizyki: od S zawodnik składa się tak szybko i mocno, jak pozwala motocykl i prędkość, ale tak, żeby kierownica, tył motocykla, podnóżek, kolano i łokieć minęły pachołek o zapas. Zawodnik i trener jadą bez błędów, więc ten sam plan daje zawsze ten sam wynik. Obaj hamują w złożeniu: składając się, oddają przód, a tył od razu przejmuje hamowanie, najpierw mocno, potem coraz mniej, i trzymają go jeszcze chwilę po wejściu na gaz. Siła hamowania, odkręcanie gazu i zapas od pachołka są ustalone dla motocykla, pozycji i miejsca na siedzeniu.":"The virtual rider and the coach start together from the gate. The rider follows the plan: throttle up to B, front brake from B, the bike starts leaning in at T, throttle at G. You can move point T nearer and farther, and wider and narrower. The coach rides the same bike, in the same body position and the same place on the seat, exactly as in the coach demo. The planner's rider is a simpler rider than the coach: it leans in and opens the throttle at the plan points and rides at the lean limit, while the coach keeps a margin. That is why, even with the coach's points, the rider can be faster or slower than the coach. The line comes out of the physics: from T the rider leans in as fast and as far as the bike and the speed allow, but so that the handlebar, the rear of the bike, the footpeg, the knee and the elbow clear the cone by the margin. The rider and the coach make no mistakes, so the same plan always gives the same result. Both brake while leaned over: leaning in, they ease off the front and the rear takes over the braking at once, hard at first, then less and less, and they hold it for a moment after getting on the gas. The braking force, the throttle roll-on and the cone margin are fixed for the bike, the body position and the seat position.","Obejrzyj pokaz trenera. Po przejeździe raport porówna jego pętle z wzorcem faz A–H.":"Watch the coach demo. After the run the report will compare the coach's loops with the A–H phase pattern.","<b>Planer.</b> Wybierz pozycję ciała i miejsce na siedzeniu zawodnika, przeciągnij przy czerwonym pachołku punkty <b>H</b> (hamowanie), <b>S</b> (początek składania, także w bok) i <b>G</b> (gaz), potem <b>▶ Porównaj</b> albo Enter: zawodnik pojedzie razem z trenerem.":"<b>Planner.</b> Choose the rider's body position and seat position, drag points <b>B</b> (braking), <b>T</b> (start of turn-in, also sideways) and <b>G</b> (gas) by the red cone, then press <b>▶ Compare</b> or Enter: the rider will ride together with the coach.","<b>Pokaz trenera.</b> Naciśnij <b>▶ Pokaz</b> albo Enter: automatyczny kierowca przejedzie GP8 według wzorca faz A–H.":"<b>Coach demo.</b> Press <b>▶ Demo</b> or Enter: the automatic rider will ride the GP8 following the A–H phase pattern.","<b>Wykres.</b> Biała linia to zawodnik, zielona to trener: prędkość, złożenie i przeciążenie wzdłużne (w górę gaz, w dół hamowanie). Grubo na złożeniu: <b>przeciwskręt</b>, czyli chwila, w której kierownica jest skręcona na zewnątrz łuku, żeby motocykl zaczął się składać (w pętli najlepiej widać go po wybraniu pętli i w tempie ¼×). Grubo na przeciążeniu: hamowanie przodem w złożeniu, czyli <b>trail braking</b>. W wybranej pętli obaj są wyrównani do jej początku, a litery H, S i G pokazują, gdzie każdy zaczął hamować, skręcać i odkręcać gaz. Podczas odtwarzania wykres przechodzi do pętli, którą jedzie zawodnik. Nad wykresem przy każdej pętli różnica czasu: zawodnik minus trener (plus: zawodnik wolniejszy).":"<b>Chart.</b> The white line is the rider, the green one the coach: speed, lean and longitudinal g (up is throttle, down is braking). Thick on the lean trace: <b>countersteering</b>, the moment when the handlebar is turned to the outside of the turn so that the bike starts to lean (in a loop it shows best after selecting the loop and at ¼× speed). Thick on the g trace: front braking while leaned over, that is <b>trail braking</b>. In a selected loop both are aligned to its start, and the letters B, T and G show where each of them started to brake, to turn in and to open the throttle. During replay the chart moves to the loop the rider is in. Above the chart each loop shows the time difference: rider minus coach (plus: the rider is slower).","<b>Wykres.</b> Tło dzieli pętlę na fazy: S1 wejście (A–C), S2 obrót na pełnym skręcie (D), S3 wyjście, przełożenie i dohamowanie (E–H). Szeroka blada linia to wzorzec. Najedź na wykres albo odtwórz przejazd pod placem, żeby zobaczyć to miejsce na placu.":"<b>Chart.</b> The background splits the loop into phases: S1 entry (A–C), S2 rotation at full lock (D), S3 exit, transition and braking for the next cone (E–H). The wide pale line is the reference pattern. Hover over the chart or replay the run below the course to see that spot on the course.","z tyłu":"back","na środku":"middle","z przodu":"front","z tyłu siedzenia":"at the back of the seat","na środku siedzenia":"in the middle of the seat","z przodu siedzenia":"at the front of the seat","nie dojeżdża do mety.":"does not reach the finish.","Zawodnik dotknąłby pachołka.":"The rider would touch a cone.","Przejazd trwałby {} s, a planer przyjmuje najwyżej {} s.":"The run would take {} s, and the planner accepts {} s at most.","wjazd w bramkę":"rode into the gate","wyjazd poza plac":"left the course","za długo":"too long","minął metę":"missed the finish","nie stanął w boxie":"did not stop in the box","gleba":"crash","nie ukończył":"did not finish","<b>Planer nie przyjmie tego ustawienia:</b> {} ":"<b>The planner will not accept this setting:</b> {} ","Zostawiam najbliższe ustawienie, z którym zawodnik jedzie bezbłędnie i najwyżej {} s: ":"Keeping the nearest setting with which the rider completes a clean run in {} s at most: ","Wracam do ostatniego dobrego ustawienia.":"Going back to the last good setting.","{} m przed":"{} m before","{} m za":"{} m past","{} m od pachołka":"{} m from the cone","{}° przed wyjściem":"{}° before the exit","na wyjściu":"at the exit","{} m w bok":"{} m sideways","S · składanie bliżej albo dalej":"T · turn-in nearer or farther","S · składanie szerzej albo węziej":"T · turn-in wider or narrower","■ Przerwij":"■ Stop","▶ Porównaj":"▶ Compare","Porównanie…":"Comparing…","Porównanie przerwane.":"Comparison stopped.","<b>{}.</b> Odtwarzam ten przejazd od startu z bramki. Spacja: pauza.":"<b>{}.</b> Replaying this run from the start at the gate. Space: pause.","Obaj nie ukończyli":"Neither finished","{} nie ukończył":"{} did not finish","Bez różnicy":"No difference","{} szybszy o {} s":"{} faster by {} s","{} za":"{} past","Plan zmieniony od porównania. Naciśnij Porównaj jeszcze raz.":"The plan has changed since the comparison. Press Compare again.","Naciśnij <b>▶ Porównaj</b> albo Enter, a zobaczysz czas zawodnika i trenera.":"Press <b>▶ Compare</b> or Enter to see the times of the rider and the coach.","Plan":"Plan","Pozycja":"Body position","Siedzi":"Seat","H hamowanie":"B braking","S: metry przed linią pachołka (za: po niej) · metry w bok od pachołka":"T: metres before the cone line (past: beyond it) · metres sideways from the cone","S składanie · bok":"T turn-in · side","G gaz":"G gas","błąd trasy":"course error","Wynik":"Result","Czas":"Time","Powód":"Reason","Średnio w pętli":"Loop averages","km/h w H·S·G":"km/h at B·T·G","Złożenie w G":"Lean at G","najmniejszy odstęp obrysu motocykla z kierowcą (kierownica, tył motocykla, podnóżek, kolano, łokieć) od pachołka; ślad tylnej opony: zawodnik {} m, trener {} m od środka pachołka":"smallest gap between the outline of the bike with its rider (handlebar, rear of the bike, footpeg, knee, elbow) and the cone; rear tyre track: rider {} m, coach {} m from the centre of the cone","Do pachołka":"Cone clearance","Najbliżej":"Closest part","Naciśnij <b>▶ Pokaz</b> albo Enter. Tu pojawi się wynik trenera.":"Press <b>▶ Demo</b> or Enter. The coach's result will appear here.","Trener: {}":"Coach: {}","Pokaz przerwany":"Demo stopped","Trener nie ukończył":"The coach did not finish","Najwyższa prędkość":"Top speed","Największe złożenie":"Max lean","Pętla najszybsza – najwolniejsza":"Fastest – slowest loop","Ósemka":"Eight","Różnica":"Difference"," (pozycja {}, {})":" (body position: {}, {})","<b>{}</b>: zawodnik {}, trener {}.":"<b>{}</b>: rider {}, coach {}.","{}: w S ma ok. {}. Obrys mija pachołek średnio o {}":"{}: about {} at T. The outline clears the cone by {} on average"," (najbliżej: {})":" (closest: {})",", ślad tylnej opony ok. {} m od jego środka. W G ma ok. {} i złożenie ok. {}°, wyjście wychodzi szersze od nitki o ok. {} cm.":", and the rear tyre track runs about {} m from its centre. At G the speed is about {} and the lean about {}°; the exit runs about {} cm wider than the line.","błąd trasy.":"course error.","{} nie ukończył: {}":"{} did not finish: {}","Największa różnica w pętli {}: zawodnik {} względem trenera. Kliknij ją nad wykresem i odtwórz w tempie ¼× albo ⅒×.":"Biggest difference in loop {}: rider {} relative to the coach. Click it above the chart and replay it at ¼× or ⅒× speed.","Wirtualny zawodnik: do H gaz, od H przedni hamulec z zadaną siłą (pełna siła po ok. 0,2 s), najdłużej do S, aż do prędkości, z jaką zmieści się w łuku za S. W S składa się <b>przeciwskrętem</b>: kierownica na ułamek sekundy idzie na zewnątrz łuku, motocykl zaczyna się przechylać, a dopiero potem kierownica idzie do środka (na wykresie grubo na złożeniu, w tabeli „Teraz” przy kierownicy: „przeciwskręt”). Przy większej prędkości przechył rusza szybciej. Tak samo, tylko odwrotnie, podnosi motocykl przy wyjściu: kierownica mocniej do środka. Hamuje też w złożeniu (trail braking): po S oddaje przedni hamulec w miarę składania, bo w złożeniu opona ma mniej przyczepności na hamowanie, a jak tylko puszcza przód, dokłada tyłu: najpierw mocno (do ok. 80% tego, na co tylnej oponie zostaje przyczepności w złożeniu), potem coraz mniej, aż zwolni do prędkości wierzchołka albo tył nie ma już czym hamować; wtedy uchyla gaz, a tył puszcza dopiero po ok. 0,2 s (zakładka), więc nie ma chwili bez hamulca i bez gazu; ugięty widelec zmniejsza wyprzedzenie, więc motocykl składa się szybciej. Od S składa się tak szybko i mocno, jak pozwala motocykl, ale tak, żeby obrys (kierownica, tył motocykla, podnóżek, kolano i łokieć) minął pachołek o zapas, i jedzie na granicy złożenia (trener w pokazie zostawia sobie zapas). Późny albo wąski S to ciasny łuk zaraz za S, więc przed nim trzeba mocniej wyhamować. Kto hamuje za późno, w złożeniu już tak nie wyhamuje i wynosi go szeroko. Potem trzyma prędkość wierzchołka uchylonym gazem aż do G. Od G odkręca do pełna, przesuwa ciało do przodu (przednie koło później się podnosi) i podnosi motocykl na tyle, żeby opony przeniosły przyspieszanie, więc gaz w głębszym złożeniu to szersze wyjście. W pierwszej pętli (prawej, zaraz po starcie) hamuje i składa się jak trener, wcześniej niż w H i w S, bo z bramki jest szybszy i dojeżdża z innej strony; od pierwszej lewej hamuje w H. Bramka 3 m za niebieskim pachołkiem to przeszkoda: przejazd, w którym zawodnik w nią wjeżdża, jest nieukończony. Złożenie od pionu do 45° trwa na Ultra Bee ok. 0,35 s, tak jak na nagraniu przejazdu.":"The virtual rider: throttle up to B, then from B the front brake with the set force (full force after about 0.2 s), until T at the latest, down to the speed that fits the turn after T. At T the rider leans in by <b>countersteering</b>: for a fraction of a second the handlebar goes to the outside of the turn, the bike starts to roll, and only then does the handlebar turn in (thick on the lean trace of the chart; “countersteer” next to the steering angle in the “Now” table). At higher speed the roll starts faster. The same thing in reverse picks the bike up on exit: the handlebar turns further in. The rider also brakes while leaned over (trail braking): after T the front brake is released as the lean grows, because a leaned tyre has less grip left for braking, and as soon as the front is released the rear comes in: hard at first (up to about 80% of the grip the rear tyre has left at that lean), then less and less, until the bike has slowed to the apex speed or the rear has nothing left to brake with; then the throttle is cracked open and the rear is released only after about 0.2 s (overlap), so there is no moment without brake or throttle; the compressed fork shortens the trail, so the bike leans in faster. From T the rider leans in as fast and as far as the bike allows, but so that the outline (handlebar, rear of the bike, footpeg, knee and elbow) clears the cone by the margin, and rides at the lean limit (the coach in the demo keeps a margin). A late or narrow T means a tight turn right after T, so more braking is needed before it. Braking that starts too late cannot be made up while leaned over, and the bike runs wide. Then the rider holds the apex speed on a cracked throttle until G. From G the rider rolls on to full throttle, moves the body forward (the front wheel lifts later) and picks the bike up just enough for the tyres to carry the acceleration, so throttle at deeper lean means a wider exit. In the first loop (the right-hand one, straight after the start) the rider brakes and leans in like the coach, earlier than at B and T, because the speed out of the gate is higher and the approach comes from a different side; from the first left-hand loop on, braking starts at B. The gate 3 m behind the blue cone is an obstacle: a run in which the rider enters it does not count as finished. Leaning from upright to 45° takes about 0.35 s on the Ultra Bee, as in the video of a real run.","Brak danych z przejazdu.":"No data from the run.","▬ przeciwskręt":"▬ countersteer","Przeciążenie":"Longitudinal g","g wzdł.":"long. g","± 1,2 g":"± 1.2 g","▬ trail braking":"▬ trail braking","WIDOK Z TYŁU":"REAR VIEW","moto {}°":"bike {}°","wypadkowa {}°":"combined {}°","PRZECIĄŻENIA (G)":"G-FORCES","hamowanie":"braking","tył odciążony":"rear unloaded","hamowanie blokuje złożenie":"braking holds the bike up","przód odciążony":"front unloaded","tył się ślizga":"rear sliding","przód się ślizga":"front sliding","przyczepność {}%":"grip {}%","Teraz":"Now","złożenie":"lean","promień":"radius","przyczepność":"grip","przeciwskręt":"countersteer","prosto":"straight","{} · {} kg · {} kW · rozstaw {} m · skręt {}°":"{} · {} kg · {} kW · wheelbase {} m · lock {}°","Pauza":"Pause","Odtwórz":"Play","Raport planera":"Planner report","Raport z pokazu":"Demo report","<b>{} w pozycji {}</b> z tym planem nie przejedzie bezbłędnie w czasie do {} s, więc ma plan wyjściowy dla tej pozycji.":"<b>{} in the {} position</b> cannot complete a clean run within {} s with this plan, so the default plan for this position is used.","<b>{} w pozycji {}</b> z tymi punktami nie przejedzie bezbłędnie w czasie do {} s, więc zmieniam: ":"<b>{} in the {} position</b> cannot complete a clean run within {} s with these points, so they are changed: ","{} z tym planem nie przejedzie bezbłędnie w czasie do {} s, więc ma plan wyjściowy dla tej pozycji i miejsca.":"{} cannot complete a clean run within {} s with this plan, so the default plan for this position and seat is used.","{} z tymi punktami nie przejedzie bezbłędnie w czasie do {} s, więc zmieniam: ":"{} cannot complete a clean run within {} s with these points, so they are changed: ","Przeciągnij kółko <b>H</b>, <b>S</b> albo <b>G</b> albo kliknij przy czerwonym pachołku: na prostej dojazdu (H), obok niej (S, także w bok) albo na pętli (G).":"Drag the <b>B</b>, <b>T</b> or <b>G</b> circle, or click near the red cone: on the approach straight (B), beside it (T, also sideways) or on the loop (G)."};
 
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Maciej Kasprzyk
@@ -481,7 +481,7 @@ const BIKES = [
   {
     id: 'pit', name: 'Pitbike SM 12"', sub: i18n`ok. 150–190 cm³`, tyre: 'supermoto 12"',
     m: 72,  P: 11,                  aT: 7.5, b0: 0.75, vb: 4, eb: 0.8,
-    L: 1.17,  lock: 45, rake: 26, h: 0.72, ff: 0.47, clear: 62, mu: 1.4,
+    L: 1.17,  lock: 45, rake: 26, h: 0.72, ff: 0.47, clear: 62, mu: 1.18,
     bf: 8.5, br: 2.8, roll: 330,
     ft: 130, fd: 75,  fz: 2.2, rw: 0.242, trail: 0.07,
     rt: 120, rd: 35, rr: 0.243, hp: 0.33, ls: 0.46,  rf: 0.0285, rs: 0.079,  xf: 0.07, yf: 0,
@@ -489,7 +489,7 @@ const BIKES = [
   {
     id: 'sm', name: 'Supermoto 450', sub: i18n`klasa Honda CRF450 z kołami SM`, tyre: i18n`supermoto, miękkie`,
     m: 118, P: 40,                  aT: 8.5, b0: 0.8,  vb: 4, eb: 1.2,
-    L: 1.49,  lock: 38, rake: 26, h: 0.95, ff: 0.46, clear: 59, mu: 1.35,
+    L: 1.49,  lock: 38, rake: 26, h: 0.95, ff: 0.46, clear: 59, mu: 1.18,
     bf: 10,  br: 3.0, roll: 170,
     ft: 270, fd: 135, fz: 1.8, rw: 0.3,   trail: 0.11,
     rt: 290, rd: 55, rr: 0.3,   hp: 0.45, ls: 0.585, rf: 0.0357, rs: 0.121,  xf: 0.05, yf: 0,
@@ -647,12 +647,70 @@ const tanGroundSteer = (d, p, e) => {
 const steerForCurvature = (T, p, e) => Math.atan((T * Math.cos(p)) / (Math.cos(e) + T * Math.sin(e) * Math.sin(p)));
 // Radius of the rear wheel track at full lock and combined lean a.
 const lockRadius = (S, a) => S.b.L / tanGroundSteer(S.lockEff, bikeLean(S, a), S.eps0);
-// The largest lean full lock can hold at speed v: the first lean at which g·tan φ reaches v² times the
-// full-lock curvature (head angle e and wheelbase L default to static).
+// A steady turn of the rigid bike: with both wheels rolling it turns about a point on the line of the rear
+// axle, so the centre of mass, h·sin p inside the tyre line, runs on the radius 1/k − h·sin p, where k is
+// the curvature of the rear track. Balance at combined lean p and rear wheel speed v:
+// g·tan p = v²·k·(1 − h·k·sin p). Returns k (for a lean too deep for the speed, the tightest k).
+function balanceCurvature(S, p, v) {
+  const k0 = (G * Math.tan(p)) / Math.max(v * v, 0.09);
+  const c = S.b.h * Math.sin(p);
+  if (c < 1e-6) return k0;
+  const d = 1 - 4 * c * k0;
+  return d > 0 ? (1 - Math.sqrt(d)) / (2 * c) : 1 / (2 * c);
+}
+// Tyre loads per kilogram in that turn at side acceleration la = g·tan p and rear track curvature k. The
+// front contact runs on a wider circle than the rear one (√(1 + (kL)²) times its side share) and pulls the
+// centre of mass back towards the turn centre by ω²·a_r, which loads the front like braking does; the rear
+// carries the rest of the side force, outwards in the tightest turns. cf, cr: side forces on the front and
+// rear; tr: load moved forward; kv: side acceleration of the rear contact (p: the lean, if the turn is not
+// balanced).
+function turnLoads(S, D, la, k, p) {
+  if (!k) return { cf: la * D.fF, cr: la * (1 - D.fF), tr: 0, kv: la };
+  const b = S.b;
+  if (p == null) p = Math.atan(la / G);
+  const kv = la / Math.max(0.05, 1 - b.h * k * Math.sin(p));
+  return {
+    cf: kv * D.fF * Math.sqrt(1 + (k * b.L) ** 2),
+    cr: Math.abs(la - kv * D.fF),
+    tr: kv * k * D.fF * b.h * Math.cos(p),
+    kv,
+  };
+}
+// Whether both tyres hold that turn within grip mu.
+function turnHolds(S, D, la, k, p, mu) {
+  const q = turnLoads(S, D, la, k, p);
+  return q.cf <= mu * (G * D.fF + q.tr) && q.cr <= mu * (G * (1 - D.fF) - q.tr);
+}
+// The deepest lean (up to top) whose steady turn at speed v, free or at full lock, both tyres hold.
+function gripLean(S, D, v, mu, top) {
+  const ok = (p) => {
+    const c = S.b.h * Math.sin(p);
+    const k0 = (G * Math.tan(p)) / Math.max(v * v, 0.09);
+    const d = 1 - 4 * c * k0;
+    if (d < 0) return false;
+    const k = c < 1e-6 ? k0 : (1 - Math.sqrt(d)) / (2 * c);
+    if (k > tanGroundSteer(S.lockEff, bikeLean(S, p), S.eps0) / S.b.L) return false;
+    return turnHolds(S, D, G * Math.tan(p), k, p, mu);
+  };
+  if (ok(top)) return top;
+  let lo = 0;
+  let hi = top;
+  for (let i = 0; i < 16; i++) {
+    const m = (lo + hi) / 2;
+    if (ok(m)) lo = m;
+    else hi = m;
+  }
+  return lo;
+}
+// The largest lean full lock can hold at speed v: the first lean at which balance needs the full-lock
+// curvature (head angle e and wheelbase L default to static).
 function fullLockLean(S, v, e, L) {
   e = e != null ? e : S.eps0;
   L = L || S.b.L;
-  const f = (p) => G * Math.tan(p) - (v * v * tanGroundSteer(S.lockEff, bikeLean(S, p), e)) / L;
+  const f = (p) => {
+    const kL = Math.min(tanGroundSteer(S.lockEff, bikeLean(S, p), e) / L, 0.5 / Math.max(1e-6, S.b.h * Math.sin(p)));
+    return G * Math.tan(p) - v * v * kL * (1 - S.b.h * kL * Math.sin(p));
+  };
   const hi = Math.min(1.4, S.capC + 0.3);
   let lo = 0;
   let p = 0;
@@ -773,42 +831,6 @@ function outlineClearance(pts, x, y, psi, C) {
   }
   return { c, n };
 }
-// Smallest and largest radius at which part p circles the centre of a turn of radius R.
-const sweepRadii = (p, R) => {
-  const e = R - p.lat;
-  const a0 = Math.abs(p.z0);
-  const a1 = Math.abs(p.z1);
-  const zm = p.z0 <= 0 && p.z1 >= 0 ? 0 : Math.min(a0, a1);
-  return [Math.hypot(zm, e), Math.hypot(Math.max(a0, a1), e)];
-};
-// Smallest distance from the rear tyre track to the cone centre, on a turn of radius R at bike lean
-// phb, at which the outline clears the cone; and the part that reaches furthest.
-function coneOffsetAt(S, phb, R) {
-  const d = Math.min(S.lockEff, steerForCurvature(S.b.L / Math.max(R, 0.05), Math.abs(phb), S.eps0)) * S.cosR;
-  let m = 0;
-  let n = '';
-  for (const p of outlinePoints(S, Math.abs(phb), d)) {
-    if (p.lat <= 0 || !canTouchCone(p)) continue;
-    const x = p.z0 <= 0 && p.z1 >= 0 && p.lat >= R ? p.lat + touchRadius(p) : R - sweepRadii(p, R)[0] + touchRadius(p);
-    if (x > m) {
-      m = x;
-      n = p.n;
-    }
-  }
-  return { m, n };
-}
-// The same at the coach's lean limit and full lock, plus margin cm.
-function minConeOffset(S, cm) {
-  const phb = bikeLean(S, AUTO.LIM * S.capC);
-  const R0 = lockRadius(S, AUTO.LIM * S.capC) * 1.03;
-  let R = R0;
-  let m = 0;
-  for (let i = 0; i < 6; i++) {
-    m = coneOffsetAt(S, phb, R).m;
-    R = Math.max(R0, m + cm);
-  }
-  return m + cm;
-}
 
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Maciej Kasprzyk
@@ -822,7 +844,14 @@ const engineAccel = (b, S, v, t) =>
     b.aT * (b.b0 + (1 - b.b0) * Math.min(1, v / b.vb)),
     ((b.P2 && t != null && t > b.Pt ? b.P2 : b.P) * 850) / (S.mt * Math.max(v, 0.5)),
   );
-const FLAG = { WHEELIE: 1, STOPPIE: 2, SLIDEF: 4, LOCKR: 8, SPIN: 16, FALL: 32, WIDE: 64, SCRAPE: 128 };
+const FLAG = { WHEELIE: 1, STOPPIE: 2, SLIDEF: 4, LOCKR: 8, SPIN: 16, FALL: 32, WIDE: 64, SCRAPE: 128, HOLD: 256 };
+// The steady turn at lean p and speed v: its curvature k and the side force each tyre needs [N].
+function tyreNeeds(S, D, g, p, v) {
+  const k = Math.min(balanceCurvature(D, p, Math.max(v, 0.3)), tanGroundSteer(D.lockEff, bikeLean(D, p), g.eps) / g.L);
+  const kv = v * v * k;
+  const al = kv * (1 - S.b.h * k * Math.sin(p));
+  return { k, f: S.mt * kv * D.fF * Math.sqrt(1 + (k * g.L) ** 2), r: S.mt * Math.abs(al - kv * D.fF) };
+}
 // The rider's body as a second mass: FA shift of its centre of mass along the bike at full reach [m],
 // WN and ZB natural frequency [rad/s] and damping of the torso, VB its top speed [full reach/s].
 const BODY_SHIFT = { FA: 0.15, WN: 9, ZB: 0.9, VB: 5 };
@@ -877,6 +906,7 @@ class Sim {
     this.vr = 0;
     this.dN = 0;
     this.dNv = 0;
+    this.fxR = 0;
     this.g = liveGeometry(S, this.zf, this.zr);
     this.yr = 0;
     this.yd = 0;
@@ -949,6 +979,25 @@ class Sim {
       fl |= FLAG.FALL;
       this.eqC = true;
     }
+    // A deeper lean needs a rear tyre that can carry the side force of that turn. Hard front braking
+    // unloads the rear, so the bike leans in only as far as the rear allows until the brake eases.
+    if (Math.abs(phi) > Math.abs(this.phi)) {
+      const Nr0 = Math.max(0, S.mt * G * (1 - D.fF) - this.dN);
+      const cR = Math.sqrt(Math.max(0, (D.mu * Nr0) ** 2 - this.fxR ** 2));
+      if (tyreNeeds(S, D, g, Math.abs(phi), v0).r > cR) {
+        let lo = Math.abs(this.phi);
+        if (tyreNeeds(S, D, g, lo, v0).r <= cR) {
+          let hi = Math.abs(phi);
+          for (let i = 0; i < 10; i++) {
+            const m = (lo + hi) / 2;
+            if (tyreNeeds(S, D, g, m, v0).r <= cR) lo = m;
+            else hi = m;
+          }
+        }
+        phi = Math.sign(phi || this.phi) * lo;
+        fl |= FLAG.HOLD;
+      }
+    }
     const w1 = this.eqC ? clamp((phi - this.phi) / dt, -Math.abs(w0), Math.abs(w0)) : (phi - this.phi) / dt;
     const racc = (w1 - w0) / dt;
     this.eqC = false;
@@ -959,7 +1008,7 @@ class Sim {
     const ab = bikeLean(D, a);
     const kLock = tanGroundSteer(D.lockEff, ab, g.eps) / g.L;
     const vv = Math.max(v0, 0.3);
-    const kBal = (G * Math.tan(a)) / (vv * vv);
+    const kBal = balanceCurvature(D, a, vv);
     let k = Math.min(kBal, kLock);
     this.lock = a > 0.5 * RAD && kBal >= kLock * 0.95;
     if (v0 < 0.02) k = 0;
@@ -998,9 +1047,13 @@ class Sim {
     this.yd += ((yr - this.yr) / dt - this.yd) * Math.min(1, dt / 0.04);
     this.yr = yr;
     const dY = (S.Iz * this.yd) / g.L;
-    const al = v0 * v0 * k;
-    const Fyf = Math.abs(side * S.mt * al * D.fF + dY);
-    const Fyr = Math.abs(side * S.mt * al * (1 - D.fF) - dY);
+    // Side forces of the rigid bike turning about the rear axle line (see turnLoads): kv = v²·k is the rear
+    // contact's side acceleration, al the centre of mass's; the front contact's wider circle adds sF.
+    const kv = v0 * v0 * k;
+    const al = kv * (1 - b.h * k * Math.sin(a));
+    const sF = Math.sqrt(1 + (k * g.L) ** 2);
+    const Fyf = Math.abs(side * S.mt * kv * D.fF + dY) * sF;
+    const Fyr = Math.abs(side * S.mt * (al - kv * D.fF) - dY);
     this.dY = dY;
     const capF = D.mu * Math.max(Nf, 1);
     let uF = Math.hypot(S.mt * aF, Fyf) / capF;
@@ -1011,10 +1064,17 @@ class Sim {
         this.slideF += (uF - 1) * 10 * dt;
         fl |= FLAG.SLIDEF;
       } else {
-        const pm = Math.atan(capF / (S.mt * D.fF * G));
-        if (pm < a) {
+        // The front pushes: the bike stands up to the deepest lean whose steady turn the front holds.
+        if (tyreNeeds(S, D, g, a, v0).f > capF) {
+          let pm = 0;
+          let hi = a;
+          for (let i = 0; i < 12; i++) {
+            const m = (pm + hi) / 2;
+            if (tyreNeeds(S, D, g, m, v0).f <= capF) pm = m;
+            else hi = m;
+          }
           this.phi = side * pm;
-          k = Math.min(k, (G * Math.tan(pm)) / Math.max(v0 * v0, 0.09));
+          k = Math.min(k, tyreNeeds(S, D, g, pm, v0).k);
           fl |= FLAG.WIDE;
         }
         this.slideF = Math.max(0, this.slideF - 3 * dt);
@@ -1022,6 +1082,7 @@ class Sim {
     } else this.slideF = Math.max(0, this.slideF - 3 * dt);
     const capR = D.mu * Math.max(Nr, 1);
     const FxR = S.mt * (aD - aR - aEB);
+    this.fxR = FxR;
     const uR = Math.hypot(FxR, Fyr) / capR;
     if (uR > 1) {
       const av = Math.sqrt(Math.max(0, capR * capR - Fyr * Fyr)) / S.mt;
@@ -1070,7 +1131,8 @@ class Sim {
     this.psi += side * vm * k * dt;
     this.x += vm * Math.cos(this.psi) * dt;
     this.y += vm * Math.sin(this.psi) * dt;
-    const dNt = (-S.mt * ax * b.h) / b.L;
+    // Load moved onto the front by braking and by the pull of a tight turn towards its centre (ω²·a_r).
+    const dNt = (S.mt * (vm * vm * k * k * D.fF * b.L * Math.cos(a) - ax) * b.h) / b.L;
     const wn = S.wn;
     this.dNv += (wn * wn * (dNt - this.dN) - 2 * 0.55 * wn * this.dNv) * dt;
     this.dN += this.dNv * dt;
@@ -1096,7 +1158,7 @@ class Sim {
     this.v = v;
     this.k = side * k;
     this.ax = ax;
-    this.al = side * v * v * k;
+    this.al = side * al;
     this.fl = fl;
     this.t += dt;
   }
@@ -1262,31 +1324,32 @@ function checkCones(sim, course, t) {
 // Tyre limits per kilogram of mass, with load transfer and grip share eta. The hardest braking at
 // lateral acceleration la: the front gains load as it brakes, while the rear loses load but must still
 // carry its share of the side force, so in a lean it is usually the rear that limits braking. sh is
-// side force moved onto the front by yaw inertia (see yawLoadShift).
-function maxBrakeDecel(S, D, la, eta, sh) {
+// side force moved onto the front by yaw inertia (see yawLoadShift), k the curvature of the rear track
+// in a tight turn (see turnLoads).
+function maxBrakeDecel(S, D, la, eta, sh, k) {
   const b = S.b;
-  const fF = D.fF;
   const hL = b.h / b.L;
   const mu = eta * D.mu;
+  const q = turnLoads(S, D, la, k);
   const A = mu * hL;
-  const B = mu * G * fF;
-  const c = sh ? Math.abs(la * fF + sh) : la * fF;
+  const B = mu * (G * D.fF + q.tr);
+  const c = sh ? Math.abs(q.cf + sh) : q.cf;
   const disc = A * A * B * B - (1 - A * A) * (c * c - B * B);
   const aF = disc > 0 ? (A * B + Math.sqrt(disc)) / (1 - A * A) : 0;
-  const aR = Math.max(0, (eta * G * (1 - fF) - (sh ? Math.abs(la * (1 - fF) - sh) : la * (1 - fF)) / mu) / hL);
+  const aR = Math.max(0, (eta * (G * (1 - D.fF) - q.tr) - (sh ? Math.abs(q.cr - sh) : q.cr) / mu) / hL);
   return Math.max(0, Math.min(aF, aR, b.bf));
 }
 // The hardest acceleration at la: the front, unloaded by drive, must still carry its share of the side
 // force; a wheelie and the engine set the other limits.
-function maxDriveAccel(S, D, la, eta, v, t, sh) {
+function maxDriveAccel(S, D, la, eta, v, t, sh, k) {
   const b = S.b;
-  const fF = D.fF;
   const hL = b.h / b.L;
   const mu = eta * D.mu;
-  const aF = Math.max(0, (G * fF - (sh ? Math.abs(la * fF + sh) : la * fF) / mu) / hL);
+  const q = turnLoads(S, D, la, k);
+  const aF = Math.max(0, (G * D.fF + q.tr - (sh ? Math.abs(q.cf + sh) : q.cf) / mu) / hL);
   const A = mu * hL;
-  const B = mu * G * (1 - fF);
-  const c = sh ? Math.abs(la * (1 - fF) - sh) : la * (1 - fF);
+  const B = mu * (G * (1 - D.fF) - q.tr);
+  const c = sh ? Math.abs(q.cr - sh) : q.cr;
   const disc = A * A * B * B - (1 - A * A) * (c * c - B * B);
   const aR = disc > 0 ? (A * B + Math.sqrt(disc)) / (1 - A * A) : 0;
   return Math.max(0, Math.min(aF, aR, 0.97 * D.wheelie, engineAccel(b, S, v, t)));
@@ -1335,13 +1398,15 @@ function gripEnvelope(S, la, v, om, brake, t) {
 // the plan points and a few rules, and the line comes out of the physics. Between the loops it heads
 // for the next approach point; from B it brakes as hard as the tyres allow, mostly with the front, the
 // rear adding gently without locking; from T it leans in smoothly while the brakes fade with the lean
-// (the g-g envelope); from G it opens the throttle as far as the lean allows and picks the bike up.
+// it is about to take (the g-g envelope), so the rear always has the grip to carry that lean; from G
+// it opens the throttle as far as the lean allows and picks the bike up.
 // Entry and exit are planned with short look-ahead simulations (predictEntry, predictExit).
 
 // LIM share of the lean limit used, rG share of the rear tyre's spare grip used for braking, rMin
 // least rear braking (share of br), fK front brake release gain [1/s], gRot rotation [°] after which
-// the coach may open the throttle at full lean.
-const AUTO = { LIM: 0.98, rG: 0.8, rMin: 0.15, fK: 8, gRot: 75 };
+// the coach may open the throttle at full lean, pB lean [°] ahead of the present one that the
+// braking in a turn-in leaves grip for.
+const AUTO = { LIM: 0.98, rG: 0.8, rMin: 0.15, fK: 8, gRot: 75, pB: 10 };
 // The diagonals cross the cone axis at this angle. Even turns go round the far cone to the right, odd
 // ones round the near cone to the left.
 const APPROACH_ANGLE = 10 * RAD;
@@ -1465,6 +1530,22 @@ function aimOnPolyline(pts, p, Ld) {
     t = 0;
   }
 }
+// Side acceleration la and rear track curvature k of the steady turn at lean p and speed v.
+function steadyTurn(S, D, p, v) {
+  const k = Math.min(
+    balanceCurvature(D, p, Math.max(v, 0.3)),
+    tanGroundSteer(D.lockEff, bikeLean(D, p), S.eps0) / S.b.L,
+  );
+  return { la: v * v * k * (1 - S.b.h * k * Math.sin(p)), k };
+}
+// The hardest braking in a turn-in at lean p heading for lean tc: it leaves the grip that the lean
+// pB further on needs.
+function turnInBrake(S, D, eta, la, k, p, tc, v) {
+  const pT = Math.min(tc, p + AUTO.pB * RAD);
+  if (pT <= p + 1e-4) return maxBrakeDecel(S, D, la, eta, 0, k);
+  const s = steadyTurn(S, D, pT, v);
+  return maxBrakeDecel(S, D, Math.max(la, s.la), eta, 0, Math.max(k, s.k));
+}
 class AutoRider {
   constructor(S, opt) {
     this.S = S;
@@ -1477,14 +1558,29 @@ class AutoRider {
     this.ld = opt.ld;
     this.kcs = opt.kcs;
     this.leanMax = Math.min(AUTO.LIM * S.capC, Math.atan(opt.lf * this.eta * S.mu));
-    this.coneOffset = minConeOffset(S, this.cm);
-    this.r = Math.max(lockRadius(S, this.leanMax) * 1.03, opt.rA || 0.45 * b.L);
+    // Grip the rider allows for the turn, and the apex it permits: at full lock (k null), or on the rear
+    // track radius 1/k, the deepest lean both tyres hold and its balance speed (see turnLoads).
+    this.muR = opt.lf * this.eta * S.mu;
+    this.caps = new Map();
+    const apexAt = (k) => {
+      let best = null;
+      for (let p = 3 * RAD; p <= this.leanMax + 1e-9; p += 0.25 * RAD) {
+        const kL = tanGroundSteer(S.lockEff, bikeLean(S, p), S.eps0) / b.L;
+        const kk = k || kL;
+        if (kL < kk) continue;
+        const q = 1 - b.h * kk * Math.sin(p);
+        if (q <= 0.05 || !turnHolds(S, S, G * Math.tan(p), kk, p, this.muR)) break;
+        best = { p, v: Math.sqrt((G * Math.tan(p)) / (kk * q)), r: 1 / kk };
+      }
+      return best;
+    };
+    const a0 = apexAt(null);
+    this.r = Math.max(a0.r * 1.03, opt.rA || 0.45 * b.L);
+    const aA = apexAt(1 / this.r) || a0;
+    this.leanApex = aA.p;
     this.om = opt.om * RAD;
-    this.vApex = Math.sqrt(G * Math.tan(this.leanMax) * this.r);
-    this.vTurn = Math.max(
-      opt.kA * this.vApex,
-      1.02 * Math.sqrt(G * Math.tan(this.leanMax) * lockRadius(S, this.leanMax)),
-    );
+    this.vApex = aA.v;
+    this.vTurn = Math.max(opt.kA * this.vApex, 1.02 * a0.v);
     const FW = [-CONE_X, opt.finY];
     this.finishAim = FW;
     this.aim = (q) => (q >= TURNS ? FW : turnFramePoint(q, [0, opt.pdq ? opt.pdq[q] : opt.pd]));
@@ -1629,12 +1725,26 @@ class AutoRider {
     }
     return outlineClearance(pts, x, y, h, C).c;
   }
+  // The deepest lean the tyres hold at speed v (memoised in steps of 0.05 m/s).
+  capAt(v) {
+    const key = Math.round(Math.max(v, 0.3) * 20);
+    let c = this.caps.get(key);
+    if (c == null) {
+      c = gripLean(this.S, this.S, key / 20, this.muR, this.leanMax);
+      this.caps.set(key, c);
+    }
+    return c;
+  }
   // Lean while slowing for the apex: from pS towards the lean limit as the speed drops.
   scheduledLean(sch, v) {
-    return sch.pS + (this.leanMax - sch.pS) * clamp((sch.vS - v) / Math.max(0.3, sch.vS - this.vApex), 0, 1) * sch.k;
+    return Math.min(
+      this.capAt(v),
+      sch.pS + (this.leanMax - sch.pS) * clamp((sch.vS - v) / Math.max(0.3, sch.vS - this.vApex), 0, 1) * sch.k,
+    );
   }
-  // Looks ahead through the turn-in with lean schedule sch: the smaller of the margin to the cone and
-  // how far past the cone the bike gets in its first 90° of rotation [m]. Negative: the schedule fails.
+  // Looks ahead through the turn-in with lean schedule sch: the smaller of the margin to the cone over
+  // the first 150° of rotation and how far past the cone the bike is after 90° [m]. Negative: the
+  // schedule fails.
   predictEntry(sim, st, q, sch, cs) {
     const S = this.S;
     const D = sim.D || S;
@@ -1645,7 +1755,11 @@ class AutoRider {
     const bq = this.opt.plan ? this.opt.brk[q] : null;
     const C0 = turnCone(q);
     const C = cs ? [C0[0] - cs * u[0], C0[1] - cs * u[1]] : C0;
-    const aBr = bq ? bq.fs * maxBrakeDecel(S, D, 0, this.eta) : 1e9;
+    const aBr = bq
+      ? bq.fs * maxBrakeDecel(S, D, 0, this.eta)
+      : this.opt.bC > 0 && this.opt.bC < 1
+        ? this.opt.bC * maxBrakeDecel(S, D, 0, this.eta)
+        : 1e9;
     const dt = 0.02;
     const fF = D.fF;
     const mu = this.eta * D.mu;
@@ -1660,6 +1774,7 @@ class AutoRider {
     let m = 9;
     let ab = false;
     let t = 0;
+    let pa = null;
     const hL = b.h / b.L;
     const aW0 = Math.max(0.3, Math.min(aBr, maxBrakeDecel(S, D, 0, this.eta)));
     const vA = this.vTurn;
@@ -1680,19 +1795,26 @@ class AutoRider {
           : sch.dl && t <= sch.dl
             ? sch.pS
             : this.scheduledLean(sch, v);
-      [vp, vw] = servo(vp, vw, tc, this.rollAccel(S, v, vp), S.roll, dt);
+      const cap = this.capAt(v);
+      [vp, vw] = servo(vp, vw, Math.min(tc, cap), this.rollAccel(S, v, vp), S.roll, dt);
       [p, w] = servo(p, w, vp, rollAccelOf(S, v), S.roll, dt);
+      if (Math.abs(p) > cap) p = Math.sign(p) * cap;
       const ap = Math.abs(p);
-      const kb = (G * Math.tan(ap)) / (v * v);
+      const kb = balanceCurvature(D, ap, v);
       const kl = tanGroundSteer(D.lockEff, bikeLean(D, ap), S.eps0) / b.L;
       const k = Math.sign(p) * Math.min(kb, kl);
-      const la = v * v * Math.abs(k);
-      const aW = v > vFr && !mt ? Math.min(aBr, maxBrakeDecel(S, D, la, this.eta), AUTO.fK * (v - vFr)) : 0;
+      const ka = Math.abs(k);
+      const la = v * v * ka * (1 - b.h * ka * Math.sin(ap));
+      const aW =
+        v > vFr && !mt
+          ? Math.min(aBr, turnInBrake(S, D, this.eta, la, ka, ap, Math.min(tc, cap), v), AUTO.fK * (v - vFr))
+          : 0;
       const wR = clamp(1 - aW / aW0, 0, 1);
       let aR = 0;
       if (!mt) {
-        const Nr = Math.max(0, G * (1 - fF) - aP * hL);
-        const cR = Math.sqrt(Math.max(0, (mu * Nr) ** 2 - (la * (1 - fF)) ** 2));
+        const tq = turnLoads(S, D, la, ka, ap);
+        const Nr = Math.max(0, G * (1 - fF) - tq.tr - aP * hL);
+        const cR = Math.sqrt(Math.max(0, (mu * Nr) ** 2 - tq.cr ** 2));
         const aU = Math.min(kp * (v - vA), AUTO.rG * cR, b.br);
         aR = wR * Math.max(rL, aU);
         aPk = Math.max(aPk, aR);
@@ -1728,9 +1850,11 @@ class AutoRider {
         const c = this.clearance(D, sg * p, sg * k, x, y, h, C);
         if (c < m) m = c;
       }
-      if (signedRotation(hu, h, sg) >= Math.PI / 2) {
+      const turned = signedRotation(hu, h, sg);
+      if (pa == null && turned >= Math.PI / 2) pa = (x - C[0]) * u[0] + (y - C[1]) * u[1];
+      if (pa != null && turned >= 2.6) {
         this.predMargin = m - this.cm;
-        this.predAhead = (x - C[0]) * u[0] + (y - C[1]) * u[1] - this.coneOffset;
+        this.predAhead = pa;
         return Math.min(this.predMargin, this.predAhead);
       }
     }
@@ -1756,7 +1880,19 @@ class AutoRider {
   solveLeanGain(sim, st, q, sch, k0) {
     const f = (k) => this.predictEntry(sim, st, q, { vS: sch.vS, pS: sch.pS, k });
     if (f(k0) >= 0) return k0;
-    if (f(0) < 0) return 0;
+    if (f(0) < 0) {
+      // No schedule works from here: hold the lean that keeps the bike furthest from the cone.
+      const p0 = Math.abs(sim.phi);
+      let bv = -1e9;
+      for (const z of [1, 0.85, 0.7, 0.5]) {
+        const m = this.predictEntry(sim, st, q, { vS: sch.vS, pS: z * p0, k: 0 });
+        if (m > bv + 0.01) {
+          bv = m;
+          sch.pS = Math.max(sch.pS, z * p0);
+        }
+      }
+      return 0;
+    }
     let lo = 0;
     let hi = k0;
     for (let i = 0; i < 5; i++) {
@@ -1801,11 +1937,12 @@ class AutoRider {
         if (vw > 0) vw = 0;
       }
       [p, w] = servo(p, w, vp, rollAccelOf(S, v), S.roll, dt);
-      p = Math.max(0, p);
+      p = Math.min(Math.max(0, p), this.capAt(v));
       const la = G * Math.tan(p);
+      const k = balanceCurvature(D, p, v);
       const uc = Math.min(
         clamp((t + t0) / this.op, 0.15, 1),
-        throttleFor(S, maxDriveAccel(S, D, la, this.eta, v, sim.t + t), v, sim.t + t),
+        throttleFor(S, maxDriveAccel(S, D, la, this.eta, v, sim.t + t, 0, k), v, sim.t + t),
       );
       if (plan) {
         oT += (uc - oT) * (uc < oT ? kD : kU);
@@ -1813,7 +1950,6 @@ class AutoRider {
       } else ut += clamp(uc - ut, -dt / 0.1, dt / 0.25);
       const a =
         accelAtThrottle(S, ut, v, sim.t + t) - (rb0 > 0 && t + t0 < ov ? rb0 * (1 - (t + t0) / ov) * S.b.br : 0);
-      const k = la / (v * v);
       const d = v * dt;
       const hm = h + (sg * k * d) / 2;
       x += d * Math.cos(hm);
@@ -1854,11 +1990,13 @@ class AutoRider {
     const fF = D.fF;
     const mu = eta * D.mu;
     const dN = (sim.dN || 0) / S.mt;
+    const kNow = Math.abs(sim.k || 0);
+    const tq = turnLoads(S, D, la, kNow, Math.abs(sim.phi));
     const brk = (aW) => {
       const Nf = G * fF + dN;
       const Nr = Math.max(0, G * (1 - fF) - dN);
-      const cF = Math.sqrt(Math.max(0, (mu * Nf) ** 2 - (la * fF) ** 2));
-      const cR = Math.sqrt(Math.max(0, (mu * Nr) ** 2 - (la * (1 - fF)) ** 2));
+      const cF = Math.sqrt(Math.max(0, (mu * Nf) ** 2 - tq.cf ** 2));
+      const cR = Math.sqrt(Math.max(0, (mu * Nr) ** 2 - tq.cr ** 2));
       const aR = Math.min(0.5 * aW * Math.max(0, 1 - fF - (aW * hL) / G), 0.5 * cR, b.br);
       const aF = Math.min(Math.max(0, aW - aR), cF, b.bf);
       return [aF / b.bf, aR / b.br];
@@ -1903,7 +2041,7 @@ class AutoRider {
       const sg = turnSign(q);
       const T = this.aim(q + 1);
       const ah = aheadOfCone(q, mid);
-      const aBr = (bq ? bq.fs : 1) * maxBrakeDecel(S, D, 0, eta);
+      const aBr = (bq ? bq.fs : opt.bC || 1) * maxBrakeDecel(S, D, 0, eta);
       const vT = opt.vT / 3.6;
       const aP = 0.85 * aBr;
       const dd = ah - (bq ? bq.dT : opt.dT);
@@ -1925,7 +2063,10 @@ class AutoRider {
             const p0 = Math.max(0, sg * st.vp);
             const r = this.predictEntry(sim, st, q, { vS: Math.max(v, this.vApex + 0.3), pS: p0, k: 1 }, sS);
             st.nF = r >= 0 ? (st.nF || 0) + 1 : 0;
-            sNow = r >= 0 && (this.predAhead <= 0.2 || (st.nF > 3 && st.pAp != null && this.predAhead > st.pAp + 0.01));
+            sNow =
+              r >= 0 &&
+              (this.predAhead <= (opt.tA != null ? opt.tA : 0.2) ||
+                (st.nF > 3 && st.pAp != null && this.predAhead > st.pAp + 0.01));
             st.pAp = r >= 0 ? Math.min(this.predAhead, st.pAp != null ? st.pAp : 9) : null;
           }
         }
@@ -1965,11 +2106,11 @@ class AutoRider {
         if (st.brk) {
           const aq = dd > 0.05 ? (v * v - vT * vT) / (2 * dd) : 1e9;
           if (v > this.vApex + 0.05) {
-            if (aq > 0) brake = Math.min(aBr, aq, maxBrakeDecel(S, D, la, eta));
+            if (aq > 0) brake = Math.min(aBr, aq, maxBrakeDecel(S, D, la, eta, 0, kNow));
           } else thr = gas(Math.max(-1, Math.min(2, 4 * (this.vApex - v))));
         } else if (ctW) {
           const vt = st.ctV;
-          if (v > vt + 0.3) brake = Math.min(0.5 * maxBrakeDecel(S, D, la, eta), 2 * (v - vt));
+          if (v > vt + 0.3) brake = Math.min(0.5 * maxBrakeDecel(S, D, la, eta, 0, kNow), 2 * (v - vt));
           else thr = gas(Math.max(-1, Math.min(2, 3 * (vt - v))));
         } else {
           thr = gas(maxDriveAccel(S, D, G * Math.tan(Math.abs(lean)), eta, v, sim.t));
@@ -2006,7 +2147,7 @@ class AutoRider {
           const tc = this.scheduledLean(st.sch, v);
           st.tc = tc;
         }
-        if (opt.plan) st.tc = Math.min(st.tc, 0.97 * fullLockLean(D, Math.max(v, 0.5), S.eps0, b.L));
+        st.tc = Math.min(st.tc, this.capAt(v));
 
         if (st.cap != null) st.tc = Math.min(st.tc, st.cap);
         lean = sg * st.tc;
@@ -2044,7 +2185,10 @@ class AutoRider {
         } else if (st.brk) {
           const vA = this.vTurn;
           const vFr = Math.max(this.vApex + 0.05, vA + opt.vF);
-          const aW = v > vFr && st.tM == null ? Math.min(aBr, maxBrakeDecel(S, D, la, eta), AUTO.fK * (v - vFr)) : 0;
+          const aW =
+            v > vFr && st.tM == null
+              ? Math.min(aBr, turnInBrake(S, D, eta, la, kNow, Math.abs(sim.phi), st.tc, v), AUTO.fK * (v - vFr))
+              : 0;
           const fr = aW > 0 ? brk(aW) : [0, 0];
           const aW0 = Math.max(0.3, Math.min(aBr, maxBrakeDecel(S, D, 0, eta)));
           const wR = clamp(1 - aW / aW0, 0, 1);
@@ -2052,7 +2196,7 @@ class AutoRider {
           if (st.tM == null) {
             const yR = (Math.sign(sim.phi || 0) * (sim.dY || 0)) / S.mt;
             const Nr = Math.max(0, G * (1 - fF) - dN);
-            const cR = Math.sqrt(Math.max(0, (mu * Nr) ** 2 - (la * (1 - fF) - yR) ** 2));
+            const cR = Math.sqrt(Math.max(0, (mu * Nr) ** 2 - (la - tq.kv * fF - yR) ** 2));
             const rU = Math.min(opt.rK * (v - vA), AUTO.rG * cR, b.br);
             const rF = AUTO.rMin * b.br;
             r = (wR * Math.max(rF, rU)) / b.br;
@@ -2069,7 +2213,7 @@ class AutoRider {
           }
           fb = fr[0];
           rb = Math.max(fr[1], r);
-        } else thr = gas(maxDriveAccel(S, D, la, eta, v, sim.t));
+        } else thr = gas(maxDriveAccel(S, D, la, eta, v, sim.t, 0, kNow));
       }
       if (st.ph === 'exit') {
         if (upd || !st.lam) {
@@ -2110,12 +2254,12 @@ class AutoRider {
         }
         st.tx = Math.max(0, st.tx - st.lam * DT);
 
-        lean = sg * st.tx;
+        lean = sg * Math.min(st.tx, this.capAt(v));
         const ramp = clamp((sim.t - st.tG) / this.op, 0.15, 1);
-        thr = Math.min(ramp, gas(maxDriveAccel(S, D, G * Math.tan(Math.abs(sim.phi)), eta, v, sim.t)));
+        thr = Math.min(ramp, gas(maxDriveAccel(S, D, G * Math.tan(Math.abs(sim.phi)), eta, v, sim.t, 0, kNow)));
         bf = 1;
         if (opt.plan && sim.cl && sim.cl[C[0] < 0 ? 0 : 1] < opt.gX) {
-          thr = gas(maxDriveAccel(S, D, G * Math.tan(Math.abs(sim.phi)), eta, v, sim.t));
+          thr = gas(maxDriveAccel(S, D, G * Math.tan(Math.abs(sim.phi)), eta, v, sim.t, 0, kNow));
         }
         const q1 = q + 1;
         const ah1 = q1 < TURNS ? aheadOfCone(q1, mid) : 1e9;
@@ -2356,7 +2500,8 @@ const peakBrakeDecel = (S) => Math.min(S.b.bf, S.stoppie);
 // [s], om peak roll rate when leaning in [°/s], ld look-ahead time [s], kcs countersteer authority at
 // low speed, ov time for the rear brake to fade out after G [s].
 const COACH_BASE = { eta: 0.93, op: 0.35, om: 90, ld: 0.7, kcs: 0.5, ov: 0.2 };
-const COACH_COLUMNS = ['cm', 'lr', 'vT', 'dT', 'pd', 'lf', 'rA', 'kA', 'rK', 'vF', 'wy', 'finL', 'finY', 'fxY', 'gS'];
+// prettier-ignore
+const COACH_COLUMNS = ['cm', 'lr', 'vT', 'dT', 'pd', 'lf', 'rA', 'kA', 'rK', 'vF', 'wy', 'finL', 'finY', 'fxY', 'gS', 'bC', 'tA'];
 const allButLast = (x) => [...Array(TURNS - 1).fill(x), 0];
 // Coach settings for every bike and setup, '<body position>@<seat>' (seat −1 back, 0 middle, 1 front):
 //   cm       gap kept between the outline and the cone [m]
@@ -2371,67 +2516,69 @@ const allButLast = (x) => [...Array(TURNS - 1).fill(x), 0];
 //   finL     look-ahead time on the way to the finish [s]
 //   finY     the way to the finish passes finY [m] beside the near cone; fxY replaces it after the rehearsal
 //   gS       the throttle opens gS [rad] of rotation earlier (one value, or one per turn)
+//   bC       braking before the turn-in as a share of the hardest braking upright
+//   tA       the bike turns in once the look-ahead puts it no more than tA [m] past the cone after 90°
 // prettier-ignore
 const COACH = {
   ebike: {
-    //           cm    lr    vT  dT   pd    lf    rA    kA    rK vF   wy     finL  finY  fxY   gS
-    'neg@-1':  [0.12, 1.15, 30, 3.4, 0.85, 0.95, 0.75, 0.89, 5, 0.4, -0.66, 1,    0.85, 0,    allButLast(0.2)],
-    'neg@0':   [0.15, 1.3,  26, 2.6, 0.85, 0.95, 0.75, 0.81, 3, 0.4, -0.66, 1,    0.85, null, allButLast(0.2)],
-    'neg@1':   [0.12, 1.3,  26, 3,   0.85, 0.95, 0.68, 0.88, 5, 0.4, -0.66, 1,    0.85, null, allButLast(0.2)],
-    'neu@-1':  [0.12, 1.3,  30, 3.4, 1.15, 0.95, 1,    0.82, 3, 0.4, -0.85, 1.5,  0.85, null, 0.16],
-    'neu@0':   [0.12, 1.3,  28, 3.4, 0.85, 0.95, 1,    0.81, 5, 0.4, -0.85, 1.5,  0.85, 0,    0.2],
-    'neu@1':   [0.12, 1.15, 26, 3,   1.15, 0.95, 1,    0.87, 5, 0.6, -0.75, 1.25, 1.05, null, 0.2],
-    'pos@-1':  [0.12, 1.3,  26, 2.6, 1,    0.95, 1.4,  0.77, 5, 0.4, -0.66, 1.5,  0.85, -0.4, 0.12],
-    'pos@0':   [0.12, 1.3,  26, 3,   1.15, 0.95, 1.2,  0.84, 5, 0.6, -0.66, 1.5,  1.05, 0.4,  0.12],
-    'pos@1':   [0.12, 1.3,  26, 3.4, 1.15, 0.95, 1.2,  0.79, 5, 0.4, -0.66, 1.5,  0.85, 0,    0.12],
+    //          cm    lr    vT  dT   pd    lf rA   kA    rK vF   wy     finL  finY  fxY   gS                bC    tA
+    'neg@-1':  [0.12, 1.3,  24, 2.2, 1.3,  1, 1.2, 0.9,  3, 0.6, -0.66, 1,    0.85, -0.4, allButLast(0.25), 0.8,  1],
+    'neg@0':   [0.08, 1,    26, 3.4, 1.3,  1, 1.6, 0.85, 8, 0.6, -0.66, 1.5,  1.05, -0.2, allButLast(0.16), 0.85, 1],
+    'neg@1':   [0.06, 1,    22, 2.6, 1.3,  1, 1.6, 0.85, 5, 0.2, -0.66, 1,    0.85, -0.4, allButLast(0.25), 0.85, 1],
+    'neu@-1':  [0.08, 1,    24, 2.2, 1.5,  1, 1.2, 0.95, 8, 0.9, -0.66, 1,    0.85, -0.4, 0.25,             0.7,  1],
+    'neu@0':   [0.04, 1,    22, 2.2, 1.3,  1, 0,   1.05, 8, 0.6, -0.66, 1,    0.85, -0.4, 0.25,             0.85, 0.6],
+    'neu@1':   [0.06, 1,    22, 2.6, 1.3,  1, 1.6, 0.85, 8, 0.2, -0.66, 1,    0.85, -0.4, 0.2,              0.85, 1],
+    'pos@-1':  [0.15, 1.9,  24, 2.2, 1.5,  1, 1.4, 0.9,  8, 0.6, -0.66, 1,    0.85, -0.4, 0.2,              0.8,  1],
+    'pos@0':   [0.06, 1.3,  24, 2.6, 1.5,  1, 0,   0.7,  8, 0.6, -0.66, 1,    0.85, -0.4, 0.25,             0.65, 1],
+    'pos@1':   [0.15, 1,    22, 2.6, 1.5,  1, 1.2, 1,    5, 0.2, -0.66, 1,    0.85, -0.4, 0.25,             0.85, 1],
   },
   pit: {
-    //           cm    lr    vT  dT   pd    lf    rA    kA    rK vF   wy     finL  finY  fxY   gS
-    'neg@-1':  [0.14, 1.3,  30, 2.6, 0.85, 0.95, 0.95, 0.77, 5, 0.4, -0.85, 1.5,  0.85, 0.4,  0.2],
-    'neg@0':   [0.12, 1.3,  30, 3,   0.85, 0.95, 0.95, 0.78, 5, 0.4, -0.85, 1.5,  0.85, 0.2,  0.2],
-    'neg@1':   [0.12, 1.3,  30, 3.4, 0.85, 0.95, 0.85, 0.91, 5, 0.4, -0.85, 1.5,  0.85, -0.2, 0.2],
-    'neu@-1':  [0.12, 1.3,  30, 2.6, 0.85, 0.95, 1.05, 0.79, 5, 0.4, -0.66, 0.7,  0.85, null, 0.2],
-    'neu@0':   [0.14, 1.3,  30, 3,   0.85, 0.95, 1.05, 0.79, 3, 0.4, -0.66, 1.25, 1.05, 0.4,  0.2],
-    'neu@1':   [0.12, 1.3,  30, 3.4, 0.85, 0.95, 0.85, 0.87, 5, 0.6, -0.66, 1.25, 1.05, null, 0.2],
-    'pos@-1':  [0.12, 1.3,  28, 3,   1.15, 0.95, 1.8,  0.75, 5, 1.2, -0.85, 1.5,  0.85, -0.2, 0.2],
-    'pos@0':   [0.12, 1.3,  26, 2.6, 1.15, 0.95, 1.8,  0.74, 3, 0.4, -0.66, 1.5,  0.85, -0.2, 0.2],
-    'pos@1':   [0.12, 1.3,  26, 3,   1.15, 0.95, 1.5,  0.76, 5, 0.4, -0.66, 1.5,  0.85, -0.4, 0.2],
+    //          cm    lr    vT  dT   pd    lf rA   kA    rK vF   wy     finL  finY  fxY   gS                bC    tA
+    'neg@-1':  [0.04, 1.9,  24, 2.2, 1.3,  1, 1.2, 0.9,  3, 0.9, -0.85, 1,    0.85, -0.4, 0.25,             0.75, 1],
+    'neg@0':   [0.04, 1.45, 26, 3.8, 1.8,  1, 1.4, 1,    3, 1.2, -0.85, 1.5,  0.85, -0.4, 0,                0.75, 1],
+    'neg@1':   [0.04, 1.15, 24, 3,   1.5,  1, 1.6, 0.85, 3, 0.9, -0.85, 1.5,  1.2,  -0.2, 0.12,             0.9,  0.2],
+    'neu@-1':  [0.04, 1,    24, 2.2, 1.3,  1, 1.2, 0.9,  3, 0.9, -0.66, 1,    0.85, -0.4, 0.25,             0.65, 0.6],
+    'neu@0':   [0.04, 1.45, 26, 3.8, 1.8,  1, 1.4, 1,    3, 1.2, -0.75, 1.5,  0.85, -0.4, 0,                0.75, 1],
+    'neu@1':   [0.04, 1.15, 24, 3,   1.3,  1, 1.6, 0.85, 5, 0.9, -0.66, 1.5,  1.2,  -0.2, 0.2,              0.85, 0.2],
+    'pos@-1':  [0.04, 1.45, 22, 2.2, 1.15, 1, 2.1, 0.75, 3, 1.2, -0.85, 1.5,  0.85, -0.4, 0,                0.85, 1],
+    'pos@0':   [0.04, 1,    24, 2.6, 1.3,  1, 0,   1.05, 5, 0.6, -0.66, 1,    0.85, -0.4, 0.25,             0.7,  0.6],
+    'pos@1':   [0.06, 1.3,  22, 3.4, 1.8,  1, 1.6, 0.95, 3, 1.2, -0.66, 1,    0.85, -0.4, 0.12,             1,    1],
   },
   sm: {
-    //           cm    lr    vT  dT   pd    lf    rA    kA    rK vF   wy     finL  finY  fxY   gS
-    'neg@-1':  [0.14, 1.9,  29, 3.4, 1,    0.95, 1.55, 0.66, 5, 0.4, -0.85, 1.5,  0.85, 0.2,  0.2],
-    'neg@0':   [0.18, 1.45, 28, 3.2, 1,    0.95, 1.55, 0.67, 3, 0.4, -0.85, 1.5,  0.85, 0.2,  0.2],
-    'neg@1':   [0.12, 1.9,  28, 3.4, 1.1,  0.95, 1.65, 0.7,  5, 0.4, -0.85, 1.5,  0.85, 0.4,  0.2],
-    'neu@-1':  [0.12, 1.6,  26, 3.2, 1.1,  0.95, 2.1,  0.67, 3, 0.4, -0.85, 1.5,  0.85, 0.4,  0.2],
-    'neu@0':   [0.12, 1.3,  28, 3,   0.85, 0.92, 2.1,  0.67, 5, 0.4, -0.66, 1.25, 0.85, -0.4, 0.2],
-    'neu@1':   [0.13, 1.3,  26, 3,   0.85, 0.95, 1.8,  0.71, 5, 1.2, -0.66, 1.25, 0.85, 0,    0.2],
-    'pos@-1':  [0.12, 1.3,  27, 3.4, 1.15, 0.95, 2.4,  0.66, 5, 0.4, -0.85, 1.5,  0.85, -0.4, 0.2],
-    'pos@0':   [0.12, 1.3,  26, 2.6, 1.15, 0.95, 2.4,  0.68, 5, 0.4, -0.66, 1.5,  1.05, -0.4, 0.2],
-    'pos@1':   [0.12, 1.3,  26, 3,   1.15, 0.95, 2.4,  0.69, 5, 0.4, -0.66, 1.5,  0.85, 0,    0.2],
+    //          cm    lr    vT  dT   pd    lf rA   kA    rK vF   wy     finL  finY  fxY   gS                bC    tA
+    'neg@-1':  [0.04, 1.3,  26, 3.8, 1.8,  1, 1.4, 1,    3, 1.2, -0.75, 1.5,  0.85, -0.4, 0,                0.9,  1],
+    'neg@0':   [0.04, 1.15, 26, 3.8, 1.8,  1, 1.4, 1,    3, 1.2, -0.66, 1.5,  0.85, -0.4, 0,                0.85, 1],
+    'neg@1':   [0.04, 1.45, 24, 3.8, 1.8,  1, 1.4, 0.95, 3, 1.2, -0.75, 1.5,  0.85, 0,    0.2,              1,    1],
+    'neu@-1':  [0.04, 1.3,  26, 3.8, 1.8,  1, 0,   1,    3, 1.2, -0.66, 1.5,  0.85, -0.4, 0,                0.9,  1],
+    'neu@0':   [0.04, 1.9,  24, 3.4, 1.8,  1, 1.6, 0.95, 3, 1.2, -0.85, 1.5,  0.85, 0,    0.12,             0.8,  1],
+    'neu@1':   [0.04, 1,    24, 3.8, 1.8,  1, 2.4, 0.75, 3, 1.2, -0.66, 1.25, 0.85, -0.2, 0.25,             0.75, 1],
+    'pos@-1':  [0.04, 1.3,  26, 3.4, 1.8,  1, 1.4, 1,    3, 1.2, -0.75, 1.5,  0.85, -0.4, 0,                0.65, 1.4],
+    'pos@0':   [0.04, 1.9,  24, 3.4, 1.8,  1, 1.6, 0.95, 3, 1.2, -0.75, 1.5,  0.85, 0,    0.12,             0.7,  1],
+    'pos@1':   [0.06, 1,    22, 3.4, 1.8,  1, 1.8, 0.95, 3, 1.2, -0.66, 1,    0.85, -0.4, 0.12,             1,    0.6],
   },
   cbr: {
-    //           cm    lr    vT  dT   pd    lf    rA    kA    rK vF   wy     finL  finY  fxY   gS
-    'neg@-1':  [0.12, 1.6,  28, 3,   0.85, 0.92, 1,    1,    5, 0.4, -0.85, 1.25, 1.05, -0.4],
-    'neg@0':   [0.14, 1.6,  26, 2.6, 0.85, 0.92, 1,    1,    5, 0.4, -0.85, 1.5,  0.85, 0.4],
-    'neg@1':   [0.14, 1.6,  28, 3.4, 0.85, 0.92, 1,    1,    5, 0.6, -0.66, 1.25, 0.85, 0.4],
-    'neu@-1':  [0.12, 1.6,  26, 2.6, 1.15, 0.97, 1.3,  1.03, 5, 0.6, -0.66, 1.25, 0.85, -0.4],
-    'neu@0':   [0.12, 1.6,  26, 2.6, 1.15, 0.97, 0,    0.91, 5, 0.4, -0.85, 1.5,  0.85, 0.2],
-    'neu@1':   [0.12, 1.6,  26, 3,   1.3,  0.97, 0,    0.97, 5, 0.6, -0.85, 1.5,  0.85, 0.2],
-    'pos@-1':  [0.12, 1.6,  28, 3.4, 1,    0.97, 0,    0.97, 5, 0.4, -0.85, 1.25, 1.05, -0.4],
-    'pos@0':   [0.15, 1.6,  26, 3,   1,    0.97, 0,    0.97, 5, 0.4, -0.66, 1.5,  0.85, 0.2],
-    'pos@1':   [0.12, 1.6,  24, 2.6, 1,    0.97, 1.3,  0.97, 5, 0.9, -0.66, 1.25, 0.85, -0.2],
+    //          cm    lr    vT  dT   pd    lf rA   kA    rK vF   wy     finL  finY  fxY   gS                bC    tA
+    'neg@-1':  [0.04, 1.6,  24, 2.6, 1.8,  1, 0,   0.7,  3, 0.9, -0.75, 1,    0.85, -0.4, 0.25,             0.85, 1],
+    'neg@0':   [0.04, 1.6,  26, 3.8, 1.8,  1, 1.4, 1,    3, 1.2, -0.66, 1.5,  0.85, -0.4, 0,                0.75, 1],
+    'neg@1':   [0.04, 1,    22, 2.6, 1.8,  1, 2.1, 0.85, 3, 1.2, -0.66, 1,    0.85, -0.2, 0.25,             0.8,  1],
+    'neu@-1':  [0.04, 1,    26, 3.4, 1.8,  1, 1.4, 0.95, 5, 0.4, -0.66, 1.5,  0.85, 0.2,  0.12,             0.85, 1],
+    'neu@0':   [0.04, 1,    22, 3,   1.8,  1, 1.6, 0.95, 3, 1.2, -0.85, 1.5,  0.85, 0.2,  0.25,             0.9,  1],
+    'neu@1':   [0.04, 1.15, 24, 3.8, 1.8,  1, 2.4, 0.7,  3, 1.2, -0.66, 1.25, 0.85, 0.2,  0.25,             0.9,  1],
+    'pos@-1':  [0.08, 1.15, 22, 2.2, 1.8,  1, 1.6, 0.95, 3, 1.2, -0.75, 1.5,  0.85, 0.2,  0.25,             0.85, 1],
+    'pos@0':   [0.04, 1.45, 24, 3.8, 1.8,  1, 1.6, 0.95, 3, 1.2, -0.85, 1.5,  0.85, 0.2,  0.25,             1,    1],
+    'pos@1':   [0.08, 1.45, 24, 3.4, 1.8,  1, 1.6, 0.95, 8, 0.6, -0.75, 1.25, 0.85, 0,    0.25,             0.7,  1],
   },
   gsxr: {
-    //           cm    lr    vT  dT   pd    lf    rA    kA    rK vF   wy     finL  finY  fxY   gS
-    'neg@-1':  [0.14, 1.6,  28, 3,   0.85, 0.92, 0,    1.03, 5, 0.4, -0.85, 1.5,  0.85, 0.4],
-    'neg@0':   [0.12, 1.6,  28, 3.4, 1.3,  0.92, 1.3,  1,    5, 0.9, -0.85, 1.25, 1.05, 0],
-    'neg@1':   [0.12, 1.6,  28, 3.4, 1.15, 0.92, 0,    1.03, 5, 0.9, -0.66, 1.25, 0.85, 0.4],
-    'neu@-1':  [0.12, 1.6,  28, 3,   0.85, 0.97, 0,    1.03, 5, 0.4, -0.85, 1.25, 0.85, 0.4],
-    'neu@0':   [0.12, 1.6,  28, 3,   1.15, 0.97, 0,    0.97, 5, 0.6, -0.85, 1.5,  0.85, 0],
-    'neu@1':   [0.12, 1.6,  28, 3.4, 1.15, 0.95, 0,    0.97, 5, 0.4, -0.85, 1.5,  0.85, -0.4],
-    'pos@-1':  [0.12, 1.6,  28, 3.4, 1,    0.97, 0,    0.97, 5, 0.6, -0.85, 1.5,  1.2,  0.2],
-    'pos@0':   [0.16, 1.6,  28, 3.4, 1,    0.97, 0,    0.91, 5, 0.9, -0.85, 1.5,  0.85, -0.4],
-    'pos@1':   [0.12, 1.6,  26, 3,   1,    0.97, 0,    0.91, 3, 0.9, -0.66, 1.5,  0.85, -0.4],
+    //          cm    lr    vT  dT   pd    lf rA   kA    rK vF   wy     finL  finY  fxY   gS                bC    tA
+    'neg@-1':  [0.1,  1.15, 26, 3.4, 1.5,  1, 0,   0.85, 8, 0.6, -0.66, 1,    0.85, -0.4, 0.12,             0.65, 1],
+    'neg@0':   [0.04, 1,    22, 2.6, 1.5,  1, 1.8, 0.85, 3, 0.9, -0.66, 1,    0.85, -0.4, 0.12,             0.75, 1],
+    'neg@1':   [0.04, 1,    24, 3,   1.5,  1, 0,   0.85, 8, 0.6, -0.75, 1,    0.85, -0.4, 0.2,              0.65, 1],
+    'neu@-1':  [0.06, 1.45, 22, 2.6, 1.8,  1, 0,   0.85, 8, 0.9, -0.85, 1,    0.85, -0.4, 0,                0.9,  1],
+    'neu@0':   [0.04, 1.9,  24, 3,   1.8,  1, 1.6, 0.7,  3, 1.2, -0.75, 1.5,  0.85, 0,    0.08,             0.65, 1],
+    'neu@1':   [0.06, 1,    22, 3,   1.8,  1, 1.6, 1,    3, 1.2, -0.66, 1.5,  0.85, -0.4, 0.08,             0.9,  1],
+    'pos@-1':  [0.04, 1,    22, 2.6, 1.8,  1, 1.6, 0.85, 3, 1.2, -0.75, 1,    0.85, -0.4, 0,                0.9,  1],
+    'pos@0':   [0.04, 1,    20, 2.6, 1.8,  1, 1.8, 0.7,  8, 0.9, -0.85, 1.5,  0.85, -0.4, 0,                0.9,  1],
+    'pos@1':   [0.06, 1,    22, 3.4, 1.8,  1, 0,   0.95, 3, 1.2, -0.66, 1.5,  0.85, 0,    0,                1,    1],
   },
 };
 function coachSetup(S) {
@@ -2477,7 +2624,7 @@ function coachPlan(S) {
   const rd = (x) => Math.round(x * 10) / 10;
   return {
     brake: rd(r.brake),
-    force: Math.round(Math.min(1, maxBrakeDecel(S, S, 0, r.c.eta) / aM) * 100) / 100,
+    force: Math.round(Math.min(1, ((r.c.bC || 1) * maxBrakeDecel(S, S, 0, r.c.eta)) / aM) * 100) / 100,
     turn: rd(r.s2[0]),
     side: rd(r.s2[1]),
     gap: r.c.cm,
@@ -2509,7 +2656,7 @@ const PLAN_MODE = {
   finL: null,
 };
 // Options for the planner's rider: the coach's run shifted by the changes in the plan (B earlier by
-// dH with the braking force scaled, T moved by dS along and dSd sideways, G earlier by dG).
+// dH, T moved by dS along and dSd sideways, G earlier by dG), braking as hard as the coach.
 function planOptions(S, plan) {
   const S2 = [];
   const brk = [];
@@ -2524,14 +2671,13 @@ function planOptions(S, plan) {
   const pT = num(plan.turn, cp.turn);
   const pS = num(plan.side, cp.side);
   const pG = num(plan.gas, cp.gas);
-  const f = clamp(cp.force, 0.1, 1.25);
   const dH = pB - cp.brake;
   const dS = pT - cp.turn;
   const dSd = pS - cp.side;
   const dG = pG - cp.gas;
   for (let q = 0; q < TURNS; q++) {
     S2.push([cr.sA[q] + dS, Math.max(0.3, cr.sD[q] + dSd)]);
-    brk.push({ fs: cp.force > 0 ? f / cp.force : 1, dT: cc.dT + dH });
+    brk.push({ fs: cc.bC || 1, dT: cc.dT + dH });
     sS.push(dS);
     gS.push((cc.gS ? cc.gS[q] : 0) + dG * RAD);
     pdq.push(Math.max(0.3, cc.pd + dSd));
@@ -6008,6 +6154,7 @@ function gripState(p) {
   }
   const slide = Math.max(f, r) > 1;
   if (slide) note = r >= f ? i18n`tył się ślizga` : i18n`przód się ślizga`;
+  else if (!note && (p.fl || 0) & FLAG.HOLD) note = i18n`hamowanie blokuje złożenie`;
   return { use: Math.min(1, Math.max(f, r)), note, slide };
 }
 function drawGG(p, pb, who) {

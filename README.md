@@ -22,7 +22,8 @@ The fonts come from Google Fonts; offline, the browser falls back to its own.
   suspension and rear linkage; three body positions (lean in, neutral, lean out) and three seat positions.
 - Tyre limits as friction circles with load transfer, including the side force that yaw inertia moves
   between the wheels while the bike leans in or is picked up. The g-g envelope of a motorcycle is not
-  a circle.
+  a circle. A rear tyre unloaded by braking cannot hold a deeper lean, and an overloaded front stands
+  the bike up onto a wider line.
 - Exact steering kinematics in a lean (Cossalter, *Motorcycle Dynamics*): at full lock a leaned bike
   turns much tighter than an upright one.
 - Roll dynamics with countersteering, fork dive and rear squat, and the rider's body as a second mass.

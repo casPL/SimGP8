@@ -101,39 +101,3 @@ function outlineClearance(pts, x, y, psi, C) {
   }
   return { c, n };
 }
-// Smallest and largest radius at which part p circles the centre of a turn of radius R.
-const sweepRadii = (p, R) => {
-  const e = R - p.lat;
-  const a0 = Math.abs(p.z0);
-  const a1 = Math.abs(p.z1);
-  const zm = p.z0 <= 0 && p.z1 >= 0 ? 0 : Math.min(a0, a1);
-  return [Math.hypot(zm, e), Math.hypot(Math.max(a0, a1), e)];
-};
-// Smallest distance from the rear tyre track to the cone centre, on a turn of radius R at bike lean
-// phb, at which the outline clears the cone; and the part that reaches furthest.
-function coneOffsetAt(S, phb, R) {
-  const d = Math.min(S.lockEff, steerForCurvature(S.b.L / Math.max(R, 0.05), Math.abs(phb), S.eps0)) * S.cosR;
-  let m = 0;
-  let n = '';
-  for (const p of outlinePoints(S, Math.abs(phb), d)) {
-    if (p.lat <= 0 || !canTouchCone(p)) continue;
-    const x = p.z0 <= 0 && p.z1 >= 0 && p.lat >= R ? p.lat + touchRadius(p) : R - sweepRadii(p, R)[0] + touchRadius(p);
-    if (x > m) {
-      m = x;
-      n = p.n;
-    }
-  }
-  return { m, n };
-}
-// The same at the coach's lean limit and full lock, plus margin cm.
-function minConeOffset(S, cm) {
-  const phb = bikeLean(S, AUTO.LIM * S.capC);
-  const R0 = lockRadius(S, AUTO.LIM * S.capC) * 1.03;
-  let R = R0;
-  let m = 0;
-  for (let i = 0; i < 6; i++) {
-    m = coneOffsetAt(S, phb, R).m;
-    R = Math.max(R0, m + cm);
-  }
-  return m + cm;
-}

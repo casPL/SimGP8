@@ -32,7 +32,7 @@ const BIKES = [
   {
     id: 'pit', name: 'Pitbike SM 12"', sub: i18n`ok. 150–190 cm³`, tyre: 'supermoto 12"',
     m: 72,  P: 11,                  aT: 7.5, b0: 0.75, vb: 4, eb: 0.8,
-    L: 1.17,  lock: 45, rake: 26, h: 0.72, ff: 0.47, clear: 62, mu: 1.4,
+    L: 1.17,  lock: 45, rake: 26, h: 0.72, ff: 0.47, clear: 62, mu: 1.18,
     bf: 8.5, br: 2.8, roll: 330,
     ft: 130, fd: 75,  fz: 2.2, rw: 0.242, trail: 0.07,
     rt: 120, rd: 35, rr: 0.243, hp: 0.33, ls: 0.46,  rf: 0.0285, rs: 0.079,  xf: 0.07, yf: 0,
@@ -40,7 +40,7 @@ const BIKES = [
   {
     id: 'sm', name: 'Supermoto 450', sub: i18n`klasa Honda CRF450 z kołami SM`, tyre: i18n`supermoto, miękkie`,
     m: 118, P: 40,                  aT: 8.5, b0: 0.8,  vb: 4, eb: 1.2,
-    L: 1.49,  lock: 38, rake: 26, h: 0.95, ff: 0.46, clear: 59, mu: 1.35,
+    L: 1.49,  lock: 38, rake: 26, h: 0.95, ff: 0.46, clear: 59, mu: 1.18,
     bf: 10,  br: 3.0, roll: 170,
     ft: 270, fd: 135, fz: 1.8, rw: 0.3,   trail: 0.11,
     rt: 290, rd: 55, rr: 0.3,   hp: 0.45, ls: 0.585, rf: 0.0357, rs: 0.121,  xf: 0.05, yf: 0,

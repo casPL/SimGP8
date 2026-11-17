@@ -5,13 +5,15 @@
 // the plan points and a few rules, and the line comes out of the physics. Between the loops it heads
 // for the next approach point; from B it brakes as hard as the tyres allow, mostly with the front, the
 // rear adding gently without locking; from T it leans in smoothly while the brakes fade with the lean
-// (the g-g envelope); from G it opens the throttle as far as the lean allows and picks the bike up.
+// it is about to take (the g-g envelope), so the rear always has the grip to carry that lean; from G
+// it opens the throttle as far as the lean allows and picks the bike up.
 // Entry and exit are planned with short look-ahead simulations (predictEntry, predictExit).
 
 // LIM share of the lean limit used, rG share of the rear tyre's spare grip used for braking, rMin
 // least rear braking (share of br), fK front brake release gain [1/s], gRot rotation [°] after which
-// the coach may open the throttle at full lean.
-const AUTO = { LIM: 0.98, rG: 0.8, rMin: 0.15, fK: 8, gRot: 75 };
+// the coach may open the throttle at full lean, pB lean [°] ahead of the present one that the
+// braking in a turn-in leaves grip for.
+const AUTO = { LIM: 0.98, rG: 0.8, rMin: 0.15, fK: 8, gRot: 75, pB: 10 };
 // The diagonals cross the cone axis at this angle. Even turns go round the far cone to the right, odd
 // ones round the near cone to the left.
 const APPROACH_ANGLE = 10 * RAD;
@@ -135,6 +137,22 @@ function aimOnPolyline(pts, p, Ld) {
     t = 0;
   }
 }
+// Side acceleration la and rear track curvature k of the steady turn at lean p and speed v.
+function steadyTurn(S, D, p, v) {
+  const k = Math.min(
+    balanceCurvature(D, p, Math.max(v, 0.3)),
+    tanGroundSteer(D.lockEff, bikeLean(D, p), S.eps0) / S.b.L,
+  );
+  return { la: v * v * k * (1 - S.b.h * k * Math.sin(p)), k };
+}
+// The hardest braking in a turn-in at lean p heading for lean tc: it leaves the grip that the lean
+// pB further on needs.
+function turnInBrake(S, D, eta, la, k, p, tc, v) {
+  const pT = Math.min(tc, p + AUTO.pB * RAD);
+  if (pT <= p + 1e-4) return maxBrakeDecel(S, D, la, eta, 0, k);
+  const s = steadyTurn(S, D, pT, v);
+  return maxBrakeDecel(S, D, Math.max(la, s.la), eta, 0, Math.max(k, s.k));
+}
 class AutoRider {
   constructor(S, opt) {
     this.S = S;
@@ -147,14 +165,29 @@ class AutoRider {
     this.ld = opt.ld;
     this.kcs = opt.kcs;
     this.leanMax = Math.min(AUTO.LIM * S.capC, Math.atan(opt.lf * this.eta * S.mu));
-    this.coneOffset = minConeOffset(S, this.cm);
-    this.r = Math.max(lockRadius(S, this.leanMax) * 1.03, opt.rA || 0.45 * b.L);
+    // Grip the rider allows for the turn, and the apex it permits: at full lock (k null), or on the rear
+    // track radius 1/k, the deepest lean both tyres hold and its balance speed (see turnLoads).
+    this.muR = opt.lf * this.eta * S.mu;
+    this.caps = new Map();
+    const apexAt = (k) => {
+      let best = null;
+      for (let p = 3 * RAD; p <= this.leanMax + 1e-9; p += 0.25 * RAD) {
+        const kL = tanGroundSteer(S.lockEff, bikeLean(S, p), S.eps0) / b.L;
+        const kk = k || kL;
+        if (kL < kk) continue;
+        const q = 1 - b.h * kk * Math.sin(p);
+        if (q <= 0.05 || !turnHolds(S, S, G * Math.tan(p), kk, p, this.muR)) break;
+        best = { p, v: Math.sqrt((G * Math.tan(p)) / (kk * q)), r: 1 / kk };
+      }
+      return best;
+    };
+    const a0 = apexAt(null);
+    this.r = Math.max(a0.r * 1.03, opt.rA || 0.45 * b.L);
+    const aA = apexAt(1 / this.r) || a0;
+    this.leanApex = aA.p;
     this.om = opt.om * RAD;
-    this.vApex = Math.sqrt(G * Math.tan(this.leanMax) * this.r);
-    this.vTurn = Math.max(
-      opt.kA * this.vApex,
-      1.02 * Math.sqrt(G * Math.tan(this.leanMax) * lockRadius(S, this.leanMax)),
-    );
+    this.vApex = aA.v;
+    this.vTurn = Math.max(opt.kA * this.vApex, 1.02 * a0.v);
     const FW = [-CONE_X, opt.finY];
     this.finishAim = FW;
     this.aim = (q) => (q >= TURNS ? FW : turnFramePoint(q, [0, opt.pdq ? opt.pdq[q] : opt.pd]));
@@ -299,12 +332,26 @@ class AutoRider {
     }
     return outlineClearance(pts, x, y, h, C).c;
   }
+  // The deepest lean the tyres hold at speed v (memoised in steps of 0.05 m/s).
+  capAt(v) {
+    const key = Math.round(Math.max(v, 0.3) * 20);
+    let c = this.caps.get(key);
+    if (c == null) {
+      c = gripLean(this.S, this.S, key / 20, this.muR, this.leanMax);
+      this.caps.set(key, c);
+    }
+    return c;
+  }
   // Lean while slowing for the apex: from pS towards the lean limit as the speed drops.
   scheduledLean(sch, v) {
-    return sch.pS + (this.leanMax - sch.pS) * clamp((sch.vS - v) / Math.max(0.3, sch.vS - this.vApex), 0, 1) * sch.k;
+    return Math.min(
+      this.capAt(v),
+      sch.pS + (this.leanMax - sch.pS) * clamp((sch.vS - v) / Math.max(0.3, sch.vS - this.vApex), 0, 1) * sch.k,
+    );
   }
-  // Looks ahead through the turn-in with lean schedule sch: the smaller of the margin to the cone and
-  // how far past the cone the bike gets in its first 90° of rotation [m]. Negative: the schedule fails.
+  // Looks ahead through the turn-in with lean schedule sch: the smaller of the margin to the cone over
+  // the first 150° of rotation and how far past the cone the bike is after 90° [m]. Negative: the
+  // schedule fails.
   predictEntry(sim, st, q, sch, cs) {
     const S = this.S;
     const D = sim.D || S;
@@ -315,7 +362,11 @@ class AutoRider {
     const bq = this.opt.plan ? this.opt.brk[q] : null;
     const C0 = turnCone(q);
     const C = cs ? [C0[0] - cs * u[0], C0[1] - cs * u[1]] : C0;
-    const aBr = bq ? bq.fs * maxBrakeDecel(S, D, 0, this.eta) : 1e9;
+    const aBr = bq
+      ? bq.fs * maxBrakeDecel(S, D, 0, this.eta)
+      : this.opt.bC > 0 && this.opt.bC < 1
+        ? this.opt.bC * maxBrakeDecel(S, D, 0, this.eta)
+        : 1e9;
     const dt = 0.02;
     const fF = D.fF;
     const mu = this.eta * D.mu;
@@ -330,6 +381,7 @@ class AutoRider {
     let m = 9;
     let ab = false;
     let t = 0;
+    let pa = null;
     const hL = b.h / b.L;
     const aW0 = Math.max(0.3, Math.min(aBr, maxBrakeDecel(S, D, 0, this.eta)));
     const vA = this.vTurn;
@@ -350,19 +402,26 @@ class AutoRider {
           : sch.dl && t <= sch.dl
             ? sch.pS
             : this.scheduledLean(sch, v);
-      [vp, vw] = servo(vp, vw, tc, this.rollAccel(S, v, vp), S.roll, dt);
+      const cap = this.capAt(v);
+      [vp, vw] = servo(vp, vw, Math.min(tc, cap), this.rollAccel(S, v, vp), S.roll, dt);
       [p, w] = servo(p, w, vp, rollAccelOf(S, v), S.roll, dt);
+      if (Math.abs(p) > cap) p = Math.sign(p) * cap;
       const ap = Math.abs(p);
-      const kb = (G * Math.tan(ap)) / (v * v);
+      const kb = balanceCurvature(D, ap, v);
       const kl = tanGroundSteer(D.lockEff, bikeLean(D, ap), S.eps0) / b.L;
       const k = Math.sign(p) * Math.min(kb, kl);
-      const la = v * v * Math.abs(k);
-      const aW = v > vFr && !mt ? Math.min(aBr, maxBrakeDecel(S, D, la, this.eta), AUTO.fK * (v - vFr)) : 0;
+      const ka = Math.abs(k);
+      const la = v * v * ka * (1 - b.h * ka * Math.sin(ap));
+      const aW =
+        v > vFr && !mt
+          ? Math.min(aBr, turnInBrake(S, D, this.eta, la, ka, ap, Math.min(tc, cap), v), AUTO.fK * (v - vFr))
+          : 0;
       const wR = clamp(1 - aW / aW0, 0, 1);
       let aR = 0;
       if (!mt) {
-        const Nr = Math.max(0, G * (1 - fF) - aP * hL);
-        const cR = Math.sqrt(Math.max(0, (mu * Nr) ** 2 - (la * (1 - fF)) ** 2));
+        const tq = turnLoads(S, D, la, ka, ap);
+        const Nr = Math.max(0, G * (1 - fF) - tq.tr - aP * hL);
+        const cR = Math.sqrt(Math.max(0, (mu * Nr) ** 2 - tq.cr ** 2));
         const aU = Math.min(kp * (v - vA), AUTO.rG * cR, b.br);
         aR = wR * Math.max(rL, aU);
         aPk = Math.max(aPk, aR);
@@ -398,9 +457,11 @@ class AutoRider {
         const c = this.clearance(D, sg * p, sg * k, x, y, h, C);
         if (c < m) m = c;
       }
-      if (signedRotation(hu, h, sg) >= Math.PI / 2) {
+      const turned = signedRotation(hu, h, sg);
+      if (pa == null && turned >= Math.PI / 2) pa = (x - C[0]) * u[0] + (y - C[1]) * u[1];
+      if (pa != null && turned >= 2.6) {
         this.predMargin = m - this.cm;
-        this.predAhead = (x - C[0]) * u[0] + (y - C[1]) * u[1] - this.coneOffset;
+        this.predAhead = pa;
         return Math.min(this.predMargin, this.predAhead);
       }
     }
@@ -426,7 +487,19 @@ class AutoRider {
   solveLeanGain(sim, st, q, sch, k0) {
     const f = (k) => this.predictEntry(sim, st, q, { vS: sch.vS, pS: sch.pS, k });
     if (f(k0) >= 0) return k0;
-    if (f(0) < 0) return 0;
+    if (f(0) < 0) {
+      // No schedule works from here: hold the lean that keeps the bike furthest from the cone.
+      const p0 = Math.abs(sim.phi);
+      let bv = -1e9;
+      for (const z of [1, 0.85, 0.7, 0.5]) {
+        const m = this.predictEntry(sim, st, q, { vS: sch.vS, pS: z * p0, k: 0 });
+        if (m > bv + 0.01) {
+          bv = m;
+          sch.pS = Math.max(sch.pS, z * p0);
+        }
+      }
+      return 0;
+    }
     let lo = 0;
     let hi = k0;
     for (let i = 0; i < 5; i++) {
@@ -471,11 +544,12 @@ class AutoRider {
         if (vw > 0) vw = 0;
       }
       [p, w] = servo(p, w, vp, rollAccelOf(S, v), S.roll, dt);
-      p = Math.max(0, p);
+      p = Math.min(Math.max(0, p), this.capAt(v));
       const la = G * Math.tan(p);
+      const k = balanceCurvature(D, p, v);
       const uc = Math.min(
         clamp((t + t0) / this.op, 0.15, 1),
-        throttleFor(S, maxDriveAccel(S, D, la, this.eta, v, sim.t + t), v, sim.t + t),
+        throttleFor(S, maxDriveAccel(S, D, la, this.eta, v, sim.t + t, 0, k), v, sim.t + t),
       );
       if (plan) {
         oT += (uc - oT) * (uc < oT ? kD : kU);
@@ -483,7 +557,6 @@ class AutoRider {
       } else ut += clamp(uc - ut, -dt / 0.1, dt / 0.25);
       const a =
         accelAtThrottle(S, ut, v, sim.t + t) - (rb0 > 0 && t + t0 < ov ? rb0 * (1 - (t + t0) / ov) * S.b.br : 0);
-      const k = la / (v * v);
       const d = v * dt;
       const hm = h + (sg * k * d) / 2;
       x += d * Math.cos(hm);
@@ -524,11 +597,13 @@ class AutoRider {
     const fF = D.fF;
     const mu = eta * D.mu;
     const dN = (sim.dN || 0) / S.mt;
+    const kNow = Math.abs(sim.k || 0);
+    const tq = turnLoads(S, D, la, kNow, Math.abs(sim.phi));
     const brk = (aW) => {
       const Nf = G * fF + dN;
       const Nr = Math.max(0, G * (1 - fF) - dN);
-      const cF = Math.sqrt(Math.max(0, (mu * Nf) ** 2 - (la * fF) ** 2));
-      const cR = Math.sqrt(Math.max(0, (mu * Nr) ** 2 - (la * (1 - fF)) ** 2));
+      const cF = Math.sqrt(Math.max(0, (mu * Nf) ** 2 - tq.cf ** 2));
+      const cR = Math.sqrt(Math.max(0, (mu * Nr) ** 2 - tq.cr ** 2));
       const aR = Math.min(0.5 * aW * Math.max(0, 1 - fF - (aW * hL) / G), 0.5 * cR, b.br);
       const aF = Math.min(Math.max(0, aW - aR), cF, b.bf);
       return [aF / b.bf, aR / b.br];
@@ -573,7 +648,7 @@ class AutoRider {
       const sg = turnSign(q);
       const T = this.aim(q + 1);
       const ah = aheadOfCone(q, mid);
-      const aBr = (bq ? bq.fs : 1) * maxBrakeDecel(S, D, 0, eta);
+      const aBr = (bq ? bq.fs : opt.bC || 1) * maxBrakeDecel(S, D, 0, eta);
       const vT = opt.vT / 3.6;
       const aP = 0.85 * aBr;
       const dd = ah - (bq ? bq.dT : opt.dT);
@@ -595,7 +670,10 @@ class AutoRider {
             const p0 = Math.max(0, sg * st.vp);
             const r = this.predictEntry(sim, st, q, { vS: Math.max(v, this.vApex + 0.3), pS: p0, k: 1 }, sS);
             st.nF = r >= 0 ? (st.nF || 0) + 1 : 0;
-            sNow = r >= 0 && (this.predAhead <= 0.2 || (st.nF > 3 && st.pAp != null && this.predAhead > st.pAp + 0.01));
+            sNow =
+              r >= 0 &&
+              (this.predAhead <= (opt.tA != null ? opt.tA : 0.2) ||
+                (st.nF > 3 && st.pAp != null && this.predAhead > st.pAp + 0.01));
             st.pAp = r >= 0 ? Math.min(this.predAhead, st.pAp != null ? st.pAp : 9) : null;
           }
         }
@@ -635,11 +713,11 @@ class AutoRider {
         if (st.brk) {
           const aq = dd > 0.05 ? (v * v - vT * vT) / (2 * dd) : 1e9;
           if (v > this.vApex + 0.05) {
-            if (aq > 0) brake = Math.min(aBr, aq, maxBrakeDecel(S, D, la, eta));
+            if (aq > 0) brake = Math.min(aBr, aq, maxBrakeDecel(S, D, la, eta, 0, kNow));
           } else thr = gas(Math.max(-1, Math.min(2, 4 * (this.vApex - v))));
         } else if (ctW) {
           const vt = st.ctV;
-          if (v > vt + 0.3) brake = Math.min(0.5 * maxBrakeDecel(S, D, la, eta), 2 * (v - vt));
+          if (v > vt + 0.3) brake = Math.min(0.5 * maxBrakeDecel(S, D, la, eta, 0, kNow), 2 * (v - vt));
           else thr = gas(Math.max(-1, Math.min(2, 3 * (vt - v))));
         } else {
           thr = gas(maxDriveAccel(S, D, G * Math.tan(Math.abs(lean)), eta, v, sim.t));
@@ -676,7 +754,7 @@ class AutoRider {
           const tc = this.scheduledLean(st.sch, v);
           st.tc = tc;
         }
-        if (opt.plan) st.tc = Math.min(st.tc, 0.97 * fullLockLean(D, Math.max(v, 0.5), S.eps0, b.L));
+        st.tc = Math.min(st.tc, this.capAt(v));
 
         if (st.cap != null) st.tc = Math.min(st.tc, st.cap);
         lean = sg * st.tc;
@@ -714,7 +792,10 @@ class AutoRider {
         } else if (st.brk) {
           const vA = this.vTurn;
           const vFr = Math.max(this.vApex + 0.05, vA + opt.vF);
-          const aW = v > vFr && st.tM == null ? Math.min(aBr, maxBrakeDecel(S, D, la, eta), AUTO.fK * (v - vFr)) : 0;
+          const aW =
+            v > vFr && st.tM == null
+              ? Math.min(aBr, turnInBrake(S, D, eta, la, kNow, Math.abs(sim.phi), st.tc, v), AUTO.fK * (v - vFr))
+              : 0;
           const fr = aW > 0 ? brk(aW) : [0, 0];
           const aW0 = Math.max(0.3, Math.min(aBr, maxBrakeDecel(S, D, 0, eta)));
           const wR = clamp(1 - aW / aW0, 0, 1);
@@ -722,7 +803,7 @@ class AutoRider {
           if (st.tM == null) {
             const yR = (Math.sign(sim.phi || 0) * (sim.dY || 0)) / S.mt;
             const Nr = Math.max(0, G * (1 - fF) - dN);
-            const cR = Math.sqrt(Math.max(0, (mu * Nr) ** 2 - (la * (1 - fF) - yR) ** 2));
+            const cR = Math.sqrt(Math.max(0, (mu * Nr) ** 2 - (la - tq.kv * fF - yR) ** 2));
             const rU = Math.min(opt.rK * (v - vA), AUTO.rG * cR, b.br);
             const rF = AUTO.rMin * b.br;
             r = (wR * Math.max(rF, rU)) / b.br;
@@ -739,7 +820,7 @@ class AutoRider {
           }
           fb = fr[0];
           rb = Math.max(fr[1], r);
-        } else thr = gas(maxDriveAccel(S, D, la, eta, v, sim.t));
+        } else thr = gas(maxDriveAccel(S, D, la, eta, v, sim.t, 0, kNow));
       }
       if (st.ph === 'exit') {
         if (upd || !st.lam) {
@@ -780,12 +861,12 @@ class AutoRider {
         }
         st.tx = Math.max(0, st.tx - st.lam * DT);
 
-        lean = sg * st.tx;
+        lean = sg * Math.min(st.tx, this.capAt(v));
         const ramp = clamp((sim.t - st.tG) / this.op, 0.15, 1);
-        thr = Math.min(ramp, gas(maxDriveAccel(S, D, G * Math.tan(Math.abs(sim.phi)), eta, v, sim.t)));
+        thr = Math.min(ramp, gas(maxDriveAccel(S, D, G * Math.tan(Math.abs(sim.phi)), eta, v, sim.t, 0, kNow)));
         bf = 1;
         if (opt.plan && sim.cl && sim.cl[C[0] < 0 ? 0 : 1] < opt.gX) {
-          thr = gas(maxDriveAccel(S, D, G * Math.tan(Math.abs(sim.phi)), eta, v, sim.t));
+          thr = gas(maxDriveAccel(S, D, G * Math.tan(Math.abs(sim.phi)), eta, v, sim.t, 0, kNow));
         }
         const q1 = q + 1;
         const ah1 = q1 < TURNS ? aheadOfCone(q1, mid) : 1e9;

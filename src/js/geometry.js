@@ -116,12 +116,70 @@ const tanGroundSteer = (d, p, e) => {
 const steerForCurvature = (T, p, e) => Math.atan((T * Math.cos(p)) / (Math.cos(e) + T * Math.sin(e) * Math.sin(p)));
 // Radius of the rear wheel track at full lock and combined lean a.
 const lockRadius = (S, a) => S.b.L / tanGroundSteer(S.lockEff, bikeLean(S, a), S.eps0);
-// The largest lean full lock can hold at speed v: the first lean at which g·tan φ reaches v² times the
-// full-lock curvature (head angle e and wheelbase L default to static).
+// A steady turn of the rigid bike: with both wheels rolling it turns about a point on the line of the rear
+// axle, so the centre of mass, h·sin p inside the tyre line, runs on the radius 1/k − h·sin p, where k is
+// the curvature of the rear track. Balance at combined lean p and rear wheel speed v:
+// g·tan p = v²·k·(1 − h·k·sin p). Returns k (for a lean too deep for the speed, the tightest k).
+function balanceCurvature(S, p, v) {
+  const k0 = (G * Math.tan(p)) / Math.max(v * v, 0.09);
+  const c = S.b.h * Math.sin(p);
+  if (c < 1e-6) return k0;
+  const d = 1 - 4 * c * k0;
+  return d > 0 ? (1 - Math.sqrt(d)) / (2 * c) : 1 / (2 * c);
+}
+// Tyre loads per kilogram in that turn at side acceleration la = g·tan p and rear track curvature k. The
+// front contact runs on a wider circle than the rear one (√(1 + (kL)²) times its side share) and pulls the
+// centre of mass back towards the turn centre by ω²·a_r, which loads the front like braking does; the rear
+// carries the rest of the side force, outwards in the tightest turns. cf, cr: side forces on the front and
+// rear; tr: load moved forward; kv: side acceleration of the rear contact (p: the lean, if the turn is not
+// balanced).
+function turnLoads(S, D, la, k, p) {
+  if (!k) return { cf: la * D.fF, cr: la * (1 - D.fF), tr: 0, kv: la };
+  const b = S.b;
+  if (p == null) p = Math.atan(la / G);
+  const kv = la / Math.max(0.05, 1 - b.h * k * Math.sin(p));
+  return {
+    cf: kv * D.fF * Math.sqrt(1 + (k * b.L) ** 2),
+    cr: Math.abs(la - kv * D.fF),
+    tr: kv * k * D.fF * b.h * Math.cos(p),
+    kv,
+  };
+}
+// Whether both tyres hold that turn within grip mu.
+function turnHolds(S, D, la, k, p, mu) {
+  const q = turnLoads(S, D, la, k, p);
+  return q.cf <= mu * (G * D.fF + q.tr) && q.cr <= mu * (G * (1 - D.fF) - q.tr);
+}
+// The deepest lean (up to top) whose steady turn at speed v, free or at full lock, both tyres hold.
+function gripLean(S, D, v, mu, top) {
+  const ok = (p) => {
+    const c = S.b.h * Math.sin(p);
+    const k0 = (G * Math.tan(p)) / Math.max(v * v, 0.09);
+    const d = 1 - 4 * c * k0;
+    if (d < 0) return false;
+    const k = c < 1e-6 ? k0 : (1 - Math.sqrt(d)) / (2 * c);
+    if (k > tanGroundSteer(S.lockEff, bikeLean(S, p), S.eps0) / S.b.L) return false;
+    return turnHolds(S, D, G * Math.tan(p), k, p, mu);
+  };
+  if (ok(top)) return top;
+  let lo = 0;
+  let hi = top;
+  for (let i = 0; i < 16; i++) {
+    const m = (lo + hi) / 2;
+    if (ok(m)) lo = m;
+    else hi = m;
+  }
+  return lo;
+}
+// The largest lean full lock can hold at speed v: the first lean at which balance needs the full-lock
+// curvature (head angle e and wheelbase L default to static).
 function fullLockLean(S, v, e, L) {
   e = e != null ? e : S.eps0;
   L = L || S.b.L;
-  const f = (p) => G * Math.tan(p) - (v * v * tanGroundSteer(S.lockEff, bikeLean(S, p), e)) / L;
+  const f = (p) => {
+    const kL = Math.min(tanGroundSteer(S.lockEff, bikeLean(S, p), e) / L, 0.5 / Math.max(1e-6, S.b.h * Math.sin(p)));
+    return G * Math.tan(p) - v * v * kL * (1 - S.b.h * kL * Math.sin(p));
+  };
   const hi = Math.min(1.4, S.capC + 0.3);
   let lo = 0;
   let p = 0;

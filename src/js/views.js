@@ -243,6 +243,7 @@ function gripState(p) {
   }
   const slide = Math.max(f, r) > 1;
   if (slide) note = r >= f ? i18n`tył się ślizga` : i18n`przód się ślizga`;
+  else if (!note && (p.fl || 0) & FLAG.HOLD) note = i18n`hamowanie blokuje złożenie`;
   return { use: Math.min(1, Math.max(f, r)), note, slide };
 }
 function drawGG(p, pb, who) {

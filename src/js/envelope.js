@@ -7,31 +7,32 @@
 // Tyre limits per kilogram of mass, with load transfer and grip share eta. The hardest braking at
 // lateral acceleration la: the front gains load as it brakes, while the rear loses load but must still
 // carry its share of the side force, so in a lean it is usually the rear that limits braking. sh is
-// side force moved onto the front by yaw inertia (see yawLoadShift).
-function maxBrakeDecel(S, D, la, eta, sh) {
+// side force moved onto the front by yaw inertia (see yawLoadShift), k the curvature of the rear track
+// in a tight turn (see turnLoads).
+function maxBrakeDecel(S, D, la, eta, sh, k) {
   const b = S.b;
-  const fF = D.fF;
   const hL = b.h / b.L;
   const mu = eta * D.mu;
+  const q = turnLoads(S, D, la, k);
   const A = mu * hL;
-  const B = mu * G * fF;
-  const c = sh ? Math.abs(la * fF + sh) : la * fF;
+  const B = mu * (G * D.fF + q.tr);
+  const c = sh ? Math.abs(q.cf + sh) : q.cf;
   const disc = A * A * B * B - (1 - A * A) * (c * c - B * B);
   const aF = disc > 0 ? (A * B + Math.sqrt(disc)) / (1 - A * A) : 0;
-  const aR = Math.max(0, (eta * G * (1 - fF) - (sh ? Math.abs(la * (1 - fF) - sh) : la * (1 - fF)) / mu) / hL);
+  const aR = Math.max(0, (eta * (G * (1 - D.fF) - q.tr) - (sh ? Math.abs(q.cr - sh) : q.cr) / mu) / hL);
   return Math.max(0, Math.min(aF, aR, b.bf));
 }
 // The hardest acceleration at la: the front, unloaded by drive, must still carry its share of the side
 // force; a wheelie and the engine set the other limits.
-function maxDriveAccel(S, D, la, eta, v, t, sh) {
+function maxDriveAccel(S, D, la, eta, v, t, sh, k) {
   const b = S.b;
-  const fF = D.fF;
   const hL = b.h / b.L;
   const mu = eta * D.mu;
-  const aF = Math.max(0, (G * fF - (sh ? Math.abs(la * fF + sh) : la * fF) / mu) / hL);
+  const q = turnLoads(S, D, la, k);
+  const aF = Math.max(0, (G * D.fF + q.tr - (sh ? Math.abs(q.cf + sh) : q.cf) / mu) / hL);
   const A = mu * hL;
-  const B = mu * G * (1 - fF);
-  const c = sh ? Math.abs(la * (1 - fF) - sh) : la * (1 - fF);
+  const B = mu * (G * (1 - D.fF) - q.tr);
+  const c = sh ? Math.abs(q.cr - sh) : q.cr;
   const disc = A * A * B * B - (1 - A * A) * (c * c - B * B);
   const aR = disc > 0 ? (A * B + Math.sqrt(disc)) / (1 - A * A) : 0;
   return Math.max(0, Math.min(aF, aR, 0.97 * D.wheelie, engineAccel(b, S, v, t)));

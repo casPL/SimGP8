@@ -21,7 +21,7 @@ const PLAN_MODE = {
   finL: null,
 };
 // Options for the planner's rider: the coach's run shifted by the changes in the plan (B earlier by
-// dH with the braking force scaled, T moved by dS along and dSd sideways, G earlier by dG).
+// dH, T moved by dS along and dSd sideways, G earlier by dG), braking as hard as the coach.
 function planOptions(S, plan) {
   const S2 = [];
   const brk = [];
@@ -36,14 +36,13 @@ function planOptions(S, plan) {
   const pT = num(plan.turn, cp.turn);
   const pS = num(plan.side, cp.side);
   const pG = num(plan.gas, cp.gas);
-  const f = clamp(cp.force, 0.1, 1.25);
   const dH = pB - cp.brake;
   const dS = pT - cp.turn;
   const dSd = pS - cp.side;
   const dG = pG - cp.gas;
   for (let q = 0; q < TURNS; q++) {
     S2.push([cr.sA[q] + dS, Math.max(0.3, cr.sD[q] + dSd)]);
-    brk.push({ fs: cp.force > 0 ? f / cp.force : 1, dT: cc.dT + dH });
+    brk.push({ fs: cc.bC || 1, dT: cc.dT + dH });
     sS.push(dS);
     gS.push((cc.gS ? cc.gS[q] : 0) + dG * RAD);
     pdq.push(Math.max(0.3, cc.pd + dSd));

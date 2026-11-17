@@ -10,7 +10,14 @@ const engineAccel = (b, S, v, t) =>
     b.aT * (b.b0 + (1 - b.b0) * Math.min(1, v / b.vb)),
     ((b.P2 && t != null && t > b.Pt ? b.P2 : b.P) * 850) / (S.mt * Math.max(v, 0.5)),
   );
-const FLAG = { WHEELIE: 1, STOPPIE: 2, SLIDEF: 4, LOCKR: 8, SPIN: 16, FALL: 32, WIDE: 64, SCRAPE: 128 };
+const FLAG = { WHEELIE: 1, STOPPIE: 2, SLIDEF: 4, LOCKR: 8, SPIN: 16, FALL: 32, WIDE: 64, SCRAPE: 128, HOLD: 256 };
+// The steady turn at lean p and speed v: its curvature k and the side force each tyre needs [N].
+function tyreNeeds(S, D, g, p, v) {
+  const k = Math.min(balanceCurvature(D, p, Math.max(v, 0.3)), tanGroundSteer(D.lockEff, bikeLean(D, p), g.eps) / g.L);
+  const kv = v * v * k;
+  const al = kv * (1 - S.b.h * k * Math.sin(p));
+  return { k, f: S.mt * kv * D.fF * Math.sqrt(1 + (k * g.L) ** 2), r: S.mt * Math.abs(al - kv * D.fF) };
+}
 // The rider's body as a second mass: FA shift of its centre of mass along the bike at full reach [m],
 // WN and ZB natural frequency [rad/s] and damping of the torso, VB its top speed [full reach/s].
 const BODY_SHIFT = { FA: 0.15, WN: 9, ZB: 0.9, VB: 5 };
@@ -65,6 +72,7 @@ class Sim {
     this.vr = 0;
     this.dN = 0;
     this.dNv = 0;
+    this.fxR = 0;
     this.g = liveGeometry(S, this.zf, this.zr);
     this.yr = 0;
     this.yd = 0;
@@ -137,6 +145,25 @@ class Sim {
       fl |= FLAG.FALL;
       this.eqC = true;
     }
+    // A deeper lean needs a rear tyre that can carry the side force of that turn. Hard front braking
+    // unloads the rear, so the bike leans in only as far as the rear allows until the brake eases.
+    if (Math.abs(phi) > Math.abs(this.phi)) {
+      const Nr0 = Math.max(0, S.mt * G * (1 - D.fF) - this.dN);
+      const cR = Math.sqrt(Math.max(0, (D.mu * Nr0) ** 2 - this.fxR ** 2));
+      if (tyreNeeds(S, D, g, Math.abs(phi), v0).r > cR) {
+        let lo = Math.abs(this.phi);
+        if (tyreNeeds(S, D, g, lo, v0).r <= cR) {
+          let hi = Math.abs(phi);
+          for (let i = 0; i < 10; i++) {
+            const m = (lo + hi) / 2;
+            if (tyreNeeds(S, D, g, m, v0).r <= cR) lo = m;
+            else hi = m;
+          }
+        }
+        phi = Math.sign(phi || this.phi) * lo;
+        fl |= FLAG.HOLD;
+      }
+    }
     const w1 = this.eqC ? clamp((phi - this.phi) / dt, -Math.abs(w0), Math.abs(w0)) : (phi - this.phi) / dt;
     const racc = (w1 - w0) / dt;
     this.eqC = false;
@@ -147,7 +174,7 @@ class Sim {
     const ab = bikeLean(D, a);
     const kLock = tanGroundSteer(D.lockEff, ab, g.eps) / g.L;
     const vv = Math.max(v0, 0.3);
-    const kBal = (G * Math.tan(a)) / (vv * vv);
+    const kBal = balanceCurvature(D, a, vv);
     let k = Math.min(kBal, kLock);
     this.lock = a > 0.5 * RAD && kBal >= kLock * 0.95;
     if (v0 < 0.02) k = 0;
@@ -186,9 +213,13 @@ class Sim {
     this.yd += ((yr - this.yr) / dt - this.yd) * Math.min(1, dt / 0.04);
     this.yr = yr;
     const dY = (S.Iz * this.yd) / g.L;
-    const al = v0 * v0 * k;
-    const Fyf = Math.abs(side * S.mt * al * D.fF + dY);
-    const Fyr = Math.abs(side * S.mt * al * (1 - D.fF) - dY);
+    // Side forces of the rigid bike turning about the rear axle line (see turnLoads): kv = v²·k is the rear
+    // contact's side acceleration, al the centre of mass's; the front contact's wider circle adds sF.
+    const kv = v0 * v0 * k;
+    const al = kv * (1 - b.h * k * Math.sin(a));
+    const sF = Math.sqrt(1 + (k * g.L) ** 2);
+    const Fyf = Math.abs(side * S.mt * kv * D.fF + dY) * sF;
+    const Fyr = Math.abs(side * S.mt * (al - kv * D.fF) - dY);
     this.dY = dY;
     const capF = D.mu * Math.max(Nf, 1);
     let uF = Math.hypot(S.mt * aF, Fyf) / capF;
@@ -199,10 +230,17 @@ class Sim {
         this.slideF += (uF - 1) * 10 * dt;
         fl |= FLAG.SLIDEF;
       } else {
-        const pm = Math.atan(capF / (S.mt * D.fF * G));
-        if (pm < a) {
+        // The front pushes: the bike stands up to the deepest lean whose steady turn the front holds.
+        if (tyreNeeds(S, D, g, a, v0).f > capF) {
+          let pm = 0;
+          let hi = a;
+          for (let i = 0; i < 12; i++) {
+            const m = (pm + hi) / 2;
+            if (tyreNeeds(S, D, g, m, v0).f <= capF) pm = m;
+            else hi = m;
+          }
           this.phi = side * pm;
-          k = Math.min(k, (G * Math.tan(pm)) / Math.max(v0 * v0, 0.09));
+          k = Math.min(k, tyreNeeds(S, D, g, pm, v0).k);
           fl |= FLAG.WIDE;
         }
         this.slideF = Math.max(0, this.slideF - 3 * dt);
@@ -210,6 +248,7 @@ class Sim {
     } else this.slideF = Math.max(0, this.slideF - 3 * dt);
     const capR = D.mu * Math.max(Nr, 1);
     const FxR = S.mt * (aD - aR - aEB);
+    this.fxR = FxR;
     const uR = Math.hypot(FxR, Fyr) / capR;
     if (uR > 1) {
       const av = Math.sqrt(Math.max(0, capR * capR - Fyr * Fyr)) / S.mt;
@@ -258,7 +297,8 @@ class Sim {
     this.psi += side * vm * k * dt;
     this.x += vm * Math.cos(this.psi) * dt;
     this.y += vm * Math.sin(this.psi) * dt;
-    const dNt = (-S.mt * ax * b.h) / b.L;
+    // Load moved onto the front by braking and by the pull of a tight turn towards its centre (ω²·a_r).
+    const dNt = (S.mt * (vm * vm * k * k * D.fF * b.L * Math.cos(a) - ax) * b.h) / b.L;
     const wn = S.wn;
     this.dNv += (wn * wn * (dNt - this.dN) - 2 * 0.55 * wn * this.dNv) * dt;
     this.dN += this.dNv * dt;
@@ -284,7 +324,7 @@ class Sim {
     this.v = v;
     this.k = side * k;
     this.ax = ax;
-    this.al = side * v * v * k;
+    this.al = side * al;
     this.fl = fl;
     this.t += dt;
   }
