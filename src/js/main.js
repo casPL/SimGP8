@@ -187,6 +187,7 @@ $('plT').addEventListener('input', (e) => {
       m = { kind: c.kind, q: c.q };
     }
     player.on = false;
+    getSelection()?.removeAllRanges();
     const [wx, wy] = toWorld(sx, sy);
     planner.drag = {
       kind: m.kind,
@@ -231,6 +232,15 @@ $('plT').addEventListener('input', (e) => {
     }
   };
   for (const ev of ['pointerup', 'pointercancel', 'lostpointercapture']) tr.addEventListener(ev, end);
+  // In the planner a finger that rests on a point before it moves would otherwise become a long press,
+  // which selects text or opens a menu and cancels the drag.
+  tr.addEventListener(
+    'touchstart',
+    (e) => {
+      if (planner.on) e.preventDefault();
+    },
+    { passive: false },
+  );
 }
 window.addEventListener('resize', () => {
   clearTimeout(resizeAll.t);

@@ -71,6 +71,10 @@ button { font: inherit; color: inherit; }
 /* Page frame and header */
 .wrap { max-width: 1920px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
 .screen { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+/* Touch screens: a finger held on the game screen selects no text and opens no copy menu */
+@media (pointer: coarse) {
+  .screen { -webkit-user-select: none; user-select: none; -webkit-touch-callout: none; }
+}
 .top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 22px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
 .brand { display: flex; align-items: center; gap: 12px; }
 .brand h1 { font-size: clamp(24px, 3vw, 30px); line-height: 1; }
@@ -6850,6 +6854,7 @@ $('plT').addEventListener('input', (e) => {
       m = { kind: c.kind, q: c.q };
     }
     player.on = false;
+    getSelection()?.removeAllRanges();
     const [wx, wy] = toWorld(sx, sy);
     planner.drag = {
       kind: m.kind,
@@ -6894,6 +6899,15 @@ $('plT').addEventListener('input', (e) => {
     }
   };
   for (const ev of ['pointerup', 'pointercancel', 'lostpointercapture']) tr.addEventListener(ev, end);
+  // In the planner a finger that rests on a point before it moves would otherwise become a long press,
+  // which selects text or opens a menu and cancels the drag.
+  tr.addEventListener(
+    'touchstart',
+    (e) => {
+      if (planner.on) e.preventDefault();
+    },
+    { passive: false },
+  );
 }
 window.addEventListener('resize', () => {
   clearTimeout(resizeAll.t);
