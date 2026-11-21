@@ -27,7 +27,7 @@ The fonts come from Google Fonts; offline, the browser falls back to its own.
 - Exact steering kinematics in a lean (Cossalter, *Motorcycle Dynamics*): at full lock a leaned bike
   turns much tighter than an upright one.
 - Roll dynamics with countersteering, fork dive and rear squat, and the rider's body as a second mass.
-- The outline of the bike with its rider (handlebar ends, tail, footpeg, knee, elbow) against the
+- The outline of the bike with its rider (wheels, handlebar ends, tail, footpeg, knee, elbow) against the
   shape of a real cone, so the gap to a cone is measured rather than assumed.
 - An automatic rider that does not follow a drawn line. It rides by the plan points and a few rules:
   brake mostly with the front, lean in as the brakes fade, open the throttle as far as the lean

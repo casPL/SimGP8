@@ -375,7 +375,7 @@ details summary { cursor: pointer; font-family: var(--f-display); font-size: 18p
       <div><h3>Zawieszenie i geometria</h3><p class="f">wyprzedzenie = (r · sin ε − offset) / cos ε</p><p>r to promień koła, ε kąt główki, offset to wysunięcie osi koła przed oś skrętu. Przedni hamulec dociąża przód, a siła hamowania wzdłuż goleni dodatkowo ugina widelec. Motocykl pochyla się do przodu: główka staje bardziej stromo, wyprzedzenie i rozstaw się skracają. Motocykl szybciej się składa, ale jest mniej stabilny. Na pełnym skręcie przy małym złożeniu skręca wtedy ciaśniej, a w głębokim szerzej: w złożeniu koło skręca się względem drogi tym mocniej, im bardziej położona główka. Gaz działa odwrotnie: przód traci nacisk i widelec się rozpręża, tym bardziej, im mocniejsze przyspieszenie; główka się kładzie, wyprzedzenie rośnie. Dlatego na gazie kierowca przesuwa ciało do przodu: dociąża przód (widelec mniej się rozpręża, wheelie później). Nagle puszczony hamulec pozwala widelcowi odbić i motocykl wychodzi szerzej. Tył zależy od wahacza: napęd na kole go podnosi, napięty łańcuch nad osią wahacza ściąga, a przy hamowaniu tyłem zacisk na wahaczu ściąga tył w dół (kolumna „Tył” w parametrach motocykli). Widok z boku pokazuje to na żywo, blady obrys to motocykl w ugięciu statycznym (sag, przyjęte 30% skoku).</p></div>
       <div><h3>Moment z dołu</h3><p>Każdy motocykl ma inny zapas momentu przy małej prędkości. Sur-Ron ciągnie od zera, CBR600 na dole jest słaby. Ze słabym dołem trzymaj szerszą nitkę i wyższą prędkość w pętli, z mocnym możesz jechać prościej i ciaśniej.</p></div>
       <div><h3>Pozycja ciała</h3><p>Opona czuje tylko złożenie wypadkowe, więc pozycja nie dodaje przyczepności. Zmienia za to złożenie samego motocykla. Pozytywna: motocykl bardziej wyprostowany, więcej prześwitu, ale szerszy pełny skręt i wolniejsze przekładanie. Negatywna: ciaśniejszy pełny skręt i szybkie przekładanie, ale prześwit kończy się wcześniej.</p></div>
-      <div><h3>Pachołek 40 cm</h3><p>Złożony motocykl i kierowca wiszą nad pachołkiem: im głębsze złożenie, tym dalej od pachołka musi biec ślad opon. Symulator sprawdza odstęp pachołka od obrysu: końców kierownicy, tyłu motocykla, podnóżka, kolana i łokcia.</p></div>
+      <div><h3>Pachołek 40 cm</h3><p>Złożony motocykl i kierowca wiszą nad pachołkiem: im głębsze złożenie, tym dalej od pachołka musi biec ślad opon. Symulator sprawdza odstęp pachołka od obrysu: kół, końców kierownicy, tyłu motocykla, podnóżka, kolana i łokcia. Pachołek nie zmieści się pod motocyklem, więc przejazd nad nim to dotknięcie.</p></div>
     </div>
   </details>
 
@@ -805,6 +805,8 @@ function outlinePoints(S, phb, d) {
     if (inner && P.ex != null)
       pt(i18n`łokieć`, zb - s * o.hw * Math.sin(d) - 0.22, s * (o.hw * Math.cos(d) + P.ex), o.hb - 0.06, 0.05);
   }
+  // The tyres on the ground and everything between them: a cone cannot pass under the bike.
+  out.push({ n: i18n`koła`, z0: 0, z1: b.L, lat: 0, Z: 0, r: 0.07, all: false });
   return out;
 }
 const canTouchCone = (p) => p.all || p.Z <= CONE_SHAPE.H;
@@ -2522,63 +2524,63 @@ const allButLast = (x) => [...Array(TURNS - 1).fill(x), 0];
 const COACH = {
   ebike: {
     //          cm    lr    vT  dT   pd    lf rA   kA    rK vF   wy     finL  finY  fxY   gS                bC    tA
-    'neg@-1':  [0.12, 1.3,  24, 2.2, 1.3,  1, 1.2, 0.9,  3, 0.6, -0.66, 1,    0.85, -0.4, allButLast(0.25), 0.8,  1],
-    'neg@0':   [0.08, 1,    26, 3.4, 1.3,  1, 1.6, 0.85, 8, 0.6, -0.66, 1.5,  1.05, -0.2, allButLast(0.16), 0.85, 1],
-    'neg@1':   [0.06, 1,    22, 2.6, 1.3,  1, 1.6, 0.85, 5, 0.2, -0.66, 1,    0.85, -0.4, allButLast(0.25), 0.85, 1],
-    'neu@-1':  [0.08, 1,    24, 2.2, 1.5,  1, 1.2, 0.95, 8, 0.9, -0.66, 1,    0.85, -0.4, 0.25,             0.7,  1],
-    'neu@0':   [0.04, 1,    22, 2.2, 1.3,  1, 0,   1.05, 8, 0.6, -0.66, 1,    0.85, -0.4, 0.25,             0.85, 0.6],
-    'neu@1':   [0.06, 1,    22, 2.6, 1.3,  1, 1.6, 0.85, 8, 0.2, -0.66, 1,    0.85, -0.4, 0.2,              0.85, 1],
-    'pos@-1':  [0.15, 1.9,  24, 2.2, 1.5,  1, 1.4, 0.9,  8, 0.6, -0.66, 1,    0.85, -0.4, 0.2,              0.8,  1],
-    'pos@0':   [0.06, 1.3,  24, 2.6, 1.5,  1, 0,   0.7,  8, 0.6, -0.66, 1,    0.85, -0.4, 0.25,             0.65, 1],
-    'pos@1':   [0.15, 1,    22, 2.6, 1.5,  1, 1.2, 1,    5, 0.2, -0.66, 1,    0.85, -0.4, 0.25,             0.85, 1],
+    'neg@-1':  [0.12, 1.3,  24, 2.2, 1.3,  1, 1.2, 0.9,  3, 0.6, -1.15, 1,    0.85, -0.4, allButLast(0.25), 0.8,  1],
+    'neg@0':   [0.08, 1,    26, 3.4, 1.3,  1, 1.6, 0.85, 8, 0.6, -0.75, 1,    1.2,  0.2,  allButLast(0.25), 0.8,  1],
+    'neg@1':   [0.06, 1,    22, 2.6, 1.3,  1, 1.6, 0.85, 8, 0.2, -1.05, 1,    1.05, 0.2,  allButLast(0.25), 0.85, 0.2],
+    'neu@-1':  [0.08, 1,    24, 2.2, 1.5,  1, 1.2, 0.95, 8, 0.9, -0.85, 1,    0.85, 0.6,  0.25,             0.7,  1],
+    'neu@0':   [0.04, 1,    22, 2.2, 1.15, 1, 0,   1.05, 8, 0.6, -0.75, 1.25, 1.2,  null, 0.25,             0.85, 0.6],
+    'neu@1':   [0.06, 1,    22, 2.6, 1.3,  1, 1.6, 0.85, 8, 0.2, -1.05, 1,    1.05, 0.4,  0.2,              0.85, 1],
+    'pos@-1':  [0.1,  1.45, 24, 2.2, 1.5,  1, 1.4, 0.7,  8, 0.6, -1.05, 1,    1.05, 0.8,  0.2,              0.8,  1],
+    'pos@0':   [0.08, 1.3,  24, 2.6, 1.5,  1, 0,   0.7,  8, 0.6, -0.66, 1,    1.05, null, 0.25,             0.7,  1],
+    'pos@1':   [0.15, 1,    22, 2.6, 1.5,  1, 1.2, 1,    5, 0.2, -0.66, 1.5,  1.05, null, 0.25,             0.85, 1],
   },
   pit: {
     //          cm    lr    vT  dT   pd    lf rA   kA    rK vF   wy     finL  finY  fxY   gS                bC    tA
-    'neg@-1':  [0.04, 1.9,  24, 2.2, 1.3,  1, 1.2, 0.9,  3, 0.9, -0.85, 1,    0.85, -0.4, 0.25,             0.75, 1],
-    'neg@0':   [0.04, 1.45, 26, 3.8, 1.8,  1, 1.4, 1,    3, 1.2, -0.85, 1.5,  0.85, -0.4, 0,                0.75, 1],
-    'neg@1':   [0.04, 1.15, 24, 3,   1.5,  1, 1.6, 0.85, 3, 0.9, -0.85, 1.5,  1.2,  -0.2, 0.12,             0.9,  0.2],
-    'neu@-1':  [0.04, 1,    24, 2.2, 1.3,  1, 1.2, 0.9,  3, 0.9, -0.66, 1,    0.85, -0.4, 0.25,             0.65, 0.6],
-    'neu@0':   [0.04, 1.45, 26, 3.8, 1.8,  1, 1.4, 1,    3, 1.2, -0.75, 1.5,  0.85, -0.4, 0,                0.75, 1],
-    'neu@1':   [0.04, 1.15, 24, 3,   1.3,  1, 1.6, 0.85, 5, 0.9, -0.66, 1.5,  1.2,  -0.2, 0.2,              0.85, 0.2],
-    'pos@-1':  [0.04, 1.45, 22, 2.2, 1.15, 1, 2.1, 0.75, 3, 1.2, -0.85, 1.5,  0.85, -0.4, 0,                0.85, 1],
-    'pos@0':   [0.04, 1,    24, 2.6, 1.3,  1, 0,   1.05, 5, 0.6, -0.66, 1,    0.85, -0.4, 0.25,             0.7,  0.6],
-    'pos@1':   [0.06, 1.3,  22, 3.4, 1.8,  1, 1.6, 0.95, 3, 1.2, -0.66, 1,    0.85, -0.4, 0.12,             1,    1],
+    'neg@-1':  [0.04, 1.15, 24, 2.2, 1.3,  1, 1.2, 0.9,  3, 0.9, -1.05, 1,    1.05, null, 0.25,             0.75, 1],
+    'neg@0':   [0.04, 1.45, 26, 3.8, 1.8,  1, 1.4, 1,    3, 1.2, -0.75, 1.5,  1.35, 0.8,  0,                0.75, 1],
+    'neg@1':   [0.04, 1,    24, 3,   1.5,  1, 1.6, 0.85, 3, 0.9, -0.66, 1.5,  1.05, null, 0.12,             0.7,  1],
+    'neu@-1':  [0.04, 1.15, 24, 2.2, 1.3,  1, 1.2, 0.9,  3, 0.9, -0.95, 1,    1.05, null, 0.25,             0.75, 0.6],
+    'neu@0':   [0.04, 1.45, 26, 3.8, 1.8,  1, 1.4, 1,    3, 1.2, -0.75, 1.5,  0.85, null, 0,                0.75, 1],
+    'neu@1':   [0.04, 1.15, 24, 3.4, 1.3,  1, 1.6, 0.85, 3, 0.9, -0.85, 1.5,  1.05, null, 0.2,              0.8,  1],
+    'pos@-1':  [0.04, 1.45, 22, 2.2, 1.3,  1, 2.1, 0.75, 3, 1.2, -0.95, 1.5,  0.85, 0.4,  0,                0.9,  1],
+    'pos@0':   [0.04, 1,    24, 2.6, 1.3,  1, 0,   1.05, 5, 0.6, -0.66, 1,    0.85, null, 0.25,             0.7,  0.6],
+    'pos@1':   [0.04, 1.45, 22, 3.4, 1.8,  1, 1.6, 0.95, 3, 1.2, -0.95, 1,    0.85, null, 0.12,             1,    1],
   },
   sm: {
     //          cm    lr    vT  dT   pd    lf rA   kA    rK vF   wy     finL  finY  fxY   gS                bC    tA
-    'neg@-1':  [0.04, 1.3,  26, 3.8, 1.8,  1, 1.4, 1,    3, 1.2, -0.75, 1.5,  0.85, -0.4, 0,                0.9,  1],
-    'neg@0':   [0.04, 1.15, 26, 3.8, 1.8,  1, 1.4, 1,    3, 1.2, -0.66, 1.5,  0.85, -0.4, 0,                0.85, 1],
-    'neg@1':   [0.04, 1.45, 24, 3.8, 1.8,  1, 1.4, 0.95, 3, 1.2, -0.75, 1.5,  0.85, 0,    0.2,              1,    1],
-    'neu@-1':  [0.04, 1.3,  26, 3.8, 1.8,  1, 0,   1,    3, 1.2, -0.66, 1.5,  0.85, -0.4, 0,                0.9,  1],
-    'neu@0':   [0.04, 1.9,  24, 3.4, 1.8,  1, 1.6, 0.95, 3, 1.2, -0.85, 1.5,  0.85, 0,    0.12,             0.8,  1],
-    'neu@1':   [0.04, 1,    24, 3.8, 1.8,  1, 2.4, 0.75, 3, 1.2, -0.66, 1.25, 0.85, -0.2, 0.25,             0.75, 1],
-    'pos@-1':  [0.04, 1.3,  26, 3.4, 1.8,  1, 1.4, 1,    3, 1.2, -0.75, 1.5,  0.85, -0.4, 0,                0.65, 1.4],
-    'pos@0':   [0.04, 1.9,  24, 3.4, 1.8,  1, 1.6, 0.95, 3, 1.2, -0.75, 1.5,  0.85, 0,    0.12,             0.7,  1],
-    'pos@1':   [0.06, 1,    22, 3.4, 1.8,  1, 1.8, 0.95, 3, 1.2, -0.66, 1,    0.85, -0.4, 0.12,             1,    0.6],
+    'neg@-1':  [0.04, 1.3,  26, 3.8, 1.8,  1, 1.4, 1,    3, 1.2, -0.55, 1.5,  1.05, 0,    0,                0.9,  1],
+    'neg@0':   [0.04, 1.15, 26, 3.8, 1.8,  1, 1.4, 1,    3, 1.2, -0.95, 1.5,  0.7,  0,    0,                0.85, 1],
+    'neg@1':   [0.04, 1.45, 24, 3.8, 1.8,  1, 1.4, 0.95, 3, 1.2, -1.25, 1.5,  1.2,  null, 0.2,              1,    1],
+    'neu@-1':  [0.04, 1.3,  26, 3.8, 1.8,  1, 0,   1,    3, 1.2, -1.05, 1.5,  0.7,  null, 0,                0.9,  1],
+    'neu@0':   [0.04, 1.9,  24, 3.4, 1.8,  1, 1.6, 0.95, 3, 1.2, -1.15, 1.5,  1.05, null, 0.12,             0.8,  1],
+    'neu@1':   [0.04, 1.3,  24, 3.8, 1.8,  1, 2.4, 0.75, 3, 1.2, -0.95, 1.25, 1.05, null, 0.25,             0.75, 1],
+    'pos@-1':  [0.04, 1.3,  26, 3.4, 1.8,  1, 1.4, 1,    3, 1.2, -0.75, 1.5,  0.85, null, 0,                0.65, 1.4],
+    'pos@0':   [0.04, 1.6,  24, 3.4, 1.8,  1, 1.6, 0.95, 3, 1.2, -0.85, 1.5,  0.7,  0.4,  0.12,             0.65, 1],
+    'pos@1':   [0.06, 1,    22, 3.4, 1.8,  1, 1.8, 0.95, 3, 1.2, -0.95, 1,    1.35, 0.4,  0.12,             1,    0.6],
   },
   cbr: {
     //          cm    lr    vT  dT   pd    lf rA   kA    rK vF   wy     finL  finY  fxY   gS                bC    tA
-    'neg@-1':  [0.04, 1.6,  24, 2.6, 1.8,  1, 0,   0.7,  3, 0.9, -0.75, 1,    0.85, -0.4, 0.25,             0.85, 1],
-    'neg@0':   [0.04, 1.6,  26, 3.8, 1.8,  1, 1.4, 1,    3, 1.2, -0.66, 1.5,  0.85, -0.4, 0,                0.75, 1],
-    'neg@1':   [0.04, 1,    22, 2.6, 1.8,  1, 2.1, 0.85, 3, 1.2, -0.66, 1,    0.85, -0.2, 0.25,             0.8,  1],
-    'neu@-1':  [0.04, 1,    26, 3.4, 1.8,  1, 1.4, 0.95, 5, 0.4, -0.66, 1.5,  0.85, 0.2,  0.12,             0.85, 1],
-    'neu@0':   [0.04, 1,    22, 3,   1.8,  1, 1.6, 0.95, 3, 1.2, -0.85, 1.5,  0.85, 0.2,  0.25,             0.9,  1],
-    'neu@1':   [0.04, 1.15, 24, 3.8, 1.8,  1, 2.4, 0.7,  3, 1.2, -0.66, 1.25, 0.85, 0.2,  0.25,             0.9,  1],
-    'pos@-1':  [0.08, 1.15, 22, 2.2, 1.8,  1, 1.6, 0.95, 3, 1.2, -0.75, 1.5,  0.85, 0.2,  0.25,             0.85, 1],
-    'pos@0':   [0.04, 1.45, 24, 3.8, 1.8,  1, 1.6, 0.95, 3, 1.2, -0.85, 1.5,  0.85, 0.2,  0.25,             1,    1],
-    'pos@1':   [0.08, 1.45, 24, 3.4, 1.8,  1, 1.6, 0.95, 8, 0.6, -0.75, 1.25, 0.85, 0,    0.25,             0.7,  1],
+    'neg@-1':  [0.04, 1,    24, 2.6, 1.8,  1, 0,   0.7,  3, 0.9, -0.66, 1,    1.2,  null, 0.25,             0.85, 1],
+    'neg@0':   [0.04, 1.6,  26, 3.8, 1.8,  1, 1.4, 1,    3, 1.2, -0.66, 1.5,  0.85, 0.4,  0,                0.75, 1],
+    'neg@1':   [0.04, 1,    22, 2.6, 1.8,  1, 2.1, 0.85, 3, 1.2, -0.66, 1,    0.7,  0.6,  0.25,             0.8,  1],
+    'neu@-1':  [0.04, 1,    26, 3.4, 1.8,  1, 1.4, 0.95, 3, 0.6, -0.85, 0.7,  1.2,  0.6,  0.08,             0.85, 1],
+    'neu@0':   [0.04, 1,    22, 3,   1.8,  1, 1.6, 0.95, 3, 1.2, -0.85, 1.5,  1.05, null, 0.25,             0.9,  1],
+    'neu@1':   [0.04, 1,    24, 3.4, 1.8,  1, 1.6, 0.7,  3, 1.2, -0.66, 1.25, 1.05, null, 0.25,             0.75, 1],
+    'pos@-1':  [0.04, 1.15, 22, 2.2, 1.8,  1, 1.6, 0.95, 3, 1.2, -0.85, 1.5,  1.05, null, 0.25,             0.75, 0.2],
+    'pos@0':   [0.04, 1.15, 24, 3.4, 1.8,  1, 0,   0.95, 3, 1.2, -0.66, 1.5,  1.05, null, 0.25,             0.75, 1],
+    'pos@1':   [0.08, 1.45, 24, 3.4, 1.8,  1, 1.6, 0.95, 8, 0.6, -0.6,  1.25, 1.05, null, 0.25,             0.7,  1],
   },
   gsxr: {
     //          cm    lr    vT  dT   pd    lf rA   kA    rK vF   wy     finL  finY  fxY   gS                bC    tA
-    'neg@-1':  [0.1,  1.15, 26, 3.4, 1.5,  1, 0,   0.85, 8, 0.6, -0.66, 1,    0.85, -0.4, 0.12,             0.65, 1],
-    'neg@0':   [0.04, 1,    22, 2.6, 1.5,  1, 1.8, 0.85, 3, 0.9, -0.66, 1,    0.85, -0.4, 0.12,             0.75, 1],
-    'neg@1':   [0.04, 1,    24, 3,   1.5,  1, 0,   0.85, 8, 0.6, -0.75, 1,    0.85, -0.4, 0.2,              0.65, 1],
-    'neu@-1':  [0.06, 1.45, 22, 2.6, 1.8,  1, 0,   0.85, 8, 0.9, -0.85, 1,    0.85, -0.4, 0,                0.9,  1],
-    'neu@0':   [0.04, 1.9,  24, 3,   1.8,  1, 1.6, 0.7,  3, 1.2, -0.75, 1.5,  0.85, 0,    0.08,             0.65, 1],
-    'neu@1':   [0.06, 1,    22, 3,   1.8,  1, 1.6, 1,    3, 1.2, -0.66, 1.5,  0.85, -0.4, 0.08,             0.9,  1],
-    'pos@-1':  [0.04, 1,    22, 2.6, 1.8,  1, 1.6, 0.85, 3, 1.2, -0.75, 1,    0.85, -0.4, 0,                0.9,  1],
-    'pos@0':   [0.04, 1,    20, 2.6, 1.8,  1, 1.8, 0.7,  8, 0.9, -0.85, 1.5,  0.85, -0.4, 0,                0.9,  1],
-    'pos@1':   [0.06, 1,    22, 3.4, 1.8,  1, 0,   0.95, 3, 1.2, -0.66, 1.5,  0.85, 0,    0,                1,    1],
+    'neg@-1':  [0.06, 1,    26, 3.4, 1.5,  1, 1.6, 0.85, 8, 0.6, -0.85, 1,    1.35, 1,    0.12,             0.65, 1],
+    'neg@0':   [0.04, 1.15, 22, 2.2, 1.8,  1, 1.6, 0.85, 3, 1.2, -0.85, 1,    1.2,  1,    0.08,             0.75, 1],
+    'neg@1':   [0.04, 1,    24, 3,   1.5,  1, 0,   0.85, 8, 0.6, -0.75, 1,    1.2,  1,    0.2,              0.65, 1],
+    'neu@-1':  [0.04, 1.45, 22, 2.6, 1.8,  1, 1.8, 0.9,  8, 0.9, -0.75, 1,    1.05, 0.6,  0,                0.9,  1],
+    'neu@0':   [0.04, 1,    24, 3,   1.8,  1, 2.1, 0.7,  3, 1.2, -0.66, 1.5,  0.7,  1,    0.12,             0.65, 1],
+    'neu@1':   [0.06, 1,    22, 3,   1.8,  1, 1.6, 1,    3, 1.2, -0.66, 1.5,  1.2,  0.2,  0.08,             0.9,  1],
+    'pos@-1':  [0.04, 1,    22, 2.6, 1.8,  1, 1.6, 0.85, 3, 1.2, -0.75, 1,    1.2,  0.8,  0,                0.9,  1],
+    'pos@0':   [0.04, 1,    20, 2.2, 1.8,  1, 2.4, 0.8,  3, 1.2, -0.66, 1.5,  0.7,  0.2,  0,                0.9,  1],
+    'pos@1':   [0.06, 1,    22, 3.4, 1.8,  1, 0,   0.95, 3, 1.2, -0.66, 1.5,  0.7,  0.2,  0,                1,    1],
   },
 };
 function coachSetup(S) {
@@ -4688,7 +4690,7 @@ const PLAN_FIELDS = [
 ];
 const PLAN_INTRO =
   '<li class="info"><span>' +
-  i18n`Wirtualny zawodnik i trener startują razem z bramki. Zawodnik jedzie według planu: do H gaz, od H przedni hamulec, w S zaczyna składać motocykl, w G gaz. Punkt S przesuwasz bliżej i dalej oraz szerzej i węziej. Trener jedzie tym samym motocyklem, w tej samej pozycji ciała i w tym samym miejscu na siedzeniu, tak jak w pokazie trenera. Zawodnik planera to prostszy kierowca niż trener: składa się i odkręca w punktach planu i jedzie na granicy złożenia, a trener zostawia sobie zapas. Dlatego nawet z punktami trenera zawodnik bywa od niego szybszy albo wolniejszy. Nitka wychodzi z fizyki: od S zawodnik składa się tak szybko i mocno, jak pozwala motocykl i prędkość, ale tak, żeby kierownica, tył motocykla, podnóżek, kolano i łokieć minęły pachołek o zapas. Zawodnik i trener jadą bez błędów, więc ten sam plan daje zawsze ten sam wynik. Obaj hamują w złożeniu: składając się, oddają przód, a tył od razu przejmuje hamowanie, najpierw mocno, potem coraz mniej, i trzymają go jeszcze chwilę po wejściu na gaz. Siła hamowania, odkręcanie gazu i zapas od pachołka są ustalone dla motocykla, pozycji i miejsca na siedzeniu.` +
+  i18n`Wirtualny zawodnik i trener startują razem z bramki. Zawodnik jedzie według planu: do H gaz, od H przedni hamulec, w S zaczyna składać motocykl, w G gaz. Punkt S przesuwasz bliżej i dalej oraz szerzej i węziej. Trener jedzie tym samym motocyklem, w tej samej pozycji ciała i w tym samym miejscu na siedzeniu, tak jak w pokazie trenera. Zawodnik planera to prostszy kierowca niż trener: składa się i odkręca w punktach planu i jedzie na granicy złożenia, a trener zostawia sobie zapas. Dlatego nawet z punktami trenera zawodnik bywa od niego szybszy albo wolniejszy. Nitka wychodzi z fizyki: od S zawodnik składa się tak szybko i mocno, jak pozwala motocykl i prędkość, ale tak, żeby koła, kierownica, tył motocykla, podnóżek, kolano i łokieć minęły pachołek o zapas. Zawodnik i trener jadą bez błędów, więc ten sam plan daje zawsze ten sam wynik. Obaj hamują w złożeniu: składając się, oddają przód, a tył od razu przejmuje hamowanie, najpierw mocno, potem coraz mniej, i trzymają go jeszcze chwilę po wejściu na gaz. Siła hamowania, odkręcanie gazu i zapas od pachołka są ustalone dla motocykla, pozycji i miejsca na siedzeniu.` +
   '</span></li>';
 const DEMO_INTRO =
   '<li class="info"><span>' +
@@ -5502,7 +5504,7 @@ function renderPlanResults() {
       row(i18n`Złożenie w G`, a ? Math.round(a.ln) + '°' : '–', b ? Math.round(b.ln) + '°' : '–') +
       row(
         '<span title="' +
-          i18n`najmniejszy odstęp obrysu motocykla z kierowcą (kierownica, tył motocykla, podnóżek, kolano, łokieć) od pachołka; ślad tylnej opony: zawodnik ${a && a.dn != null ? fmtNum(a.dn, 2) : '–'} m, trener ${b && b.dn != null ? fmtNum(b.dn, 2) : '–'} m od środka pachołka` +
+          i18n`najmniejszy odstęp obrysu motocykla z kierowcą (koła, kierownica, tył motocykla, podnóżek, kolano, łokieć) od pachołka; ślad tylnej opony: zawodnik ${a && a.dn != null ? fmtNum(a.dn, 2) : '–'} m, trener ${b && b.dn != null ? fmtNum(b.dn, 2) : '–'} m od środka pachołka` +
           '">' +
           i18n`Do pachołka` +
           '</span>',
@@ -5672,7 +5674,7 @@ function planReport(r) {
   }
   add(
     'info',
-    i18n`Wirtualny zawodnik: do H gaz, od H przedni hamulec z zadaną siłą (pełna siła po ok. 0,2 s), najdłużej do S, aż do prędkości, z jaką zmieści się w łuku za S. W S składa się <b>przeciwskrętem</b>: kierownica na ułamek sekundy idzie na zewnątrz łuku, motocykl zaczyna się przechylać, a dopiero potem kierownica idzie do środka (na wykresie grubo na złożeniu, w tabeli „Teraz” przy kierownicy: „przeciwskręt”). Przy większej prędkości przechył rusza szybciej. Tak samo, tylko odwrotnie, podnosi motocykl przy wyjściu: kierownica mocniej do środka. Hamuje też w złożeniu (trail braking): po S oddaje przedni hamulec w miarę składania, bo w złożeniu opona ma mniej przyczepności na hamowanie, a jak tylko puszcza przód, dokłada tyłu: najpierw mocno (do ok. 80% tego, na co tylnej oponie zostaje przyczepności w złożeniu), potem coraz mniej, aż zwolni do prędkości wierzchołka albo tył nie ma już czym hamować; wtedy uchyla gaz, a tył puszcza dopiero po ok. 0,2 s (zakładka), więc nie ma chwili bez hamulca i bez gazu; ugięty widelec zmniejsza wyprzedzenie, więc motocykl składa się szybciej. Od S składa się tak szybko i mocno, jak pozwala motocykl, ale tak, żeby obrys (kierownica, tył motocykla, podnóżek, kolano i łokieć) minął pachołek o zapas, i jedzie na granicy złożenia (trener w pokazie zostawia sobie zapas). Późny albo wąski S to ciasny łuk zaraz za S, więc przed nim trzeba mocniej wyhamować. Kto hamuje za późno, w złożeniu już tak nie wyhamuje i wynosi go szeroko. Potem trzyma prędkość wierzchołka uchylonym gazem aż do G. Od G odkręca do pełna, przesuwa ciało do przodu (przednie koło później się podnosi) i podnosi motocykl na tyle, żeby opony przeniosły przyspieszanie, więc gaz w głębszym złożeniu to szersze wyjście. W pierwszej pętli (prawej, zaraz po starcie) hamuje i składa się jak trener, wcześniej niż w H i w S, bo z bramki jest szybszy i dojeżdża z innej strony; od pierwszej lewej hamuje w H. Bramka 3 m za niebieskim pachołkiem to przeszkoda: przejazd, w którym zawodnik w nią wjeżdża, jest nieukończony. Złożenie od pionu do 45° trwa na Ultra Bee ok. 0,35 s, tak jak na nagraniu przejazdu.`,
+    i18n`Wirtualny zawodnik: do H gaz, od H przedni hamulec z zadaną siłą (pełna siła po ok. 0,2 s), najdłużej do S, aż do prędkości, z jaką zmieści się w łuku za S. W S składa się <b>przeciwskrętem</b>: kierownica na ułamek sekundy idzie na zewnątrz łuku, motocykl zaczyna się przechylać, a dopiero potem kierownica idzie do środka (na wykresie grubo na złożeniu, w tabeli „Teraz” przy kierownicy: „przeciwskręt”). Przy większej prędkości przechył rusza szybciej. Tak samo, tylko odwrotnie, podnosi motocykl przy wyjściu: kierownica mocniej do środka. Hamuje też w złożeniu (trail braking): po S oddaje przedni hamulec w miarę składania, bo w złożeniu opona ma mniej przyczepności na hamowanie, a jak tylko puszcza przód, dokłada tyłu: najpierw mocno (do ok. 80% tego, na co tylnej oponie zostaje przyczepności w złożeniu), potem coraz mniej, aż zwolni do prędkości wierzchołka albo tył nie ma już czym hamować; wtedy uchyla gaz, a tył puszcza dopiero po ok. 0,2 s (zakładka), więc nie ma chwili bez hamulca i bez gazu; ugięty widelec zmniejsza wyprzedzenie, więc motocykl składa się szybciej. Od S składa się tak szybko i mocno, jak pozwala motocykl, ale tak, żeby obrys (koła, kierownica, tył motocykla, podnóżek, kolano i łokieć) minął pachołek o zapas, i jedzie na granicy złożenia (trener w pokazie zostawia sobie zapas). Późny albo wąski S to ciasny łuk zaraz za S, więc przed nim trzeba mocniej wyhamować. Kto hamuje za późno, w złożeniu już tak nie wyhamuje i wynosi go szeroko. Potem trzyma prędkość wierzchołka uchylonym gazem aż do G. Od G odkręca do pełna, przesuwa ciało do przodu (przednie koło później się podnosi) i podnosi motocykl na tyle, żeby opony przeniosły przyspieszanie, więc gaz w głębszym złożeniu to szersze wyjście. W pierwszej pętli (prawej, zaraz po starcie) hamuje i składa się jak trener, wcześniej niż w H i w S, bo z bramki jest szybszy i dojeżdża z innej strony; od pierwszej lewej hamuje w H. Bramka 3 m za niebieskim pachołkiem to przeszkoda: przejazd, w którym zawodnik w nią wjeżdża, jest nieukończony. Złożenie od pionu do 45° trwa na Ultra Bee ok. 0,35 s, tak jak na nagraniu przejazdu.`,
   );
 }
 function teleRangePlan() {

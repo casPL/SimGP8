@@ -75,6 +75,8 @@ function outlinePoints(S, phb, d) {
     if (inner && P.ex != null)
       pt(i18n`łokieć`, zb - s * o.hw * Math.sin(d) - 0.22, s * (o.hw * Math.cos(d) + P.ex), o.hb - 0.06, 0.05);
   }
+  // The tyres on the ground and everything between them: a cone cannot pass under the bike.
+  out.push({ n: i18n`koła`, z0: 0, z1: b.L, lat: 0, Z: 0, r: 0.07, all: false });
   return out;
 }
 const canTouchCone = (p) => p.all || p.Z <= CONE_SHAPE.H;

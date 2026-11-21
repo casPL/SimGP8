@@ -1,7 +1,8 @@
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Maciej Kasprzyk
 //
-// Every coach run, and the coach's plan ridden by the planner, must finish with the recorded time.
+// Every coach run, and the coach's plan ridden by the planner, must finish with the recorded time
+// without touching a cone.
 // The times are compared bit for bit on the JavaScript engine that recorded them. Other engines
 // differ in the last bits of some Math functions, which now and then tips one of the rider's
 // decisions, so there the times only have to agree within 0.1 s. After a deliberate change to the
@@ -18,6 +19,7 @@ const sim = loadCore(['BIKES', 'makeSetup', 'coachSetup', 'coachPlan', 'planOpti
 const file = path.join(__dirname, 'runs.json');
 
 const runs = {};
+const touches = [];
 for (const bike of sim.BIKES)
   for (const pos of ['neg', 'neu', 'pos'])
     for (const seat of [-1, 0, 1]) {
@@ -25,6 +27,8 @@ for (const bike of sim.BIKES)
       const coach = sim.simulateRun(S, sim.coachSetup(S));
       const plan = sim.simulateRun(S, sim.planOptions(S, sim.coachPlan(S)));
       runs[`${bike.id} ${pos} ${seat}`] = { coach: coach.final, plan: plan.final };
+      if (coach.course.touches.length) touches.push(`${bike.id} ${pos} ${seat} coach`);
+      if (plan.course.touches.length) touches.push(`${bike.id} ${pos} ${seat} plan`);
     }
 
 if (process.env.RECORD) fs.writeFileSync(file, JSON.stringify({ engine: process.versions.v8, runs }, null, 1) + '\n');
@@ -39,3 +43,7 @@ for (const rider of ['coach', 'plan'])
       assert.ok(agree(time, run[rider]), `${setup}: ${time} s, recorded ${run[rider]} s`);
     }
   });
+
+test('coach runs and their plans touch no cone', () => {
+  assert.deepEqual(touches, []);
+});
