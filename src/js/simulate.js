@@ -49,11 +49,11 @@ function planOptions(S, plan) {
   }
   return { ...cc, S2, brk, sS, gS, pdq, plan: true, ...PLAN_MODE };
 }
-// keep: record the trace every 4 steps.
-function simulateRun(S, opt, keep) {
+// keep: record the trace every 4 steps; rehearsal: the rider's rehearsal of this run, if there is one.
+function simulateRun(S, opt, keep, rehearsal) {
   const sim = new Sim(S);
   const c = new Course();
-  const bot = new AutoRider(S, opt);
+  const bot = new AutoRider(S, opt, rehearsal);
   const trace = [];
   let n = 0;
   let end = null;

@@ -139,10 +139,7 @@ function aimOnPolyline(pts, p, Ld) {
 }
 // Side acceleration la and rear track curvature k of the steady turn at lean p and speed v.
 function steadyTurn(S, D, p, v) {
-  const k = Math.min(
-    balanceCurvature(D, p, Math.max(v, 0.3)),
-    tanGroundSteer(D.lockEff, bikeLean(D, p), S.eps0) / S.b.L,
-  );
+  const k = Math.min(balanceCurvature(D, p, Math.max(v, 0.3)), lockTan(D, bikeLean(D, p), S) / S.b.L);
   return { la: v * v * k * (1 - S.b.h * k * Math.sin(p)), k };
 }
 // The hardest braking in a turn-in at lean p heading for lean tc: it leaves the grip that the lean
@@ -153,8 +150,12 @@ function turnInBrake(S, D, eta, la, k, p, tc, v) {
   const s = steadyTurn(S, D, pT, v);
   return maxBrakeDecel(S, D, Math.max(la, s.la), eta, 0, Math.max(k, s.k));
 }
+// What the rehearsal of a run finds. A rider with the same setup and options can start from it
+// instead of rehearsing again.
+const REHEARSAL = ['P', 'v', 'n', 'iTurn', 'iApex', 'iExit', 'iGas', 'iBrake', 'rotLeft', 'turnAhead'];
 class AutoRider {
-  constructor(S, opt) {
+  // rehearsal: the rehearsal of this run, if one has been ridden (see REHEARSAL).
+  constructor(S, opt, rehearsal) {
     this.S = S;
     this.opt = opt;
     const b = S.b;
@@ -172,7 +173,7 @@ class AutoRider {
     const apexAt = (k) => {
       let best = null;
       for (let p = 3 * RAD; p <= this.leanMax + 1e-9; p += 0.25 * RAD) {
-        const kL = tanGroundSteer(S.lockEff, bikeLean(S, p), S.eps0) / b.L;
+        const kL = lockTan(S, bikeLean(S, p), S) / b.L;
         const kk = k || kL;
         if (kL < kk) continue;
         const q = 1 - b.h * kk * Math.sin(p);
@@ -211,7 +212,8 @@ class AutoRider {
       this.pl.push(pts);
       this.approach.push(u);
     }
-    this.rehearse();
+    if (rehearsal) for (const k of REHEARSAL) this[k] = rehearsal[k];
+    else this.rehearse();
     if (opt.fxY != null) {
       const a0 = this.aim;
       const FX = [this.finishAim[0], opt.fxY];
@@ -322,7 +324,7 @@ class AutoRider {
     const a = bikeLean(D, Math.abs(ph));
     const pb = Math.round(Math.sign(ph) * a * DEG);
     const d = Math.round(
-      Math.sign(k) * Math.min(S.lockEff, steerForCurvature(S.b.L * Math.abs(k), a, S.eps0)) * S.cosR * DEG,
+      Math.sign(k) * Math.min(S.lockEff, steerForCurvature(S.b.L * Math.abs(k), a, S)) * S.cosR * DEG,
     );
     const key = pb * 1000 + d;
     let pts = this.outlineCache.get(key);
@@ -408,7 +410,7 @@ class AutoRider {
       if (Math.abs(p) > cap) p = Math.sign(p) * cap;
       const ap = Math.abs(p);
       const kb = balanceCurvature(D, ap, v);
-      const kl = tanGroundSteer(D.lockEff, bikeLean(D, ap), S.eps0) / b.L;
+      const kl = lockTan(D, bikeLean(D, ap), S) / b.L;
       const k = Math.sign(p) * Math.min(kb, kl);
       const ka = Math.abs(k);
       const la = v * v * ka * (1 - b.h * ka * Math.sin(ap));
@@ -1038,6 +1040,9 @@ class AutoRider {
     this.iGas = iG;
     this.iBrake = iH;
     this.rotLeft = rem;
+  }
+  rehearsal() {
+    return Object.fromEntries(REHEARSAL.map((k) => [k, this[k]]));
   }
   mid(i, P) {
     P = P || this.P;

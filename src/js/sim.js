@@ -13,7 +13,7 @@ const engineAccel = (b, S, v, t) =>
 const FLAG = { WHEELIE: 1, STOPPIE: 2, SLIDEF: 4, LOCKR: 8, SPIN: 16, FALL: 32, WIDE: 64, SCRAPE: 128, HOLD: 256 };
 // The steady turn at lean p and speed v: its curvature k and the side force each tyre needs [N].
 function tyreNeeds(S, D, g, p, v) {
-  const k = Math.min(balanceCurvature(D, p, Math.max(v, 0.3)), tanGroundSteer(D.lockEff, bikeLean(D, p), g.eps) / g.L);
+  const k = Math.min(balanceCurvature(D, p, Math.max(v, 0.3)), lockTan(D, bikeLean(D, p), g) / g.L);
   const kv = v * v * k;
   const al = kv * (1 - S.b.h * k * Math.sin(p));
   return { k, f: S.mt * kv * D.fF * Math.sqrt(1 + (k * g.L) ** 2), r: S.mt * Math.abs(al - kv * D.fF) };
@@ -32,6 +32,8 @@ const FAST_HANDS = { tc: 0.05, tf: 0.08, tr: 0.1 };
 // roll rate at speed vr [m/s], lo and hi the share of that roll acceleration at low and high speed,
 // amin the lowest roll acceleration [rad/s²].
 const COUNTERSTEER = { d: 6, tr: 0.43, vr: 6, lo: 0.8, hi: 1.3, amin: 8 };
+const COUNTERSTEER_SIN = Math.sin(COUNTERSTEER.d * RAD);
+const COUNTERSTEER_COS = Math.cos(COUNTERSTEER.d * RAD);
 // Start at the back of the box near its right edge: front wheel run [m] behind the line, bike centre
 // y [m] from the cone axis.
 const START = { run: 1.0, y: -0.6 };
@@ -122,7 +124,6 @@ class Sim {
     const g = liveGeometry(D, this.zf, this.zr);
     this.g = g;
     const v0 = this.v;
-    const eq = fullLockLean(D, v0, g.eps, g.L);
     const roll = D.roll * clamp(Math.sqrt(b.trail / Math.max(0.02, g.trail)), 0.85, 1.2);
     const rAcc =
       Math.max(roll / COUNTERSTEER.tr, COUNTERSTEER.amin) *
@@ -140,7 +141,8 @@ class Sim {
         if (Math.abs(this.rate || 0) > 0 && Math.sign(this.rate) === Math.sign(phi)) this.rate = 0;
       }
     }
-    if (Math.abs(phi) > eq) {
+    const eq = fullLockLimit(D, v0, g, Math.abs(phi));
+    if (eq != null) {
       phi = Math.sign(phi) * eq;
       fl |= FLAG.FALL;
       this.eqC = true;
@@ -172,7 +174,7 @@ class Sim {
     const a = Math.abs(phi);
     const side = Math.sign(phi);
     const ab = bikeLean(D, a);
-    const kLock = tanGroundSteer(D.lockEff, ab, g.eps) / g.L;
+    const kLock = lockTan(D, ab, g) / g.L;
     const vv = Math.max(v0, 0.3);
     const kBal = balanceCurvature(D, a, vv);
     let k = Math.min(kBal, kLock);
@@ -183,12 +185,12 @@ class Sim {
     if (side && v0 > 1) {
       const dk = (-clamp(v0 - 1, 0, 1) * b.h * this.racS * side) / (vv * vv * Math.cos(a));
       if (Math.abs(dk) > 1e-6) {
-        const kcs = tanGroundSteer(COUNTERSTEER.d * RAD, -ab, g.eps) / g.L;
+        const kcs = steerTan(COUNTERSTEER_SIN, COUNTERSTEER_COS, Math.sin(-ab), Math.cos(-ab), g) / g.L;
         const kg = Math.max(kS, Math.sqrt(Math.max(0, (0.9 * D.mu * G) ** 2 - this.ax * this.ax)) / (vv * vv));
         kS = clamp(kS + dk, -kcs, Math.min(kLock, kg));
       }
     }
-    const stSS = steerForCurvature(kS * g.L, ab, g.eps);
+    const stSS = steerForCurvature(kS * g.L, ab, g);
     const stT = clamp(side * stSS, -b.lock * RAD, b.lock * RAD);
     this.st += (stT - this.st) * Math.min(1, dt / 0.03);
     let aD = this.ut * engineAccel(b, S, v0, this.t);

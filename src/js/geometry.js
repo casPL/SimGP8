@@ -56,6 +56,8 @@ function makeSetup(b, posId, seat) {
     cE,
     sE,
     lockEff,
+    sinLock: Math.sin(lockEff),
+    cosLock: Math.cos(lockEff),
     ft: b.ft / 1000,
     rt: b.rt / 1000,
     sagF: (0.3 * b.ft) / 1000,
@@ -68,7 +70,7 @@ function makeSetup(b, posId, seat) {
   };
   susp.kF0 = ((1 - FORK.preload) * susp.F0) / susp.sagF;
   const rg = rearLinkGains(b);
-  return {
+  const S = {
     b,
     P,
     mt,
@@ -91,31 +93,40 @@ function makeSetup(b, posId, seat) {
     roll: b.roll * P.roll * RAD,
     Iz: mt * (0.3 * b.L) ** 2,
   };
+  S.lockGrid = fullLockGrid(S);
+  return S;
 }
-// Steering head angle, wheelbase and trail at fork travel zf and rear travel zr.
+// Steering head angle (with its sine and cosine), wheelbase and trail at fork travel zf and rear
+// travel zr.
 function liveGeometry(S, zf, zr) {
   const b = S.b;
   const pitch = ((zf - S.sagF) * S.cE + (S.sagR - zr)) / b.L;
   const eps = S.eps0 - pitch;
   const L = b.L - (zf - S.sagF) * S.sE;
-  return { eps, L, trail: (b.rw * Math.sin(eps) - S.off) / Math.cos(eps) };
+  const sE = Math.sin(eps);
+  const cE = Math.cos(eps);
+  return { eps, L, trail: (b.rw * sE - S.off) / cE, sE, cE };
 }
 // Bike lean at a combined lean a of bike and rider (the body position phases in up to 15°).
 const bikeLean = (S, a) => Math.max(0, a + S.delta * Math.min(1, a / (15 * RAD)));
 // Exact steering kinematics in a lean (Cossalter, Motorcycle Dynamics). Handlebar angle d about the
 // steering axis, lean p and head angle e give the front wheel's steer angle Δ in the ground plane:
 // tan Δ = cos e·sin d / (cos d·cos p − sin e·sin d·sin p), so a leaned bike turns much tighter than an
-// upright one with the same handlebar angle. Δ is capped at 80°.
+// upright one with the same handlebar angle. Δ is capped at 80°. The sines and cosines come worked
+// out: sd, cd of d, sp, cp of p, and h.sE, h.cE of the head angle of h, which is the setup (static)
+// or a live geometry.
 const TAN_MAX = Math.tan(80 * RAD);
-const tanGroundSteer = (d, p, e) => {
-  const n = Math.cos(e) * Math.sin(d);
-  const q = Math.cos(d) * Math.cos(p) - Math.sin(e) * Math.sin(d) * Math.sin(p);
+function steerTan(sd, cd, sp, cp, h) {
+  const n = h.cE * sd;
+  const q = cd * cp - h.sE * sd * sp;
   return q > Math.abs(n) / TAN_MAX ? n / q : Math.sign(n) * TAN_MAX;
-};
+}
+// tan Δ at full lock and bike lean p.
+const lockTan = (S, p, h) => steerTan(S.sinLock, S.cosLock, Math.sin(p), Math.cos(p), h);
 // The inverse: the handlebar angle that gives tan Δ = T at lean p.
-const steerForCurvature = (T, p, e) => Math.atan((T * Math.cos(p)) / (Math.cos(e) + T * Math.sin(e) * Math.sin(p)));
+const steerForCurvature = (T, p, h) => Math.atan((T * Math.cos(p)) / (h.cE + T * h.sE * Math.sin(p)));
 // Radius of the rear wheel track at full lock and combined lean a.
-const lockRadius = (S, a) => S.b.L / tanGroundSteer(S.lockEff, bikeLean(S, a), S.eps0);
+const lockRadius = (S, a) => S.b.L / lockTan(S, bikeLean(S, a), S);
 // A steady turn of the rigid bike: with both wheels rolling it turns about a point on the line of the rear
 // axle, so the centre of mass, h·sin p inside the tyre line, runs on the radius 1/k − h·sin p, where k is
 // the curvature of the rear track. Balance at combined lean p and rear wheel speed v:
@@ -158,7 +169,7 @@ function gripLean(S, D, v, mu, top) {
     const d = 1 - 4 * c * k0;
     if (d < 0) return false;
     const k = c < 1e-6 ? k0 : (1 - Math.sqrt(d)) / (2 * c);
-    if (k > tanGroundSteer(S.lockEff, bikeLean(S, p), S.eps0) / S.b.L) return false;
+    if (k > lockTan(S, bikeLean(S, p), S) / S.b.L) return false;
     return turnHolds(S, D, G * Math.tan(p), k, p, mu);
   };
   if (ok(top)) return top;
@@ -171,28 +182,51 @@ function gripLean(S, D, v, mu, top) {
   }
   return lo;
 }
-// The largest lean full lock can hold at speed v: the first lean at which balance needs the full-lock
-// curvature (head angle e and wheelbase L default to static).
-function fullLockLean(S, v, e, L) {
-  e = e != null ? e : S.eps0;
-  L = L || S.b.L;
-  const f = (p) => {
-    const kL = Math.min(tanGroundSteer(S.lockEff, bikeLean(S, p), e) / L, 0.5 / Math.max(1e-6, S.b.h * Math.sin(p)));
-    return G * Math.tan(p) - v * v * kL * (1 - S.b.h * kL * Math.sin(p));
+// Full lock at speed v on live geometry g holds the lean only up to the first lean at which balance
+// needs the full-lock curvature. That limit is found in steps of 0.02 rad (everything that depends on
+// the lean alone comes from the setup's lockGrid), then refined by bisection. Returns the limit when
+// lean a goes beyond it, null when a is within it: the search stops as soon as that is settled.
+function fullLockLimit(S, v, g, a) {
+  const h = S.b.h;
+  const vv = v * v;
+  // Balance minus the full-lock turn at lean p, from tan p, sin p, the curvature cap and tan Δ.
+  const f = (tp, sp, cap, T) => {
+    const kL = Math.min(T / g.L, cap);
+    return G * tp - vv * kL * (1 - h * kL * sp);
   };
-  const hi = Math.min(1.4, S.capC + 0.3);
+  const F = S.lockGrid;
+  const n = F.p.length;
   let lo = 0;
-  let p = 0;
-  for (; p < hi; p += 0.02) {
-    if (f(p) >= 0) break;
-    lo = p;
+  let i = 0;
+  for (; i < n; i++) {
+    if (f(F.tan[i], F.sin[i], F.cap[i], steerTan(S.sinLock, S.cosLock, F.sb[i], F.cb[i], g)) >= 0) break;
+    lo = F.p[i];
+    if (lo >= a) return null; // the limit is not below lo
   }
-  if (p >= hi) return hi;
-  let h2 = p;
-  for (let i = 0; i < 20; i++) {
-    const m = (lo + h2) / 2;
-    if (f(m) < 0) lo = m;
-    else h2 = m;
+  if (i === n) return a > F.hi ? F.hi : null;
+  if (a <= lo) return null; // the limit is between lo and the next step
+  let hi = F.p[i];
+  for (let j = 0; j < 20; j++) {
+    const m = (lo + hi) / 2;
+    const sm = Math.sin(m);
+    if (f(Math.tan(m), sm, 0.5 / Math.max(1e-6, h * sm), lockTan(S, bikeLean(S, m), g)) < 0) lo = m;
+    else hi = m;
   }
-  return lo;
+  return a > lo ? lo : null;
+}
+// The steps of fullLockLimit, up to the highest limit hi: the lean p, tan p, sin p, the tightest
+// curvature a balanced turn can have at that lean (see balanceCurvature), and the sine and cosine of
+// the bike lean.
+function fullLockGrid(S) {
+  const F = { hi: Math.min(1.4, S.capC + 0.3), p: [], tan: [], sin: [], cap: [], sb: [], cb: [] };
+  for (let p = 0; p < F.hi; p += 0.02) {
+    const pb = bikeLean(S, p);
+    F.p.push(p);
+    F.tan.push(Math.tan(p));
+    F.sin.push(Math.sin(p));
+    F.cap.push(0.5 / Math.max(1e-6, S.b.h * Math.sin(p)));
+    F.sb.push(Math.sin(pb));
+    F.cb.push(Math.cos(pb));
+  }
+  return F;
 }

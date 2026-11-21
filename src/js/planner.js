@@ -21,6 +21,7 @@ const planner = {
   lastPlan: null,
   drag: null,
   fc: new Map(),
+  reh: new Map(),
   sc: new Map(),
   defs: {},
 };
@@ -119,11 +120,34 @@ function planClamp(p) {
   return q;
 }
 const PLAN_MAX_TIME = 33;
+// What the run of plan pl depends on: the bike, body position and seat, and the four points the way
+// planOptions reads them (a missing point is the coach's).
+function planRunKey(pl) {
+  const s = planSetup(pl);
+  const n = (x) => (x != null && isFinite(x) ? +x : 'c');
+  return [s.b.id, stanceOf(s), s.seat0, n(pl.brake), n(pl.turn), n(pl.side), n(pl.gas)].join('|');
+}
+// The rehearsals of the last plans ridden, for the preview and the comparison.
+function keepRehearsal(k, bot) {
+  planner.reh.delete(k);
+  planner.reh.set(k, bot.rehearsal());
+  if (planner.reh.size > 8) planner.reh.delete(planner.reh.keys().next().value);
+}
+// A rider for plan pl with its run rehearsed.
+function planRider(pl) {
+  const s = planSetup(pl);
+  const k = planRunKey(pl);
+  const bt = new AutoRider(s, planOptions(s, pl), planner.reh.get(k));
+  if (!planner.reh.has(k)) keepRehearsal(k, bt);
+  return bt;
+}
+// Why plan pl does not work (null if it does).
 function planProblem(pl) {
-  const k = planner.key + '|' + JSON.stringify(pl);
+  const k = planRunKey(pl);
   if (planner.fc.has(k)) return planner.fc.get(k);
   const s = planSetup(pl);
-  const r = simulateRun(s, planOptions(s, pl), false);
+  const r = simulateRun(s, planOptions(s, pl), false, planner.reh.get(k));
+  keepRehearsal(k, r.bot);
   const nt = r.course && r.course.touches ? r.course.touches.length : 0;
   const why =
     r.end !== 'done'
@@ -146,9 +170,8 @@ function initPlanner() {
   planner.prevKey = null;
   planner.defs = {};
   const raw = rawDefaultPlan('neu', 0);
-  const s0 = planSetup(raw);
   planner.def = raw;
-  const bt = new AutoRider(s0, planOptions(s0, raw));
+  const bt = planRider(raw);
   planner.lim = {
     bMin: 0.5,
     bMax: Math.floor(bt.ahead(2, bt.iExit[1]) * 10) / 10,
@@ -236,10 +259,9 @@ function planForStance(pl, pos) {
 function planPreview() {
   const pl = planner.A;
   if (!pl) return null;
-  const k = JSON.stringify(pl);
+  const k = planRunKey(pl);
   if (planner.prevKey !== k) {
-    const s = planSetup(pl);
-    planner.prev = new AutoRider(s, planOptions(s, pl));
+    planner.prev = planRider(pl);
     planner.prevKey = k;
   }
   return planner.prev;

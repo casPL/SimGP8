@@ -81,7 +81,8 @@ function comparePlans() {
   planBusyUI();
   const runB = () => {
     if (tok !== compareToken) return;
-    R.B = runSummary(simulateRun(SS.B, coachSetup(SS.B), false));
+    R.rB = simulateRun(SS.B, coachSetup(SS.B), true, coachRun(SS.B).bt);
+    R.B = runSummary(R.rB);
     planner.busy = false;
     planBusyUI();
     planner.res = R;
@@ -90,7 +91,8 @@ function comparePlans() {
   };
   setTimeout(() => {
     if (tok !== compareToken) return;
-    R.A = runSummary(simulateRun(SS.A, planOptions(SS.A, plans.A), false));
+    R.rA = simulateRun(SS.A, planOptions(SS.A, plans.A), true, planRider(plans.A));
+    R.A = runSummary(R.rA);
     setTimeout(runB, 0);
   }, 30);
 }
@@ -120,8 +122,7 @@ function showComparison(auto) {
   const R = planner.res;
   if (!R) return;
   player.on = false;
-  const rA = simulateRun(R.SS.A, planOptions(R.SS.A, R.plans.A), true);
-  const rB = simulateRun(R.SS.B, coachSetup(R.SS.B), true);
+  const { rA, rB } = R;
   for (const x of [rA, rB]) {
     buildSegments(x);
     x.ev = runEvents(x);

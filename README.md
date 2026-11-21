@@ -39,7 +39,8 @@ Node.js 18 or newer, no dependencies:
 
 ```sh
 node build.js     # writes dist/simgp8-pl.html and dist/simgp8-en.html
-npm test          # physics regression and translation checks
+npm test          # physics regression (times and whole runs), fast paths of the core, translations
+npm run bench     # how long a coach run and a planner run take
 npm run format    # Prettier, the only development dependency
 ```
 
@@ -53,7 +54,8 @@ src/page.*.html   the markup of each edition
 src/style.css     styles
 src/shell.html    the document the build fills in
 src/en.json       the English dictionary
-test/             tests, with the recorded run times
+test/             tests, with the recorded runs
+bench.js          timing of the simulation core
 ```
 
 ## Translations
@@ -64,6 +66,10 @@ placeholder) to its translation. To add a language, copy `src/en.json` to `src/<
 translate the values, translate `src/page.en.html` into `src/page.<lang>.html`, and add the edition
 to `EDITIONS` in `build.js`. The build stops with a list of missing or unused entries, and the tests
 check that every page has the same markup.
+
+## See also
+
+[SimWheelie](https://github.com/casPL/SimWheelie), a wheelie balance point trainer with the same bikes.
 
 ## Licence
 
@@ -92,9 +98,13 @@ skrętu w złożeniu (Cossalter, *Motorcycle Dynamics*), przeciwskręt, pracę z
 motocykla z kierowcą przy pachołku. Automatyczny kierowca nie śledzi narysowanej nitki: jedzie według
 punktów planu i kilku zasad, a nitka wynika z fizyki.
 
-Budowanie: `node build.js` (Node.js 18 lub nowszy, bez zależności), testy: `npm test`. Teksty
+Budowanie: `node build.js` (Node.js 18 lub nowszy, bez zależności), testy: `npm test`, pomiar
+szybkości symulacji: `npm run bench`. Teksty
 interfejsu są w kodzie po polsku jako szablony `i18n`, a słownik `src/en.json` tłumaczy je na
 angielski; nowy język dodaje się tak, jak opisano w sekcji Translations.
+
+Zobacz też [SimWheelie](https://github.com/casPL/SimWheelie): trening balance pointu na tylnym kole
+na tych samych motocyklach.
 
 Licencja: GNU GPL w wersji 3 lub nowszej (plik [LICENSE](LICENSE)). Autor: Maciej Kasprzyk,
 Instagram [@cas8pl](https://www.instagram.com/cas8pl/).

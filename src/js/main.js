@@ -242,6 +242,16 @@ sizeTele();
 makeAsphalt();
 settingsChanged();
 drawRef();
+// On secpro.pl both games are served under one key, /simgp8/<key>/ and /simwheelie/<key>/, the English
+// editions in en/; anywhere else the links to SimWheelie lead to its repository.
+{
+  const m = location.pathname.match(/\/simgp8\/([0-9a-f]{32})\//i);
+  if (m)
+    for (const a of document.querySelectorAll('a[data-sib]')) {
+      a.href = location.pathname.slice(0, m.index) + '/simwheelie/' + m[1] + '/' + (LANG === 'en' ? 'en/' : '');
+      a.removeAttribute('target');
+    }
+}
 // The coach's run is shown first; #planer (or #planner) opens the planner.
 setMode(/^#(planer|planner)$/.test(location.hash), true);
 if (window.ResizeObserver) {

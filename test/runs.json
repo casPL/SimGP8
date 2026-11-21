@@ -3,183 +3,273 @@
  "runs": {
   "ebike neg -1": {
    "coach": 26.497128226075933,
-   "plan": 26.639786828466242
+   "plan": 26.639786828466242,
+   "coachHash": "eebe6f946d6ff96e",
+   "planHash": "1d66d20314e16539"
   },
   "ebike neg 0": {
    "coach": 26.712124884014127,
-   "plan": 27.924994500208577
+   "plan": 27.924994500208577,
+   "coachHash": "5160d1243cdd34dd",
+   "planHash": "05b80af382992d4f"
   },
   "ebike neg 1": {
    "coach": 26.930249393456528,
-   "plan": 27.210003699738817
+   "plan": 27.210003699738817,
+   "coachHash": "85829ed9cba44b63",
+   "planHash": "e539c05cee50b9ec"
   },
   "ebike neu -1": {
    "coach": 26.439412770873552,
-   "plan": 26.65018999257109
+   "plan": 26.65018999257109,
+   "coachHash": "45ec4781ad805d9f",
+   "planHash": "cfbfb0a2701be913"
   },
   "ebike neu 0": {
    "coach": 26.60514877089946,
-   "plan": 27.236676403197418
+   "plan": 27.236676403197418,
+   "coachHash": "267d868f70ac7a3a",
+   "planHash": "a487332cc9ddf150"
   },
   "ebike neu 1": {
    "coach": 27.132589517707686,
-   "plan": 27.30010673477292
+   "plan": 27.30010673477292,
+   "coachHash": "53c1c30c71d1aab4",
+   "planHash": "b8a4a0a17bcb87c3"
   },
   "ebike pos -1": {
    "coach": 26.506649354039652,
-   "plan": 26.89597246478163
+   "plan": 26.89597246478163,
+   "coachHash": "023e9d5ce20d6372",
+   "planHash": "406c39b7b7043ca5"
   },
   "ebike pos 0": {
    "coach": 26.582176174146383,
-   "plan": 26.73242304660343
+   "plan": 26.73242304660343,
+   "coachHash": "8674214d1a6d1a28",
+   "planHash": "ac639906f417272d"
   },
   "ebike pos 1": {
    "coach": 27.068709167578376,
-   "plan": 27.0159867333088
+   "plan": 27.0159867333088,
+   "coachHash": "c586273107bafc2b",
+   "planHash": "c0acffb3eb63d8f7"
   },
   "pit neg -1": {
    "coach": 26.413000020323917,
-   "plan": 26.743035478676866
+   "plan": 26.743035478676866,
+   "coachHash": "456d8567e67a7a41",
+   "planHash": "576a7ad078d79887"
   },
   "pit neg 0": {
    "coach": 27.176590738986295,
-   "plan": 27.226257976413496
+   "plan": 27.226257976413496,
+   "coachHash": "019637ab6b260871",
+   "planHash": "50719d1b98d9e5c8"
   },
   "pit neg 1": {
    "coach": 27.286229964505218,
-   "plan": 27.3090793637419
+   "plan": 27.3090793637419,
+   "coachHash": "07e446f90cfd20f8",
+   "planHash": "532c81b4a0c80614"
   },
   "pit neu -1": {
    "coach": 26.551395358342987,
-   "plan": 26.736508866482676
+   "plan": 26.736508866482676,
+   "coachHash": "e270bfc12bc019e1",
+   "planHash": "8d91f5f83d4074b5"
   },
   "pit neu 0": {
    "coach": 27.172679344920624,
-   "plan": 27.217479260108792
+   "plan": 27.217479260108792,
+   "coachHash": "b824ed0e94962281",
+   "planHash": "53f69567bbcfcf90"
   },
   "pit neu 1": {
    "coach": 27.694255961663195,
-   "plan": 27.85842634648715
+   "plan": 27.85842634648715,
+   "coachHash": "067d5fc9cf8a0927",
+   "planHash": "8be2e96a30c68158"
   },
   "pit pos -1": {
    "coach": 26.55758749053176,
-   "plan": 26.69329795399842
+   "plan": 26.69329795399842,
+   "coachHash": "dc673808c0d5e68d",
+   "planHash": "35a22f0ce1d3d57d"
   },
   "pit pos 0": {
    "coach": 26.86655509776898,
-   "plan": 27.11500997219319
+   "plan": 27.11500997219319,
+   "coachHash": "e48cd2703ffc3dc1",
+   "planHash": "ec88f4da2530fda7"
   },
   "pit pos 1": {
    "coach": 27.651165169512723,
-   "plan": 27.691180613389164
+   "plan": 27.691180613389164,
+   "coachHash": "d70d45fb5f0e21f9",
+   "planHash": "0551178e9d81e100"
   },
   "sm neg -1": {
    "coach": 27.435037177880254,
-   "plan": 27.576665758011192
+   "plan": 27.576665758011192,
+   "coachHash": "21994267da0a2b16",
+   "planHash": "5155ec87c53acf07"
   },
   "sm neg 0": {
    "coach": 27.704514362266245,
-   "plan": 28.063896151862846
+   "plan": 28.063896151862846,
+   "coachHash": "fbe3b3a544f9f051",
+   "planHash": "39166db4bda18e44"
   },
   "sm neg 1": {
    "coach": 28.27698931629237,
-   "plan": 28.64253556218187
+   "plan": 28.64253556218187,
+   "coachHash": "290de6580dc5a4d2",
+   "planHash": "fb89a5a57fc77ca8"
   },
   "sm neu -1": {
    "coach": 27.488906942448885,
-   "plan": 28.12616228809474
+   "plan": 28.12616228809474,
+   "coachHash": "a381cade3f3fe6a8",
+   "planHash": "ef398adee69762ce"
   },
   "sm neu 0": {
    "coach": 28.074746815622728,
-   "plan": 28.42529908082235
+   "plan": 28.42529908082235,
+   "coachHash": "778f550eff05af3a",
+   "planHash": "bfb0458ea3145f2a"
   },
   "sm neu 1": {
    "coach": 28.361768836853855,
-   "plan": 28.521020527238292
+   "plan": 28.521020527238292,
+   "coachHash": "77e47efd3b64fb18",
+   "planHash": "1285d3c72113cee1"
   },
   "sm pos -1": {
    "coach": 27.512996134683423,
-   "plan": 28.08278277003075
+   "plan": 28.08278277003075,
+   "coachHash": "6705be11e95dfd7a",
+   "planHash": "17907245d3caefbe"
   },
   "sm pos 0": {
    "coach": 28.073183653297075,
-   "plan": 28.10905774697516
+   "plan": 28.10905774697516,
+   "coachHash": "25410a58d5aa5f6f",
+   "planHash": "d67ca4d5602e56f6"
   },
   "sm pos 1": {
    "coach": 28.314816504927943,
-   "plan": 29.537478017672274
+   "plan": 29.537478017672274,
+   "coachHash": "665ec887c47dc0f0",
+   "planHash": "ecccc0bf599b5a0f"
   },
   "cbr neg -1": {
    "coach": 27.32189710505414,
-   "plan": 27.664695582779668
+   "plan": 27.664695582779668,
+   "coachHash": "e41893f9d00f36de",
+   "planHash": "7d438a478449b130"
   },
   "cbr neg 0": {
    "coach": 27.946849206338204,
-   "plan": 28.434021242135827
+   "plan": 28.434021242135827,
+   "coachHash": "9b2da0ea6da95fc1",
+   "planHash": "402777b198ef85ee"
   },
   "cbr neg 1": {
    "coach": 27.941582266824568,
-   "plan": 28.578643822269456
+   "plan": 28.578643822269456,
+   "coachHash": "216521a67c52c6eb",
+   "planHash": "d9863e3c088bce87"
   },
   "cbr neu -1": {
    "coach": 27.30753188763317,
-   "plan": 28.40832366200016
+   "plan": 28.40832366200016,
+   "coachHash": "98f542be31d15205",
+   "planHash": "b413c418b9f4b09b"
   },
   "cbr neu 0": {
    "coach": 27.932512233893718,
-   "plan": 28.057955051258077
+   "plan": 28.057955051258077,
+   "coachHash": "8016f91b58b6c734",
+   "planHash": "c7a0880f05c089dc"
   },
   "cbr neu 1": {
    "coach": 27.82287503884893,
-   "plan": 27.859250558805666
+   "plan": 27.859250558805666,
+   "coachHash": "eac9ae9c28af4a63",
+   "planHash": "e6077b0bf428eb8d"
   },
   "cbr pos -1": {
    "coach": 27.294299816066374,
-   "plan": 27.536870682430777
+   "plan": 27.536870682430777,
+   "coachHash": "e27cd51b858d6eb6",
+   "planHash": "a9b57dc4b551a92b"
   },
   "cbr pos 0": {
    "coach": 27.601368632065878,
-   "plan": 27.69062408732344
+   "plan": 27.69062408732344,
+   "coachHash": "d10651bd01af9764",
+   "planHash": "a5168f6699d2d724"
   },
   "cbr pos 1": {
    "coach": 28.066639262907128,
-   "plan": 28.17205260127857
+   "plan": 28.17205260127857,
+   "coachHash": "e45bedf1b77e0e92",
+   "planHash": "831bbaceca52863e"
   },
   "gsxr neg -1": {
    "coach": 27.837343436348615,
-   "plan": 28.08395869390696
+   "plan": 28.08395869390696,
+   "coachHash": "3bd7d01ca4e4c602",
+   "planHash": "4d6cfaacaf01caa9"
   },
   "gsxr neg 0": {
    "coach": 27.80078316984962,
-   "plan": 28.13517922091217
+   "plan": 28.13517922091217,
+   "coachHash": "3e35eea38169d112",
+   "planHash": "823ab7a821d54b93"
   },
   "gsxr neg 1": {
    "coach": 28.386213723255842,
-   "plan": 28.397429361725568
+   "plan": 28.397429361725568,
+   "coachHash": "cc82970284edff54",
+   "planHash": "16b280d7720d9e86"
   },
   "gsxr neu -1": {
    "coach": 27.866351408385512,
-   "plan": 28.420714712039853
+   "plan": 28.420714712039853,
+   "coachHash": "0c199172c9537c0b",
+   "planHash": "40fcc7236c4f759b"
   },
   "gsxr neu 0": {
    "coach": 27.391642670219564,
-   "plan": 27.53462584837596
+   "plan": 27.53462584837596,
+   "coachHash": "8532bb528b29ab56",
+   "planHash": "b408e49a70b4d3f5"
   },
   "gsxr neu 1": {
    "coach": 27.891773679768846,
-   "plan": 28.490083842716658
+   "plan": 28.490083842716658,
+   "coachHash": "3a74f06b972926c8",
+   "planHash": "cbea6676a4c902bc"
   },
   "gsxr pos -1": {
    "coach": 27.34802456502376,
-   "plan": 28.35154203923441
+   "plan": 28.35154203923441,
+   "coachHash": "a5cf90f2ed36f6c0",
+   "planHash": "92d6190d9df474a4"
   },
   "gsxr pos 0": {
    "coach": 27.395251163488474,
-   "plan": 28.422841294261076
+   "plan": 28.422841294261076,
+   "coachHash": "c97659b0ed1d7c65",
+   "planHash": "cc1cd2529af0837d"
   },
   "gsxr pos 1": {
    "coach": 27.65280737473675,
-   "plan": 28.583551634784513
+   "plan": 28.583551634784513,
+   "coachHash": "caf05017cb93ec08",
+   "planHash": "54eac28f774d768c"
   }
  }
 }

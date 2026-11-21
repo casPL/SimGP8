@@ -30,9 +30,10 @@ const coneRadius = (z) =>
       : CONE_SHAPE.r0 + ((CONE_SHAPE.r1 - CONE_SHAPE.r0) * z) / CONE_SHAPE.H;
 const stanceOf = (S) => (S.rel0 > 0 ? 'pos' : S.rel0 < 0 ? 'neg' : 'neu');
 // Outline at bike lean phb and steer angle d in the ground plane (both + to the left): each part has
-// z (or a span z0–z1) along the bike from the rear contact patch, lat sideways (+ left), Z height and
-// r radius [m]. The handlebar ends count at any height, since they cannot pass over a cone; the other
-// parts only below the tip of the cone.
+// a span z0–z1 along the bike from the rear contact patch (z0 = z1 for a point), lat sideways
+// (+ left), Z height and r radius [m]. The handlebar ends count at any height, since they cannot pass
+// over a cone; the other parts only below the tip of the cone. tr: the distance between the axes of
+// the part and the cone at which they touch (null for a part that passes over the cone).
 function outlinePoints(S, phb, d) {
   const b = S.b;
   const o = OUTLINE[b.id] || OUTLINE.ebike;
@@ -43,45 +44,37 @@ function outlinePoints(S, phb, d) {
   const sp = Math.sin(phb);
   const cp = Math.cos(phb);
   const out = [];
-  const pt = (n, z, xb, y, r, all) =>
-    out.push({ n, z0: z, z1: z, lat: y * sp + xb * cp, Z: y * cp - xb * sp, r, all: !!all });
+  const part = (n, z0, z1, lat, Z, r, all) =>
+    out.push({
+      n,
+      z0,
+      z1,
+      lat,
+      Z,
+      r,
+      all,
+      tr: all || Z <= CONE_SHAPE.H ? r + coneRadius(Math.min(Z, CONE_SHAPE.H)) : null,
+    });
+  // A point xb sideways and y up in the frame of the upright bike, leaned by phb.
+  const pt = (n, z, xb, y, r, all) => part(n, z, z, y * sp + xb * cp, y * cp - xb * sp, r, !!all);
   for (const s of [1, -1]) {
     const inner = s === sg || a < 2 * RAD;
     pt(i18n`kierownica`, zb - s * o.hw * Math.sin(d), s * o.hw * Math.cos(d), o.hb, 0.035, true);
     if (inner) {
       const at = o.ta && S.rel0 < 0 ? Math.max(0, a - o.ta * RAD) : a;
       const Zs = clamp(o.hs * Math.cos(at) - o.wr * Math.sin(at), 0, CONE_SHAPE.H);
-      out.push({
-        n: i18n`tył motocykla`,
-        z0: o.z0,
-        z1: o.z1,
-        lat: s * (Zs * Math.tan(at) + o.wr / Math.cos(at)),
-        Z: Zs,
-        r: 0.02,
-        all: false,
-      });
-    } else
-      out.push({
-        n: i18n`tył motocykla`,
-        z0: o.z0,
-        z1: o.z1,
-        lat: 0.3 * sp + s * o.wr * cp,
-        Z: 0.3 * cp - s * o.wr * sp,
-        r: 0.02,
-        all: false,
-      });
+      part(i18n`tył motocykla`, o.z0, o.z1, s * (Zs * Math.tan(at) + o.wr / Math.cos(at)), Zs, 0.02, false);
+    } else part(i18n`tył motocykla`, o.z0, o.z1, 0.3 * sp + s * o.wr * cp, 0.3 * cp - s * o.wr * sp, 0.02, false);
     pt(i18n`podnóżek`, o.zp, s * o.wp, o.yp, 0.04);
     pt(i18n`kolano`, 0.6 * b.L, s * (inner ? P.kx : 0.14), P.ky * o.hs, 0.06);
     if (inner && P.ex != null)
       pt(i18n`łokieć`, zb - s * o.hw * Math.sin(d) - 0.22, s * (o.hw * Math.cos(d) + P.ex), o.hb - 0.06, 0.05);
   }
   // The tyres on the ground and everything between them: a cone cannot pass under the bike.
-  out.push({ n: i18n`koła`, z0: 0, z1: b.L, lat: 0, Z: 0, r: 0.07, all: false });
+  part(i18n`koła`, 0, b.L, 0, 0, 0.07, false);
   return out;
 }
-const canTouchCone = (p) => p.all || p.Z <= CONE_SHAPE.H;
-const touchRadius = (p) => p.r + coneRadius(Math.min(p.Z, CONE_SHAPE.H));
-// Gap between the outline (points pts, rear contact at x, y, heading psi) and cone C [m], negative for
+// Gap between the outline (parts pts, rear contact at x, y, heading psi) and cone C [m], negative for
 // a touch, and the closest part.
 function outlineClearance(pts, x, y, psi, C) {
   const ux = Math.cos(psi);
@@ -93,9 +86,9 @@ function outlineClearance(pts, x, y, psi, C) {
   let c = 9;
   let n = '';
   for (const p of pts) {
-    if (!canTouchCone(p)) continue;
+    if (p.tr == null) continue;
     const dz = Math.max(p.z0 - al, 0, al - p.z1);
-    const q = Math.hypot(dz, la - p.lat) - touchRadius(p);
+    const q = hypot2(dz, la - p.lat) - p.tr;
     if (q < c) {
       c = q;
       n = p.n;

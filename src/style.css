@@ -48,7 +48,10 @@ button { font: inherit; color: inherit; }
 .wrap { max-width: 1920px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
 .screen { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 22px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+.brand { display: flex; align-items: center; gap: 12px; }
 .brand h1 { font-size: clamp(24px, 3vw, 30px); line-height: 1; }
+.sib { font-family: var(--f-mono); font-size: 12px; color: var(--muted); text-decoration: none; border: 1px solid var(--rule); border-radius: 4px; padding: 3px 8px; white-space: nowrap; }
+.sib:hover { color: var(--chalk); border-color: var(--muted); }
 .hset { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: flex-end; }
 .hg .k, .planner .k { display: block; font-family: var(--f-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
 

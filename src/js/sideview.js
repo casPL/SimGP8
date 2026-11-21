@@ -185,8 +185,8 @@ function drawSide(p) {
     q.fill();
   }
   const lb = Math.abs(p.phb || 0);
-  const Rc = cur.g.L / tanGroundSteer(S.lockEff, lb, cur.g.eps);
-  const R0 = b.L / tanGroundSteer(S.lockEff, lb, S.eps0);
+  const Rc = cur.g.L / lockTan(S, lb, cur.g);
+  const R0 = b.L / lockTan(S, lb, S);
   const it = [
     [
       i18n`główka`,

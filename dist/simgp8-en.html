@@ -72,7 +72,10 @@ button { font: inherit; color: inherit; }
 .wrap { max-width: 1920px; margin: 0 auto; display: flex; flex-direction: column; gap: 14px; }
 .screen { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
 .top { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 8px 22px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
+.brand { display: flex; align-items: center; gap: 12px; }
 .brand h1 { font-size: clamp(24px, 3vw, 30px); line-height: 1; }
+.sib { font-family: var(--f-mono); font-size: 12px; color: var(--muted); text-decoration: none; border: 1px solid var(--rule); border-radius: 4px; padding: 3px 8px; white-space: nowrap; }
+.sib:hover { color: var(--chalk); border-color: var(--muted); }
 .hset { display: flex; flex-wrap: wrap; gap: 8px 14px; align-items: flex-end; }
 .hg .k, .planner .k { display: block; font-family: var(--f-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); margin-bottom: 3px; }
 
@@ -266,6 +269,7 @@ details summary { cursor: pointer; font-family: var(--f-display); font-size: 18p
     <header class="top">
       <div class="brand">
         <h1>SimGP8</h1>
+        <a class="sib" data-sib href="https://github.com/casPL/SimWheelie" target="_blank" rel="noopener" title="SimWheelie: a wheelie balance point trainer">SimWheelie →</a>
       </div>
       <div class="hset">
         <div class="hg"><span class="k">Bike</span><div class="seg bikes" id="bikes" role="group" aria-label="Bike"></div></div>
@@ -388,6 +392,7 @@ details summary { cursor: pointer; font-family: var(--f-display); font-size: 18p
   <footer class="credit">
     <p>SimGP8 © 2026 Maciej Kasprzyk · Instagram <a href="https://www.instagram.com/cas8pl/" target="_blank" rel="noopener">@cas8pl</a></p>
     <p>Free software under the <a href="https://www.gnu.org/licenses/gpl-3.0.html" target="_blank" rel="noopener">GNU GPL</a>, version 3 or later: you may redistribute and modify it under the terms of that licence. No warranty of any kind. Source code: <a href="https://github.com/casPL/simgp8" target="_blank" rel="noopener">github.com/casPL/simgp8</a></p>
+    <p><a data-sib href="https://github.com/casPL/SimWheelie" target="_blank" rel="noopener">SimWheelie: a wheelie balance point trainer</a></p>
   </footer>
 
 </div>
@@ -446,6 +451,18 @@ const BOX_LEN = 3;
 const EIGHTS = 5; // figure eights in a run
 const AXIS_EVENTS = EIGHTS * 4 - 1; // crossings of the cone axis before the finish
 const WORLD_BOX = { x0: -13, x1: 10.6, y0: -5.6, y1: 5.6 }; // the course [m]; leaving it ends the run
+// Math.hypot(a, b) for finite a and b, worked out the way V8 and JavaScriptCore do it (both legs scaled
+// by the longer one), so the result is the same to the last bit, without the cost of calling their
+// variadic built-in.
+function hypot2(a, b) {
+  a = Math.abs(a);
+  b = Math.abs(b);
+  const m = a > b ? a : b;
+  if (m === 0) return 0;
+  const x = a / m;
+  const y = b / m;
+  return Math.sqrt(x * x + y * y) * m;
+}
 
 // SPDX-License-Identifier: GPL-3.0-or-later
 // Copyright (C) 2026 Maciej Kasprzyk
@@ -587,6 +604,8 @@ function makeSetup(b, posId, seat) {
     cE,
     sE,
     lockEff,
+    sinLock: Math.sin(lockEff),
+    cosLock: Math.cos(lockEff),
     ft: b.ft / 1000,
     rt: b.rt / 1000,
     sagF: (0.3 * b.ft) / 1000,
@@ -599,7 +618,7 @@ function makeSetup(b, posId, seat) {
   };
   susp.kF0 = ((1 - FORK.preload) * susp.F0) / susp.sagF;
   const rg = rearLinkGains(b);
-  return {
+  const S = {
     b,
     P,
     mt,
@@ -622,31 +641,40 @@ function makeSetup(b, posId, seat) {
     roll: b.roll * P.roll * RAD,
     Iz: mt * (0.3 * b.L) ** 2,
   };
+  S.lockGrid = fullLockGrid(S);
+  return S;
 }
-// Steering head angle, wheelbase and trail at fork travel zf and rear travel zr.
+// Steering head angle (with its sine and cosine), wheelbase and trail at fork travel zf and rear
+// travel zr.
 function liveGeometry(S, zf, zr) {
   const b = S.b;
   const pitch = ((zf - S.sagF) * S.cE + (S.sagR - zr)) / b.L;
   const eps = S.eps0 - pitch;
   const L = b.L - (zf - S.sagF) * S.sE;
-  return { eps, L, trail: (b.rw * Math.sin(eps) - S.off) / Math.cos(eps) };
+  const sE = Math.sin(eps);
+  const cE = Math.cos(eps);
+  return { eps, L, trail: (b.rw * sE - S.off) / cE, sE, cE };
 }
 // Bike lean at a combined lean a of bike and rider (the body position phases in up to 15°).
 const bikeLean = (S, a) => Math.max(0, a + S.delta * Math.min(1, a / (15 * RAD)));
 // Exact steering kinematics in a lean (Cossalter, Motorcycle Dynamics). Handlebar angle d about the
 // steering axis, lean p and head angle e give the front wheel's steer angle Δ in the ground plane:
 // tan Δ = cos e·sin d / (cos d·cos p − sin e·sin d·sin p), so a leaned bike turns much tighter than an
-// upright one with the same handlebar angle. Δ is capped at 80°.
+// upright one with the same handlebar angle. Δ is capped at 80°. The sines and cosines come worked
+// out: sd, cd of d, sp, cp of p, and h.sE, h.cE of the head angle of h, which is the setup (static)
+// or a live geometry.
 const TAN_MAX = Math.tan(80 * RAD);
-const tanGroundSteer = (d, p, e) => {
-  const n = Math.cos(e) * Math.sin(d);
-  const q = Math.cos(d) * Math.cos(p) - Math.sin(e) * Math.sin(d) * Math.sin(p);
+function steerTan(sd, cd, sp, cp, h) {
+  const n = h.cE * sd;
+  const q = cd * cp - h.sE * sd * sp;
   return q > Math.abs(n) / TAN_MAX ? n / q : Math.sign(n) * TAN_MAX;
-};
+}
+// tan Δ at full lock and bike lean p.
+const lockTan = (S, p, h) => steerTan(S.sinLock, S.cosLock, Math.sin(p), Math.cos(p), h);
 // The inverse: the handlebar angle that gives tan Δ = T at lean p.
-const steerForCurvature = (T, p, e) => Math.atan((T * Math.cos(p)) / (Math.cos(e) + T * Math.sin(e) * Math.sin(p)));
+const steerForCurvature = (T, p, h) => Math.atan((T * Math.cos(p)) / (h.cE + T * h.sE * Math.sin(p)));
 // Radius of the rear wheel track at full lock and combined lean a.
-const lockRadius = (S, a) => S.b.L / tanGroundSteer(S.lockEff, bikeLean(S, a), S.eps0);
+const lockRadius = (S, a) => S.b.L / lockTan(S, bikeLean(S, a), S);
 // A steady turn of the rigid bike: with both wheels rolling it turns about a point on the line of the rear
 // axle, so the centre of mass, h·sin p inside the tyre line, runs on the radius 1/k − h·sin p, where k is
 // the curvature of the rear track. Balance at combined lean p and rear wheel speed v:
@@ -689,7 +717,7 @@ function gripLean(S, D, v, mu, top) {
     const d = 1 - 4 * c * k0;
     if (d < 0) return false;
     const k = c < 1e-6 ? k0 : (1 - Math.sqrt(d)) / (2 * c);
-    if (k > tanGroundSteer(S.lockEff, bikeLean(S, p), S.eps0) / S.b.L) return false;
+    if (k > lockTan(S, bikeLean(S, p), S) / S.b.L) return false;
     return turnHolds(S, D, G * Math.tan(p), k, p, mu);
   };
   if (ok(top)) return top;
@@ -702,30 +730,53 @@ function gripLean(S, D, v, mu, top) {
   }
   return lo;
 }
-// The largest lean full lock can hold at speed v: the first lean at which balance needs the full-lock
-// curvature (head angle e and wheelbase L default to static).
-function fullLockLean(S, v, e, L) {
-  e = e != null ? e : S.eps0;
-  L = L || S.b.L;
-  const f = (p) => {
-    const kL = Math.min(tanGroundSteer(S.lockEff, bikeLean(S, p), e) / L, 0.5 / Math.max(1e-6, S.b.h * Math.sin(p)));
-    return G * Math.tan(p) - v * v * kL * (1 - S.b.h * kL * Math.sin(p));
+// Full lock at speed v on live geometry g holds the lean only up to the first lean at which balance
+// needs the full-lock curvature. That limit is found in steps of 0.02 rad (everything that depends on
+// the lean alone comes from the setup's lockGrid), then refined by bisection. Returns the limit when
+// lean a goes beyond it, null when a is within it: the search stops as soon as that is settled.
+function fullLockLimit(S, v, g, a) {
+  const h = S.b.h;
+  const vv = v * v;
+  // Balance minus the full-lock turn at lean p, from tan p, sin p, the curvature cap and tan Δ.
+  const f = (tp, sp, cap, T) => {
+    const kL = Math.min(T / g.L, cap);
+    return G * tp - vv * kL * (1 - h * kL * sp);
   };
-  const hi = Math.min(1.4, S.capC + 0.3);
+  const F = S.lockGrid;
+  const n = F.p.length;
   let lo = 0;
-  let p = 0;
-  for (; p < hi; p += 0.02) {
-    if (f(p) >= 0) break;
-    lo = p;
+  let i = 0;
+  for (; i < n; i++) {
+    if (f(F.tan[i], F.sin[i], F.cap[i], steerTan(S.sinLock, S.cosLock, F.sb[i], F.cb[i], g)) >= 0) break;
+    lo = F.p[i];
+    if (lo >= a) return null; // the limit is not below lo
   }
-  if (p >= hi) return hi;
-  let h2 = p;
-  for (let i = 0; i < 20; i++) {
-    const m = (lo + h2) / 2;
-    if (f(m) < 0) lo = m;
-    else h2 = m;
+  if (i === n) return a > F.hi ? F.hi : null;
+  if (a <= lo) return null; // the limit is between lo and the next step
+  let hi = F.p[i];
+  for (let j = 0; j < 20; j++) {
+    const m = (lo + hi) / 2;
+    const sm = Math.sin(m);
+    if (f(Math.tan(m), sm, 0.5 / Math.max(1e-6, h * sm), lockTan(S, bikeLean(S, m), g)) < 0) lo = m;
+    else hi = m;
   }
-  return lo;
+  return a > lo ? lo : null;
+}
+// The steps of fullLockLimit, up to the highest limit hi: the lean p, tan p, sin p, the tightest
+// curvature a balanced turn can have at that lean (see balanceCurvature), and the sine and cosine of
+// the bike lean.
+function fullLockGrid(S) {
+  const F = { hi: Math.min(1.4, S.capC + 0.3), p: [], tan: [], sin: [], cap: [], sb: [], cb: [] };
+  for (let p = 0; p < F.hi; p += 0.02) {
+    const pb = bikeLean(S, p);
+    F.p.push(p);
+    F.tan.push(Math.tan(p));
+    F.sin.push(Math.sin(p));
+    F.cap.push(0.5 / Math.max(1e-6, S.b.h * Math.sin(p)));
+    F.sb.push(Math.sin(pb));
+    F.cb.push(Math.cos(pb));
+  }
+  return F;
 }
 
 // SPDX-License-Identifier: GPL-3.0-or-later
@@ -760,9 +811,10 @@ const coneRadius = (z) =>
       : CONE_SHAPE.r0 + ((CONE_SHAPE.r1 - CONE_SHAPE.r0) * z) / CONE_SHAPE.H;
 const stanceOf = (S) => (S.rel0 > 0 ? 'pos' : S.rel0 < 0 ? 'neg' : 'neu');
 // Outline at bike lean phb and steer angle d in the ground plane (both + to the left): each part has
-// z (or a span z0–z1) along the bike from the rear contact patch, lat sideways (+ left), Z height and
-// r radius [m]. The handlebar ends count at any height, since they cannot pass over a cone; the other
-// parts only below the tip of the cone.
+// a span z0–z1 along the bike from the rear contact patch (z0 = z1 for a point), lat sideways
+// (+ left), Z height and r radius [m]. The handlebar ends count at any height, since they cannot pass
+// over a cone; the other parts only below the tip of the cone. tr: the distance between the axes of
+// the part and the cone at which they touch (null for a part that passes over the cone).
 function outlinePoints(S, phb, d) {
   const b = S.b;
   const o = OUTLINE[b.id] || OUTLINE.ebike;
@@ -773,45 +825,37 @@ function outlinePoints(S, phb, d) {
   const sp = Math.sin(phb);
   const cp = Math.cos(phb);
   const out = [];
-  const pt = (n, z, xb, y, r, all) =>
-    out.push({ n, z0: z, z1: z, lat: y * sp + xb * cp, Z: y * cp - xb * sp, r, all: !!all });
+  const part = (n, z0, z1, lat, Z, r, all) =>
+    out.push({
+      n,
+      z0,
+      z1,
+      lat,
+      Z,
+      r,
+      all,
+      tr: all || Z <= CONE_SHAPE.H ? r + coneRadius(Math.min(Z, CONE_SHAPE.H)) : null,
+    });
+  // A point xb sideways and y up in the frame of the upright bike, leaned by phb.
+  const pt = (n, z, xb, y, r, all) => part(n, z, z, y * sp + xb * cp, y * cp - xb * sp, r, !!all);
   for (const s of [1, -1]) {
     const inner = s === sg || a < 2 * RAD;
     pt(i18n`kierownica`, zb - s * o.hw * Math.sin(d), s * o.hw * Math.cos(d), o.hb, 0.035, true);
     if (inner) {
       const at = o.ta && S.rel0 < 0 ? Math.max(0, a - o.ta * RAD) : a;
       const Zs = clamp(o.hs * Math.cos(at) - o.wr * Math.sin(at), 0, CONE_SHAPE.H);
-      out.push({
-        n: i18n`tył motocykla`,
-        z0: o.z0,
-        z1: o.z1,
-        lat: s * (Zs * Math.tan(at) + o.wr / Math.cos(at)),
-        Z: Zs,
-        r: 0.02,
-        all: false,
-      });
-    } else
-      out.push({
-        n: i18n`tył motocykla`,
-        z0: o.z0,
-        z1: o.z1,
-        lat: 0.3 * sp + s * o.wr * cp,
-        Z: 0.3 * cp - s * o.wr * sp,
-        r: 0.02,
-        all: false,
-      });
+      part(i18n`tył motocykla`, o.z0, o.z1, s * (Zs * Math.tan(at) + o.wr / Math.cos(at)), Zs, 0.02, false);
+    } else part(i18n`tył motocykla`, o.z0, o.z1, 0.3 * sp + s * o.wr * cp, 0.3 * cp - s * o.wr * sp, 0.02, false);
     pt(i18n`podnóżek`, o.zp, s * o.wp, o.yp, 0.04);
     pt(i18n`kolano`, 0.6 * b.L, s * (inner ? P.kx : 0.14), P.ky * o.hs, 0.06);
     if (inner && P.ex != null)
       pt(i18n`łokieć`, zb - s * o.hw * Math.sin(d) - 0.22, s * (o.hw * Math.cos(d) + P.ex), o.hb - 0.06, 0.05);
   }
   // The tyres on the ground and everything between them: a cone cannot pass under the bike.
-  out.push({ n: i18n`koła`, z0: 0, z1: b.L, lat: 0, Z: 0, r: 0.07, all: false });
+  part(i18n`koła`, 0, b.L, 0, 0, 0.07, false);
   return out;
 }
-const canTouchCone = (p) => p.all || p.Z <= CONE_SHAPE.H;
-const touchRadius = (p) => p.r + coneRadius(Math.min(p.Z, CONE_SHAPE.H));
-// Gap between the outline (points pts, rear contact at x, y, heading psi) and cone C [m], negative for
+// Gap between the outline (parts pts, rear contact at x, y, heading psi) and cone C [m], negative for
 // a touch, and the closest part.
 function outlineClearance(pts, x, y, psi, C) {
   const ux = Math.cos(psi);
@@ -823,9 +867,9 @@ function outlineClearance(pts, x, y, psi, C) {
   let c = 9;
   let n = '';
   for (const p of pts) {
-    if (!canTouchCone(p)) continue;
+    if (p.tr == null) continue;
     const dz = Math.max(p.z0 - al, 0, al - p.z1);
-    const q = Math.hypot(dz, la - p.lat) - touchRadius(p);
+    const q = hypot2(dz, la - p.lat) - p.tr;
     if (q < c) {
       c = q;
       n = p.n;
@@ -849,7 +893,7 @@ const engineAccel = (b, S, v, t) =>
 const FLAG = { WHEELIE: 1, STOPPIE: 2, SLIDEF: 4, LOCKR: 8, SPIN: 16, FALL: 32, WIDE: 64, SCRAPE: 128, HOLD: 256 };
 // The steady turn at lean p and speed v: its curvature k and the side force each tyre needs [N].
 function tyreNeeds(S, D, g, p, v) {
-  const k = Math.min(balanceCurvature(D, p, Math.max(v, 0.3)), tanGroundSteer(D.lockEff, bikeLean(D, p), g.eps) / g.L);
+  const k = Math.min(balanceCurvature(D, p, Math.max(v, 0.3)), lockTan(D, bikeLean(D, p), g) / g.L);
   const kv = v * v * k;
   const al = kv * (1 - S.b.h * k * Math.sin(p));
   return { k, f: S.mt * kv * D.fF * Math.sqrt(1 + (k * g.L) ** 2), r: S.mt * Math.abs(al - kv * D.fF) };
@@ -868,6 +912,8 @@ const FAST_HANDS = { tc: 0.05, tf: 0.08, tr: 0.1 };
 // roll rate at speed vr [m/s], lo and hi the share of that roll acceleration at low and high speed,
 // amin the lowest roll acceleration [rad/s²].
 const COUNTERSTEER = { d: 6, tr: 0.43, vr: 6, lo: 0.8, hi: 1.3, amin: 8 };
+const COUNTERSTEER_SIN = Math.sin(COUNTERSTEER.d * RAD);
+const COUNTERSTEER_COS = Math.cos(COUNTERSTEER.d * RAD);
 // Start at the back of the box near its right edge: front wheel run [m] behind the line, bike centre
 // y [m] from the cone axis.
 const START = { run: 1.0, y: -0.6 };
@@ -958,7 +1004,6 @@ class Sim {
     const g = liveGeometry(D, this.zf, this.zr);
     this.g = g;
     const v0 = this.v;
-    const eq = fullLockLean(D, v0, g.eps, g.L);
     const roll = D.roll * clamp(Math.sqrt(b.trail / Math.max(0.02, g.trail)), 0.85, 1.2);
     const rAcc =
       Math.max(roll / COUNTERSTEER.tr, COUNTERSTEER.amin) *
@@ -976,7 +1021,8 @@ class Sim {
         if (Math.abs(this.rate || 0) > 0 && Math.sign(this.rate) === Math.sign(phi)) this.rate = 0;
       }
     }
-    if (Math.abs(phi) > eq) {
+    const eq = fullLockLimit(D, v0, g, Math.abs(phi));
+    if (eq != null) {
       phi = Math.sign(phi) * eq;
       fl |= FLAG.FALL;
       this.eqC = true;
@@ -1008,7 +1054,7 @@ class Sim {
     const a = Math.abs(phi);
     const side = Math.sign(phi);
     const ab = bikeLean(D, a);
-    const kLock = tanGroundSteer(D.lockEff, ab, g.eps) / g.L;
+    const kLock = lockTan(D, ab, g) / g.L;
     const vv = Math.max(v0, 0.3);
     const kBal = balanceCurvature(D, a, vv);
     let k = Math.min(kBal, kLock);
@@ -1019,12 +1065,12 @@ class Sim {
     if (side && v0 > 1) {
       const dk = (-clamp(v0 - 1, 0, 1) * b.h * this.racS * side) / (vv * vv * Math.cos(a));
       if (Math.abs(dk) > 1e-6) {
-        const kcs = tanGroundSteer(COUNTERSTEER.d * RAD, -ab, g.eps) / g.L;
+        const kcs = steerTan(COUNTERSTEER_SIN, COUNTERSTEER_COS, Math.sin(-ab), Math.cos(-ab), g) / g.L;
         const kg = Math.max(kS, Math.sqrt(Math.max(0, (0.9 * D.mu * G) ** 2 - this.ax * this.ax)) / (vv * vv));
         kS = clamp(kS + dk, -kcs, Math.min(kLock, kg));
       }
     }
-    const stSS = steerForCurvature(kS * g.L, ab, g.eps);
+    const stSS = steerForCurvature(kS * g.L, ab, g);
     const stT = clamp(side * stSS, -b.lock * RAD, b.lock * RAD);
     this.st += (stT - this.st) * Math.min(1, dt / 0.03);
     let aD = this.ut * engineAccel(b, S, v0, this.t);
@@ -1534,10 +1580,7 @@ function aimOnPolyline(pts, p, Ld) {
 }
 // Side acceleration la and rear track curvature k of the steady turn at lean p and speed v.
 function steadyTurn(S, D, p, v) {
-  const k = Math.min(
-    balanceCurvature(D, p, Math.max(v, 0.3)),
-    tanGroundSteer(D.lockEff, bikeLean(D, p), S.eps0) / S.b.L,
-  );
+  const k = Math.min(balanceCurvature(D, p, Math.max(v, 0.3)), lockTan(D, bikeLean(D, p), S) / S.b.L);
   return { la: v * v * k * (1 - S.b.h * k * Math.sin(p)), k };
 }
 // The hardest braking in a turn-in at lean p heading for lean tc: it leaves the grip that the lean
@@ -1548,8 +1591,12 @@ function turnInBrake(S, D, eta, la, k, p, tc, v) {
   const s = steadyTurn(S, D, pT, v);
   return maxBrakeDecel(S, D, Math.max(la, s.la), eta, 0, Math.max(k, s.k));
 }
+// What the rehearsal of a run finds. A rider with the same setup and options can start from it
+// instead of rehearsing again.
+const REHEARSAL = ['P', 'v', 'n', 'iTurn', 'iApex', 'iExit', 'iGas', 'iBrake', 'rotLeft', 'turnAhead'];
 class AutoRider {
-  constructor(S, opt) {
+  // rehearsal: the rehearsal of this run, if one has been ridden (see REHEARSAL).
+  constructor(S, opt, rehearsal) {
     this.S = S;
     this.opt = opt;
     const b = S.b;
@@ -1567,7 +1614,7 @@ class AutoRider {
     const apexAt = (k) => {
       let best = null;
       for (let p = 3 * RAD; p <= this.leanMax + 1e-9; p += 0.25 * RAD) {
-        const kL = tanGroundSteer(S.lockEff, bikeLean(S, p), S.eps0) / b.L;
+        const kL = lockTan(S, bikeLean(S, p), S) / b.L;
         const kk = k || kL;
         if (kL < kk) continue;
         const q = 1 - b.h * kk * Math.sin(p);
@@ -1606,7 +1653,8 @@ class AutoRider {
       this.pl.push(pts);
       this.approach.push(u);
     }
-    this.rehearse();
+    if (rehearsal) for (const k of REHEARSAL) this[k] = rehearsal[k];
+    else this.rehearse();
     if (opt.fxY != null) {
       const a0 = this.aim;
       const FX = [this.finishAim[0], opt.fxY];
@@ -1717,7 +1765,7 @@ class AutoRider {
     const a = bikeLean(D, Math.abs(ph));
     const pb = Math.round(Math.sign(ph) * a * DEG);
     const d = Math.round(
-      Math.sign(k) * Math.min(S.lockEff, steerForCurvature(S.b.L * Math.abs(k), a, S.eps0)) * S.cosR * DEG,
+      Math.sign(k) * Math.min(S.lockEff, steerForCurvature(S.b.L * Math.abs(k), a, S)) * S.cosR * DEG,
     );
     const key = pb * 1000 + d;
     let pts = this.outlineCache.get(key);
@@ -1803,7 +1851,7 @@ class AutoRider {
       if (Math.abs(p) > cap) p = Math.sign(p) * cap;
       const ap = Math.abs(p);
       const kb = balanceCurvature(D, ap, v);
-      const kl = tanGroundSteer(D.lockEff, bikeLean(D, ap), S.eps0) / b.L;
+      const kl = lockTan(D, bikeLean(D, ap), S) / b.L;
       const k = Math.sign(p) * Math.min(kb, kl);
       const ka = Math.abs(k);
       const la = v * v * ka * (1 - b.h * ka * Math.sin(ap));
@@ -2434,6 +2482,9 @@ class AutoRider {
     this.iBrake = iH;
     this.rotLeft = rem;
   }
+  rehearsal() {
+    return Object.fromEntries(REHEARSAL.map((k) => [k, this[k]]));
+  }
   mid(i, P) {
     P = P || this.P;
     const n = P.length;
@@ -2686,11 +2737,11 @@ function planOptions(S, plan) {
   }
   return { ...cc, S2, brk, sS, gS, pdq, plan: true, ...PLAN_MODE };
 }
-// keep: record the trace every 4 steps.
-function simulateRun(S, opt, keep) {
+// keep: record the trace every 4 steps; rehearsal: the rider's rehearsal of this run, if there is one.
+function simulateRun(S, opt, keep, rehearsal) {
   const sim = new Sim(S);
   const c = new Course();
-  const bot = new AutoRider(S, opt);
+  const bot = new AutoRider(S, opt, rehearsal);
   const trace = [];
   let n = 0;
   let end = null;
@@ -2910,7 +2961,7 @@ function startDemo() {
     mode: 'demo',
     sim: new Sim(S),
     course: new Course(),
-    bot: new AutoRider(S, coachSetup(S)),
+    bot: new AutoRider(S, coachSetup(S), coachRun(S).bt),
     trace: [],
     phase: 'count',
     tc: 0,
@@ -3707,8 +3758,8 @@ function drawSide(p) {
     q.fill();
   }
   const lb = Math.abs(p.phb || 0);
-  const Rc = cur.g.L / tanGroundSteer(S.lockEff, lb, cur.g.eps);
-  const R0 = b.L / tanGroundSteer(S.lockEff, lb, S.eps0);
+  const Rc = cur.g.L / lockTan(S, lb, cur.g);
+  const R0 = b.L / lockTan(S, lb, S);
   const it = [
     [
       i18n`główka`,
@@ -4670,6 +4721,7 @@ const planner = {
   lastPlan: null,
   drag: null,
   fc: new Map(),
+  reh: new Map(),
   sc: new Map(),
   defs: {},
 };
@@ -4768,11 +4820,34 @@ function planClamp(p) {
   return q;
 }
 const PLAN_MAX_TIME = 33;
+// What the run of plan pl depends on: the bike, body position and seat, and the four points the way
+// planOptions reads them (a missing point is the coach's).
+function planRunKey(pl) {
+  const s = planSetup(pl);
+  const n = (x) => (x != null && isFinite(x) ? +x : 'c');
+  return [s.b.id, stanceOf(s), s.seat0, n(pl.brake), n(pl.turn), n(pl.side), n(pl.gas)].join('|');
+}
+// The rehearsals of the last plans ridden, for the preview and the comparison.
+function keepRehearsal(k, bot) {
+  planner.reh.delete(k);
+  planner.reh.set(k, bot.rehearsal());
+  if (planner.reh.size > 8) planner.reh.delete(planner.reh.keys().next().value);
+}
+// A rider for plan pl with its run rehearsed.
+function planRider(pl) {
+  const s = planSetup(pl);
+  const k = planRunKey(pl);
+  const bt = new AutoRider(s, planOptions(s, pl), planner.reh.get(k));
+  if (!planner.reh.has(k)) keepRehearsal(k, bt);
+  return bt;
+}
+// Why plan pl does not work (null if it does).
 function planProblem(pl) {
-  const k = planner.key + '|' + JSON.stringify(pl);
+  const k = planRunKey(pl);
   if (planner.fc.has(k)) return planner.fc.get(k);
   const s = planSetup(pl);
-  const r = simulateRun(s, planOptions(s, pl), false);
+  const r = simulateRun(s, planOptions(s, pl), false, planner.reh.get(k));
+  keepRehearsal(k, r.bot);
   const nt = r.course && r.course.touches ? r.course.touches.length : 0;
   const why =
     r.end !== 'done'
@@ -4795,9 +4870,8 @@ function initPlanner() {
   planner.prevKey = null;
   planner.defs = {};
   const raw = rawDefaultPlan('neu', 0);
-  const s0 = planSetup(raw);
   planner.def = raw;
-  const bt = new AutoRider(s0, planOptions(s0, raw));
+  const bt = planRider(raw);
   planner.lim = {
     bMin: 0.5,
     bMax: Math.floor(bt.ahead(2, bt.iExit[1]) * 10) / 10,
@@ -4885,10 +4959,9 @@ function planForStance(pl, pos) {
 function planPreview() {
   const pl = planner.A;
   if (!pl) return null;
-  const k = JSON.stringify(pl);
+  const k = planRunKey(pl);
   if (planner.prevKey !== k) {
-    const s = planSetup(pl);
-    planner.prev = new AutoRider(s, planOptions(s, pl));
+    planner.prev = planRider(pl);
     planner.prevKey = k;
   }
   return planner.prev;
@@ -5360,7 +5433,8 @@ function comparePlans() {
   planBusyUI();
   const runB = () => {
     if (tok !== compareToken) return;
-    R.B = runSummary(simulateRun(SS.B, coachSetup(SS.B), false));
+    R.rB = simulateRun(SS.B, coachSetup(SS.B), true, coachRun(SS.B).bt);
+    R.B = runSummary(R.rB);
     planner.busy = false;
     planBusyUI();
     planner.res = R;
@@ -5369,7 +5443,8 @@ function comparePlans() {
   };
   setTimeout(() => {
     if (tok !== compareToken) return;
-    R.A = runSummary(simulateRun(SS.A, planOptions(SS.A, plans.A), false));
+    R.rA = simulateRun(SS.A, planOptions(SS.A, plans.A), true, planRider(plans.A));
+    R.A = runSummary(R.rA);
     setTimeout(runB, 0);
   }, 30);
 }
@@ -5399,8 +5474,7 @@ function showComparison(auto) {
   const R = planner.res;
   if (!R) return;
   player.on = false;
-  const rA = simulateRun(R.SS.A, planOptions(R.SS.A, R.plans.A), true);
-  const rB = simulateRun(R.SS.B, coachSetup(R.SS.B), true);
+  const { rA, rB } = R;
   for (const x of [rA, rB]) {
     buildSegments(x);
     x.ev = runEvents(x);
@@ -6831,6 +6905,16 @@ sizeTele();
 makeAsphalt();
 settingsChanged();
 drawRef();
+// On secpro.pl both games are served under one key, /simgp8/<key>/ and /simwheelie/<key>/, the English
+// editions in en/; anywhere else the links to SimWheelie lead to its repository.
+{
+  const m = location.pathname.match(/\/simgp8\/([0-9a-f]{32})\//i);
+  if (m)
+    for (const a of document.querySelectorAll('a[data-sib]')) {
+      a.href = location.pathname.slice(0, m.index) + '/simwheelie/' + m[1] + '/' + (LANG === 'en' ? 'en/' : '');
+      a.removeAttribute('target');
+    }
+}
 // The coach's run is shown first; #planer (or #planner) opens the planner.
 setMode(/^#(planer|planner)$/.test(location.hash), true);
 if (window.ResizeObserver) {

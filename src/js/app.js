@@ -93,7 +93,7 @@ function startDemo() {
     mode: 'demo',
     sim: new Sim(S),
     course: new Course(),
-    bot: new AutoRider(S, coachSetup(S)),
+    bot: new AutoRider(S, coachSetup(S), coachRun(S).bt),
     trace: [],
     phase: 'count',
     tc: 0,

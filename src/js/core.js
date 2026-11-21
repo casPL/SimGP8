@@ -23,3 +23,15 @@ const BOX_LEN = 3;
 const EIGHTS = 5; // figure eights in a run
 const AXIS_EVENTS = EIGHTS * 4 - 1; // crossings of the cone axis before the finish
 const WORLD_BOX = { x0: -13, x1: 10.6, y0: -5.6, y1: 5.6 }; // the course [m]; leaving it ends the run
+// Math.hypot(a, b) for finite a and b, worked out the way V8 and JavaScriptCore do it (both legs scaled
+// by the longer one), so the result is the same to the last bit, without the cost of calling their
+// variadic built-in.
+function hypot2(a, b) {
+  a = Math.abs(a);
+  b = Math.abs(b);
+  const m = a > b ? a : b;
+  if (m === 0) return 0;
+  const x = a / m;
+  const y = b / m;
+  return Math.sqrt(x * x + y * y) * m;
+}
