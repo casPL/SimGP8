@@ -252,13 +252,14 @@ sizeTele();
 makeAsphalt();
 settingsChanged();
 drawRef();
-// On secpro.pl both games are served under one key, /simgp8/<key>/ and /simwheelie/<key>/, the English
-// editions in en/; anywhere else the links to SimWheelie lead to its repository.
+// On secpro.pl the games are served under one key, /simgp8/<key>/, /simwheelie/<key>/ and
+// /simtrackstand/<key>/, the English editions in en/; anywhere else the links to the other games lead
+// to their repositories.
 {
   const m = location.pathname.match(/\/simgp8\/([0-9a-f]{32})\//i);
   if (m)
     for (const a of document.querySelectorAll('a[data-sib]')) {
-      a.href = location.pathname.slice(0, m.index) + '/simwheelie/' + m[1] + '/' + (LANG === 'en' ? 'en/' : '');
+      a.href = `${location.pathname.slice(0, m.index)}/${a.dataset.sib}/${m[1]}/${LANG === 'en' ? 'en/' : ''}`;
       a.removeAttribute('target');
     }
 }
